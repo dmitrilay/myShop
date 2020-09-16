@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Logged out{% endblock %}
+
+{% block content %}
+<h1>Выход из системы</h1>
+<p>
+    Вы успешно вышки из системы.
+    <a href="{% url 'login' %}">Войти снова</a>.
+</p>
+
+{% endblock %}

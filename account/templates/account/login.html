@@ -1,0 +1,16 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+    <h1>Авторизация</h1>
+
+    <p>Пожалуйста, введите свой логин и пароль для входа в личный кабинет:</p>
+    <form action="." method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Войти"></p>
+    </form>
+{% endblock %}
