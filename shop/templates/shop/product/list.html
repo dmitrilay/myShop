@@ -6,79 +6,24 @@
 {% endblock %}
 
 {% block content %}
-<!--Start Футер-->
-    <div class="container-fluid padding">
-        <div class="row text-center padding">
-            <div class="col-xs-3 col-sm-3 col-md-3">
-                <div id="sidebar">
-                    <h3>Категории</h3>
-                    <ul>
-                        <li {% if not category %} class="selected" {% endif %}>
-                            <a href="{% url 'shop:product_list' %}">Все</a>
-                        </li>
-                        {% for c in categories %}
-                            <li {% if category.slug == c.slug %} class="selected" {% endif %}>
-                                <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+<div class="container">
+    <div class="row text-center padding">
+        <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <!--Категории-->
+            {% include 'include/list/category.html' %}
+        </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-9">
-                <div class="categoriy">
-                    <h1>{% if category %}
-                            {{ category.name }}
-                        {% else %}
-                            Products
-                        {% endif %}
-                    </h1>
-                    <div class="container">
-                        <div class="row">
-                            {% for pS in products %}
-                                <div class="col-6 col-sm-6 col-lg-4">
-                                    <a href="{{ pS.get_absolute_url }}">
-                                        {% if pS.image %}
-                                            <img src="{{ pS.image.url }}" class="img-fluid" alt="Responsive image">
-                                        {% endif %}
-                                    </a>
-                                    <a href="{{ pS.get_absolute_url }}">
-                                        {{ pS.name }}
-                                    </a><br>
-                                    {{ pS.price }} руб.
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9">
+            <!--Списко продуктов-->
+            {% include 'include/list/product_list.html' %}
 
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                {% if is_paginated %}
-                    <nav aria-label="...">
-                      <ul class="pagination">
-                        <li class="page-item {% if not prev_url %} disabled {% endif %}">
-                            <a class="page-link" href="{{ prev_url }}" tabindex="-1">Назад</a>
-                        </li>
-                        {% for n in products.paginator.page_range %}
-                            {% if products.number == n %}
-                                <li class="page-item active">
-                                    <a class="page-link" href="?page={{ n }}">{{ n }}
-                                        <span class="sr-only">(current)</span></a>
-                                </li>
-                            {% elif n > products.number|add:-3 and n < products.number|add:3 %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ n }}">{{ n }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                        <li class="page-item {% if not next_url %} disabled {% endif %}">
-                            <a class="page-link" href="{{ next_url }}" tabindex="-1">Вперед</a>
-                        </li>
-                      </ul>
-                    </nav>
-                {% endif %}
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <!--Навигационная панель-->
+                    {% include 'include/list/inPagination.html' %}
+                </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

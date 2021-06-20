@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block title %} Корзина {% endblock %}
+
+{% block content %}
+<p class="text-muted h3 font-weight-bold">Моя корзина</p>
+
+<br>
+
+<h3>Ваша корзина пока пуста</h3>
+<p><a href="{% url 'shop:product_list' %}">Вернутся в каталог</a></p>
+{% endblock %}

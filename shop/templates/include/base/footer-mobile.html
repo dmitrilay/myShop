@@ -1,0 +1,38 @@
+{% load static %}
+<div class="accordion accordion-flush text-white bg-dark pt-4 pb-4" id="accordionFlushExample">
+    <div class="p-2 fw-bold fs-2">Щедрый</div>
+  <div class="accordion-item bg-dark">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          <div class="fw-bold">Покупателям</div>
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
+      <div class="accordion-body">
+          <ul>
+            <li><a href="{% url 'shop:product_list' %}">Каталог</a></li>
+            <li><a href="{% url 'shop:SkupkaPageViews' %}">Хотите что-то продать?</a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item bg-dark">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+          <div class="fw-bold">Контакты</div>
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
+      <div class="accordion-body">
+            <address class="pl-2">
+                Омск, ул. Молодогвардейская, 5<br>
+                <ul>
+                    <li>Телефон: 8 913 620 29 41</li>
+                    <li><a href="https://www.avito.ru/user/ab99a7a3e181d731e076acdad6bbafd9/profile">Авито</a></li>
+                    <li><a href="https://vk.com/lombard_omsk">Контакт</a></li>
+                </ul>
+            </address>
+      </div>
+    </div>
+  </div>
+</div>

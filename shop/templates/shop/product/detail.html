@@ -1,52 +1,35 @@
 {% extends "shop/base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
-
 
 {% block title %}
     {{ product.name }}
 {% endblock %}
 
 {% block content %}
+
+
 <div class="container">
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-12">
+            <a class="text-secondary" href="{{ product.category.get_absolute_url }}">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i> {{product.category }}
+            </a>
+        </div>
+    </div><br><br>
+
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
             {% for image_item in product.productimage.all %}
                 <img src="{{ image_item.image.url }}" class="img-fluid" alt="Responsive image">
             {% endfor %}
         </div>
 
-        <div class="col-lg-7">
-            <h4>{{ product.name }}</h4>
-            <h2><a href="{{ product.category.get_absolute_url }}">{{product.category }}</a></h2>
-            <p class="price">{{ product.price }} руб.</p>
-
-            <form action="{% url 'cart:cart_add' product.id %}" method="post">
-                {{ cart_product_form }}
-                {% csrf_token %}
-                <input type="submit" value="Add to cart">
-            </form>
-
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">??? что-то точно будет</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">О товаре</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-              </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                  123
-              </div>
-              <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  {{ product.description|linebreaks }}
-              </div>
-              <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-            </div>
-
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            <h4 class="text-muted font-weight-bold">{{ product.name }}</h4>
+            <h2 class="text-dark h2 font-weight-bold">{{ product.price }}₽</h2>
+            {% include 'include/detail/ExampleModal.html' %}
+            {% include 'include/detail/NavTabs.html' %}
         </div>
     </div>
 </div>

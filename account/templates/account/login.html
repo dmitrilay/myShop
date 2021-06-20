@@ -1,16 +1,36 @@
 {% extends "shop/base.html" %}
-
-{% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}Авторизация{% endblock %}
+form.as_p bootstrap
 
 {% block content %}
-    <h1>Авторизация</h1>
+<h2>Авторизация</h2>
 
-    <p>Пожалуйста, введите свой логин и пароль для входа в личный кабинет:</p>
-    <form action="." method="post">
-        {{ form.as_p }}
+<br>
+
+<p>
+    Пожалуйста, введите свой логин и пароль. Если у вас нет учетной записи,
+    <a href="{% url 'register' %}">зарегистрируйтесь здесь</a>
+</p>
+
+<div class="form-group col-md-4 mb-0">
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <p>Ваше имя пользователя или пароль введен неверно.Пожалуйста, попробуйте еще раз.</p>
+    </div>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
-        <p><input type="submit" value="Войти"></p>
+        {{ form.username|as_crispy_field }}
+        {{ form.password|as_crispy_field }}
+
+        <br>
+
+        <button type="submit" class="btn btn-outline-warning btn-block">Войти</button>
+        <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+        <input type="hidden" name="next" value="{{next}}"/>
     </form>
+</div>
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include 'include/main/carousel.html' %}
+
+<br><br>
+<!--Выборка новых товаров-->
+{% include 'include/main/carousel_product.html' %}
+
+{% endblock %}

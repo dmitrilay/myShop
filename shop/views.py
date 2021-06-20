@@ -50,7 +50,15 @@ def product_detail(request, id, slug):
 
 
 def StartPageViews(request):
+    products = Product.objects.filter(available=True)[0:4]
+    category = 1
+    context = {'category': category, 'products': products, }
+
+    return render(request, 'shop/main/main.html', context)
+
+
+def skupka(request):
     category = 1
     context = {'category': category}
 
-    return render(request, 'shop/StartPage.html', context)
+    return render(request, 'shop/skupka.html', context)

@@ -1,0 +1,70 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Покупаем дорого
+{% endblock %}
+
+{% block content %}
+
+
+<div>
+    <img src="{% static 'img/slade_2.jpg' %}" class="img-fluid rounded mx-auto d-block"
+         alt="Cinque Terre" width="90%" height="auto">
+</div>
+
+
+
+<div class="row text-center">
+    <div class="col-12">
+        <h1 class="display-3">Покупаем дорого</h1>
+    </div>
+    <div class="col-12">
+        <p class="lead">Если вам нужно быстро и выгодно продать или заложить телефон, ноутбук или другую
+            бытовую технику -
+            добро
+            пожаловать
+            в наш магазин.
+        </p>
+        <p class="lead">Нужны деньги? У нас все просто.</p>
+        <p class="lead"># Скупка – продайте нам товар и получите деньги сразу</p>
+        <p class="lead"># Скупка с правом выкупа – заложите товар на определенный срок</p>
+        <p class="lead">С вас - рабочая техника. С нас - честная, адекватная оценка.</p>
+        <p class="lead">Свяжитесь с нами удобным для вас способом - и мы произведем точную оценку в
+            течение нескольких минут.
+        </p>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <p>
+
+              <button class="btn btn-outline-warning btn-lg d-block mx-auto" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Связатся с нами !
+              </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                <p class="lead">Позвоните нам: 8 913 620 29 41</p>
+                <p class="lead">
+                    <a href="https://www.avito.ru/user/ab99a7a3e181d731e076acdad6bbafd9/profile">
+                        Напиши нам на Авито
+                    </a>
+                </p>
+                <p class="lead">
+                    <a href="https://vk.com/lombard_omsk">
+                        Напиши нам в Контакт
+                    </a>
+                </p>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

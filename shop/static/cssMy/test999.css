@@ -1,0 +1,17 @@
+#t242 {
+  background-color: yellow;
+  font-size:100%;
+}
+
+#accordionFlushExample {display: none;}
+
+@media screen and (max-width: 600px){
+  #t124 {display: none;}
+  #accordionFlushExample {display: block;}
+
+#h11 {
+    list-style-type: none;
+    font-size:500%;
+}
+
+}
