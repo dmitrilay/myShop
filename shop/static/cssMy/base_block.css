@@ -10,14 +10,9 @@
     padding: 0 15px;
 }
 
-.cocial a{
-    font-size:2em;
-	padding:3px;
-}
 
-.fa-vk,.fa-telegram{
-	color: #00aced
-}
+
+
 /*
 .fa-vk:hover{color: #00aced;}
 .fa-telegram:hover{color: #517fa4;}
@@ -120,3 +115,15 @@
 .navbar-nav li{padding-right: 10px;}
 .nav-link{font-size: 1.1em !important}
 
+/*Footer mobile*/
+#t242 {
+  background-color: yellow;
+  font-size:100%;
+}
+
+#h11 {
+    list-style-type: none;
+    font-size:500%;
+}
+
+}
