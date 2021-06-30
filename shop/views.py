@@ -3,6 +3,64 @@ from .models import Category, Product, ProductImage
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator
 
+from django.views.generic import DetailView
+from specs.models import ProductFeatures
+from django.db.models import Q
+
+
+# def category_p1(request):
+#     category = '131414 ' * 565
+#     context = {'category': category}
+#
+#     return render(request, 'shop/category_detail.html', context)
+
+
+class CategoryDetailView(DetailView):
+    model = Category
+    queryset = Category.objects.all()
+    context_object_name = 'category'
+    template_name = 'shop/category_detail.html'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('search')
+        category = self.get_object()
+        # context['cart'] = self.cart
+        url_kwargs = {}
+        q_condition_queries = Q()
+        context['categories'] = self.model.objects.all()
+
+        # делаем запрос из сходя из slug
+        # if not query and not self.request.GET:
+        #     context['category_products'] = category.product_set.all()
+        #     return context
+
+        # if query:
+        #     products = category.product_set.filter(Q(title__icontains=query))
+        #     context['category_products'] = products
+        #     return context
+
+        # Параметры запроса
+        for item in self.request.GET:
+            if len(self.request.GET.getlist(item)) > 1:
+                url_kwargs[item] = self.request.GET.getlist(item)
+            else:
+                url_kwargs[item] = self.request.GET.get(item)
+
+        for key, value in url_kwargs.items():
+            if isinstance(value, list):
+                q_condition_queries.add(Q(**{'value__in': value}), Q.OR)
+            else:
+                q_condition_queries.add(Q(**{'value': value}), Q.OR)
+
+        pf = ProductFeatures.objects.filter(q_condition_queries).prefetch_related('product', 'feature').values(
+            'product_id')
+
+        products = Product.objects.filter(id__in=[pf_['product_id'] for pf_ in pf])
+        context['category_products'] = products
+        return context
+
 
 def product_list(request, category_slug=None):
     category = None
@@ -62,3 +120,9 @@ def skupka(request):
     context = {'category': category}
 
     return render(request, 'shop/skupka.html', context)
+
+
+def category_list(request):
+    categories = Category.objects.all()
+    context = {'categories': categories}
+    return render(request, 'shop/category.html', context)

@@ -1,0 +1,17 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Категории{% endblock %}
+{% block content %}
+
+<div class="row col-12">
+    {% for c in categories %}
+        <div class="col-3 border">
+            <li {% if category.slug == c.slug %} class="selected" {% endif %}>
+                <a class="text-dark fw-bold fs-4" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+            </li>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

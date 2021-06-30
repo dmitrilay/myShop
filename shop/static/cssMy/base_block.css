@@ -11,17 +11,6 @@
 }
 
 
-
-
-/*
-.fa-vk:hover{color: #00aced;}
-.fa-telegram:hover{color: #517fa4;}
-.fa-youtube:hover{color: #bb0000;}
-.fa-facebook:hover{color: #3b5998;}
-.fa-google-plus-g:hover{color: #dd4b39;}
-.brand1:hover{color: #f4ed7c;}
-*/
-
 @media (max-width:750px){
     .brand1 {
     font-size:1.4em;
@@ -108,22 +97,4 @@
 }
 #sidebar ul li.selected a {
     color:#fff;
-}
-/*----------------------------
-/ Start НАВБАР
-/----------------------------*/
-.navbar-nav li{padding-right: 10px;}
-.nav-link{font-size: 1.1em !important}
-
-/*Footer mobile*/
-#t242 {
-  background-color: yellow;
-  font-size:100%;
-}
-
-#h11 {
-    list-style-type: none;
-    font-size:500%;
-}
-
 }
