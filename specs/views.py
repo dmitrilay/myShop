@@ -11,19 +11,20 @@ from shop.models import Category, Product
 
 
 class BaseSpecView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         return render(request, 'product_features.html', {})
 
 
 class CreateNewFeature(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         form = NewCategoryFeatureKeyForm(request.POST or None)
         context = {'form': form}
         return render(request, 'new_feature.html', context)
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request):
         form = NewCategoryFeatureKeyForm(request.POST or None)
         if form.is_valid():
             new_category_feature_key = form.save(commit=False)
@@ -34,13 +35,14 @@ class CreateNewFeature(View):
 
 
 class CreateNewCategory(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         form = NewCategoryForm(request.POST or None)
         context = {'form': form}
         return render(request, 'new_category.html', context)
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request):
         form = NewCategoryForm(request.POST or None)
         if form.is_valid():
             new_category = form.save(commit=False)
@@ -50,16 +52,16 @@ class CreateNewCategory(View):
 
 
 class CreateNewFeatureValidator(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         categories = Category.objects.all()
         context = {'categories': categories}
         return render(request, 'new_validator.html', context)
 
 
 class FeatureChoiceView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         option = '<option value="{value}">{option_name}</option>'
         html_select = """
             <select class="form-select" name="feature-validators" id="feature-validators-id" aria-label="Default select example">
@@ -78,8 +80,8 @@ class FeatureChoiceView(View):
 
 
 class CreateFeatureView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         category_id = request.GET.get('category_id')
         feature_name = request.GET.get('feature_name')
         value = request.GET.get('feature_value').strip(" ")
@@ -104,36 +106,32 @@ class CreateFeatureView(View):
 
 
 class NewProductFeatureView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         categories = Category.objects.all()
         context = {'categories': categories}
         return render(request, 'new_product_feature.html', context)
 
 
 class SearchProductAjaxView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         query = request.GET.get('query')
         category_id = request.GET.get('category_id')
         category = Category.objects.get(id=int(category_id))
-        products = list(Product.objects.filter(
-            category=category,
-            title__icontains=query
-        ).values())
+        products = list(Product.objects.filter(category=category, name__icontains=query).values())
         return JsonResponse({"result": products})
 
 
 class AttachNewFeatureToProduct(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         res_string = ""
         product = Product.objects.get(id=int(request.GET.get('product_id')))
         existing_features = list(set([item.feature.feature_name for item in product.features.all()]))
-        print(existing_features)
-        category_features = CategoryFeature.objects.filter(
-            category=product.category
-        ).exclude(feature_name__in=existing_features)
+        # print(existing_features)
+        category_features = CategoryFeature.objects.filter(category=product.category).exclude(
+            feature_name__in=existing_features)
         option = '<option value="{value}">{option_name}</option>'
         html_select = """
             <select class="form-select" name="product-category-features" id="product-category-features-id" aria-label="Default select example">
@@ -148,8 +146,8 @@ class AttachNewFeatureToProduct(View):
 
 
 class ProductFeatureChoicesAjaxView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         res_string = ""
         category = Category.objects.get(id=int(request.GET.get('category_id')))
         feature_key = CategoryFeature.objects.get(
@@ -174,8 +172,8 @@ class ProductFeatureChoicesAjaxView(View):
 
 
 class CreateNewProductFeatureAjaxView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         product = Product.objects.get(title=request.GET.get('product'))
         category_feature = CategoryFeature.objects.get(
             category=product.category,
@@ -192,18 +190,21 @@ class CreateNewProductFeatureAjaxView(View):
 
 
 class UpdateProductFeaturesView(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         categories = Category.objects.all()
         context = {'categories': categories}
         return render(request, 'update_product_features.html', context)
 
 
 class ShowProductFeaturesForUpdate(View):
-
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         product = Product.objects.get(id=int(request.GET.get('product_id')))
         features_values_qs = product.features.all()
+        print('\n\n\n')
+        print(product)
+
         head = """
         <hr>
             <div class="row">
@@ -239,10 +240,8 @@ class ShowProductFeaturesForUpdate(View):
         mid_res = ""
         select_different_values_dict = defaultdict(list)
         for item in features_values_qs:
-            fv_qs = FeatureValidator.objects.filter(
-                category=item.product.category,
-                feature_key=item.feature
-            ).values()
+            fv_qs = FeatureValidator.objects.filter(category=item.product.category, feature_key=item.feature).values()
+
             for fv in fv_qs:
                 if fv['valid_feature_value'] == item.value:
                     pass
@@ -275,8 +274,8 @@ class ShowProductFeaturesForUpdate(View):
 
 
 class UpdateProductFeaturesAjaxView(View):
-
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request):
         features_names = request.POST.getlist('features_names')
         features_current_values = request.POST.getlist('features_current_values')
         new_feature_values = request.POST.getlist('new_feature_values')

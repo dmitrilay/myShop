@@ -60,9 +60,9 @@
         $(".product-feature-choices").empty()
         $(".product-feature-choices-values").empty()
     }
-    function getProduct(productId, title){
+    function getProduct(productId, name){
         $('.product').append(
-            '<div class="alert alert-info alert-dismissible show" id="product-title" role="alert">' + title +
+            '<div class="alert alert-info alert-dismissible show" id="product-title" role="alert">' + name +
             '<button type="button" onclick="removeProduct()" ' +
             'class="btn-close" data-bs-dismiss="alert" aria-label="Close">' +
             '</button>' +
@@ -141,10 +141,10 @@
                     items.push(v)
                     $('#search-product-results').append(
                         '<li class="list-group-item list-group-item-action" ' +
-                        'onclick="getProduct(\'' + v.id + '\', \'' + v.title + '\')" ' +
+                        'onclick="getProduct(\'' + v.id + '\', \'' + v.name + '\')" ' +
                         'style="cursor: pointer" id="product-' +
                         v.id + '">'
-                        + v.title +
+                        + v.name +
                         ' | ' +
                         v.price +
                         ' руб.' +

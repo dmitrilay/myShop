@@ -28,6 +28,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    features = models.ManyToManyField("specs.ProductFeatures", blank=True, related_name='features_for_product')
 
     class Meta:
         ordering = ('name',)
