@@ -10,13 +10,23 @@ from .forms import NewCategoryFeatureKeyForm, NewCategoryForm
 from shop.models import Category, Product
 
 
+# -------------------------------------------
+# Главная страница
+# -------------------------------------------
 class BaseSpecView(View):
+    """Базовая страница"""
+
     @staticmethod
     def get(request):
-        return render(request, 'product_features.html', {})
+        return render(request, 'base.html', {})
 
 
+# -------------------------------------------
+# Создание новой характеристики
+# -------------------------------------------
 class CreateNewFeature(View):
+    """Создание новой характеристики"""
+
     @staticmethod
     def get(request):
         form = NewCategoryFeatureKeyForm(request.POST or None)
@@ -34,24 +44,12 @@ class CreateNewFeature(View):
         return HttpResponseRedirect('/product-specs/')
 
 
-class CreateNewCategory(View):
-    @staticmethod
-    def get(request):
-        form = NewCategoryForm(request.POST or None)
-        context = {'form': form}
-        return render(request, 'new_category.html', context)
-
-    @staticmethod
-    def post(request):
-        form = NewCategoryForm(request.POST or None)
-        if form.is_valid():
-            new_category = form.save(commit=False)
-            new_category.name = form.cleaned_data['name']
-            new_category.save()
-        return HttpResponseRedirect('/product-specs/')
-
-
+# -------------------------------------------
+# Создание значения для характеристики
+# -------------------------------------------
 class CreateNewFeatureValidator(View):
+    """Создание значения для характеристики"""
+
     @staticmethod
     def get(request):
         categories = Category.objects.all()
@@ -59,33 +57,14 @@ class CreateNewFeatureValidator(View):
         return render(request, 'new_validator.html', context)
 
 
-class FeatureChoiceView(View):
-    @staticmethod
-    def get(request):
-        option = '<option value="{value}">{option_name}</option>'
-        html_select = """
-            <select class="form-select" name="feature-validators" id="feature-validators-id" aria-label="Default select example">
-                <option selected>---</option>
-                {result}
-            </select>
-                    """
-        feature_key_qs = CategoryFeature.objects.filter(
-            category_id=int(request.GET.get('category_id'))
-        )
-        res_string = ""
-        for item in feature_key_qs:
-            res_string += option.format(value=item.feature_name, option_name=item.feature_name)
-        html_select = html_select.format(result=res_string)
-        return JsonResponse({"result": html_select, "value": int(request.GET.get('category_id'))})
-
-
 class CreateFeatureView(View):
+    """Создание значения для характеристики 2"""
+
     @staticmethod
     def get(request):
         category_id = request.GET.get('category_id')
         feature_name = request.GET.get('feature_name')
         value = request.GET.get('feature_value').strip(" ")
-        print(value)
         category = Category.objects.get(id=int(category_id))
         feature = CategoryFeature.objects.get(category=category, feature_name=feature_name)
         existed_object, created = FeatureValidator.objects.get_or_create(
@@ -105,7 +84,12 @@ class CreateFeatureView(View):
         return JsonResponse({'result': 'ok'})
 
 
+# -------------------------------------------
+# Создание характеристик для ТОВАРА
+# -------------------------------------------
 class NewProductFeatureView(View):
+    """Присвоение характеристики определенному товару"""
+
     @staticmethod
     def get(request):
         categories = Category.objects.all()
@@ -113,23 +97,14 @@ class NewProductFeatureView(View):
         return render(request, 'new_product_feature.html', context)
 
 
-class SearchProductAjaxView(View):
-    @staticmethod
-    def get(request):
-        query = request.GET.get('query')
-        category_id = request.GET.get('category_id')
-        category = Category.objects.get(id=int(category_id))
-        products = list(Product.objects.filter(category=category, name__icontains=query).values())
-        return JsonResponse({"result": products})
-
-
 class AttachNewFeatureToProduct(View):
+    """Выгружаем доступные характеристики для заданного товара"""
+
     @staticmethod
     def get(request):
         res_string = ""
         product = Product.objects.get(id=int(request.GET.get('product_id')))
         existing_features = list(set([item.feature.feature_name for item in product.features.all()]))
-        # print(existing_features)
         category_features = CategoryFeature.objects.filter(category=product.category).exclude(
             feature_name__in=existing_features)
         option = '<option value="{value}">{option_name}</option>'
@@ -146,6 +121,8 @@ class AttachNewFeatureToProduct(View):
 
 
 class ProductFeatureChoicesAjaxView(View):
+    """Выгружаем доступные значения для характеристики"""
+
     @staticmethod
     def get(request):
         res_string = ""
@@ -172,9 +149,12 @@ class ProductFeatureChoicesAjaxView(View):
 
 
 class CreateNewProductFeatureAjaxView(View):
+    """Создаем характеристику для товара"""
+
     @staticmethod
     def get(request):
-        product = Product.objects.get(title=request.GET.get('product'))
+        p1 = request.GET.get('product')
+        product = Product.objects.get(name=p1)
         category_feature = CategoryFeature.objects.get(
             category=product.category,
             feature_name=request.GET.get('category_feature')
@@ -189,116 +169,157 @@ class CreateNewProductFeatureAjaxView(View):
         return JsonResponse({"OK": "OK"})
 
 
+# -------------------------------------------
+# Унивирсальные классы
+# -------------------------------------------
+class SearchProductAjaxView(View):
+    """Динамический поиск товара по имени"""
+
+    @staticmethod
+    def get(request):
+        query = request.GET.get('query')
+        category_id = request.GET.get('category_id')
+        category = Category.objects.get(id=int(category_id))
+        products = list(Product.objects.filter(category=category, name__icontains=query).values())
+        return JsonResponse({"result": products})
+
+
+class FeatureChoiceView(View):
+    """Выгружает характеристики для определенной категории, и формирует html ответ"""
+
+    @staticmethod
+    def get(request):
+        option = '<option value="{value}">{option_name}</option>'
+        html_select = """
+            <select class="form-select" name="feature-validators" id="feature-validators-id" aria-label="Default select example">
+                <option selected>---</option>
+                {result}
+            </select>
+                    """
+        feature_key_qs = CategoryFeature.objects.filter(category_id=int(request.GET.get('category_id')))
+        res_string = ""
+        for item in feature_key_qs:
+            res_string += option.format(value=item.feature_name, option_name=item.feature_name)
+        html_select = html_select.format(result=res_string)
+        return JsonResponse({"result": html_select, "value": int(request.GET.get('category_id'))})
+
+
+# -------------------------------------------
+# Остальное
+# -------------------------------------------
 class UpdateProductFeaturesView(View):
     @staticmethod
     def get(request):
-        categories = Category.objects.all()
-        context = {'categories': categories}
-        return render(request, 'update_product_features.html', context)
+        pass
+        # categories = Category.objects.all()
+        # context = {'categories': categories}
+        # return render(request, 'update_product_features.html', context)
 
 
 class ShowProductFeaturesForUpdate(View):
     @staticmethod
     def get(request):
-        product = Product.objects.get(id=int(request.GET.get('product_id')))
-        features_values_qs = product.features.all()
-        print('\n\n\n')
-        print(product)
-
-        head = """
-        <hr>
-            <div class="row">
-                <div class="col-md-4">
-                    <h4 class="text-center">Характеристика</h4>
-                </div>
-                <div class="col-md-4">
-                    <h4 class="text-center">Текущее значение</h4>
-                </div>
-                <div class="col-md-4">
-                    <h4 class="text-center">Новое значение</h4>
-                </div>
-            </div>
-        <div class='row'>{}</div>
-        <div class="row">
-        <hr>
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-4">
-            <p class='text-center'><button class="btn btn-success" id="save-updated-features">Сохранить</button></p> 
-        </div>
-        <div class="col-md-4">
-        </div>
-        </div>
-        """
-        option = '<option value="{value}">{option_name}</option>'
-        select_values = """
-            <select class="form-select" name="feature-value" id="feature-value" aria-label="Default select example">
-                <option selected>---</option>
-                {result}
-            </select>
-                    """
-        mid_res = ""
-        select_different_values_dict = defaultdict(list)
-        for item in features_values_qs:
-            fv_qs = FeatureValidator.objects.filter(category=item.product.category, feature_key=item.feature).values()
-
-            for fv in fv_qs:
-                if fv['valid_feature_value'] == item.value:
-                    pass
-                else:
-                    select_different_values_dict[fv['feature_key_id']].append(fv['valid_feature_value'])
-            feature_field = '<input type="text" class="form-control" id="{id}" value="{value}" disabled/>'
-            current_feature_value = """
-            <div class='col-md-4 feature-current-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-                                    """
-            body_feature_field = """
-            <div class='col-md-4 feature-name' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-                                """
-            body_feature_field_value = """
-            <div class='col-md-4 feature-new-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-            """
-            body_feature_field = body_feature_field.format(
-                feature_field.format(id=item.feature.id, value=item.feature.feature_name))
-            current_feature_value_mid_res = ""
-            for item_ in select_different_values_dict[item.feature.id]:
-                current_feature_value_mid_res += option.format(value=item.feature.id, option_name=item_)
-            body_feature_field_value = body_feature_field_value.format(
-                select_values.format(item.feature.id, result=current_feature_value_mid_res)
-            )
-            current_feature_value = current_feature_value.format(
-                feature_field.format(id=item.feature.id, value=item.value))
-            m = body_feature_field + current_feature_value + body_feature_field_value
-            mid_res += m
-        result = head.format(mid_res)
-        return JsonResponse({"result": result})
+        pass
+        # product = Product.objects.get(id=int(request.GET.get('product_id')))
+        # features_values_qs = product.features.all()
+        # print('\n\n\n')
+        # print(product)
+        #
+        # head = """
+        # <hr>
+        #     <div class="row">
+        #         <div class="col-md-4">
+        #             <h4 class="text-center">Характеристика</h4>
+        #         </div>
+        #         <div class="col-md-4">
+        #             <h4 class="text-center">Текущее значение</h4>
+        #         </div>
+        #         <div class="col-md-4">
+        #             <h4 class="text-center">Новое значение</h4>
+        #         </div>
+        #     </div>
+        # <div class='row'>{}</div>
+        # <div class="row">
+        # <hr>
+        # <div class="col-md-4">
+        # </div>
+        # <div class="col-md-4">
+        #     <p class='text-center'><button class="btn btn-success" id="save-updated-features">Сохранить</button></p>
+        # </div>
+        # <div class="col-md-4">
+        # </div>
+        # </div>
+        # """
+        # option = '<option value="{value}">{option_name}</option>'
+        # select_values = """
+        #     <select class="form-select" name="feature-value" id="feature-value" aria-label="Default select example">
+        #         <option selected>---</option>
+        #         {result}
+        #     </select>
+        #             """
+        # mid_res = ""
+        # select_different_values_dict = defaultdict(list)
+        # for item in features_values_qs:
+        #     fv_qs = FeatureValidator.objects.filter(category=item.product.category, feature_key=item.feature).values()
+        #
+        #     for fv in fv_qs:
+        #         if fv['valid_feature_value'] == item.value:
+        #             pass
+        #         else:
+        #             select_different_values_dict[fv['feature_key_id']].append(fv['valid_feature_value'])
+        #     feature_field = '<input type="text" class="form-control" id="{id}" value="{value}" disabled/>'
+        #     current_feature_value = """
+        #     <div class='col-md-4 feature-current-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
+        #                             """
+        #     body_feature_field = """
+        #     <div class='col-md-4 feature-name' style='margin-top:10px; margin-bottom:10px;'>{}</div>
+        #                         """
+        #     body_feature_field_value = """
+        #     <div class='col-md-4 feature-new-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
+        #     """
+        #     body_feature_field = body_feature_field.format(
+        #         feature_field.format(id=item.feature.id, value=item.feature.feature_name))
+        #     current_feature_value_mid_res = ""
+        #     for item_ in select_different_values_dict[item.feature.id]:
+        #         current_feature_value_mid_res += option.format(value=item.feature.id, option_name=item_)
+        #     body_feature_field_value = body_feature_field_value.format(
+        #         select_values.format(item.feature.id, result=current_feature_value_mid_res)
+        #     )
+        #     current_feature_value = current_feature_value.format(
+        #         feature_field.format(id=item.feature.id, value=item.value))
+        #     m = body_feature_field + current_feature_value + body_feature_field_value
+        #     mid_res += m
+        # result = head.format(mid_res)
+        # return JsonResponse({"result": result})
 
 
 class UpdateProductFeaturesAjaxView(View):
     @staticmethod
     def post(request):
-        features_names = request.POST.getlist('features_names')
-        features_current_values = request.POST.getlist('features_current_values')
-        new_feature_values = request.POST.getlist('new_feature_values')
-        data_for_update = [{'feature_name': name, 'current_value': curr_val, 'new_value': new_val} for
-                           name, curr_val, new_val
-                           in zip(features_names, features_current_values, new_feature_values)]
-        product = Product.objects.get(title=request.POST.get('product'))
-        for item in product.features.all():
-            for item_for_update in data_for_update:
-                if item.feature.feature_name == item_for_update['feature_name']:
-                    if item.value != item_for_update['new_value'] and item_for_update['new_value'] != '---':
-                        cf = CategoryFeature.objects.get(
-                            category=product.category,
-                            feature_name=item_for_update['feature_name']
-                        )
-                        item.value = FeatureValidator.objects.get(
-                            category=product.category,
-                            feature_key=cf,
-                            valid_feature_value=item_for_update['new_value']
-                        ).valid_feature_value
-                        item.save()
-        messages.add_message(
-            request, messages.SUCCESS,
-            f'Значения характеристик для товара {product.name} успешно обновлены'
-        )
-        return JsonResponse({"result": "ok"})
+        pass
+        # features_names = request.POST.getlist('features_names')
+        # features_current_values = request.POST.getlist('features_current_values')
+        # new_feature_values = request.POST.getlist('new_feature_values')
+        # data_for_update = [{'feature_name': name, 'current_value': curr_val, 'new_value': new_val} for
+        #                    name, curr_val, new_val
+        #                    in zip(features_names, features_current_values, new_feature_values)]
+        # product = Product.objects.get(title=request.POST.get('product'))
+        # for item in product.features.all():
+        #     for item_for_update in data_for_update:
+        #         if item.feature.feature_name == item_for_update['feature_name']:
+        #             if item.value != item_for_update['new_value'] and item_for_update['new_value'] != '---':
+        #                 cf = CategoryFeature.objects.get(
+        #                     category=product.category,
+        #                     feature_name=item_for_update['feature_name']
+        #                 )
+        #                 item.value = FeatureValidator.objects.get(
+        #                     category=product.category,
+        #                     feature_key=cf,
+        #                     valid_feature_value=item_for_update['new_value']
+        #                 ).valid_feature_value
+        #                 item.save()
+        # messages.add_message(
+        #     request, messages.SUCCESS,
+        #     f'Значения характеристик для товара {product.name} успешно обновлены'
+        # )
+        # return JsonResponse({"result": "ok"})
