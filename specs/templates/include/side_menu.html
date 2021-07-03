@@ -1,0 +1,25 @@
+<div class="list-group">
+
+    <a href="{% url 'new-feature' %}"
+       class="list-group-item list-group-item-action {% if request.path == '/product-specs/new-feature/' %}active{% endif %}"
+       aria-current="true">
+        Создать новую характеристику
+    </a>
+    <a href="{% url 'new-validator' %}"
+       class="list-group-item list-group-item-action {% if request.path == '/product-specs/new-validator/' %}active{% endif %}"
+       aria-current="true">
+        Создать значение характеристики
+    </a>
+    <a href="{% url 'new-product-feature' %}"
+       class="list-group-item list-group-item-action {% if request.path == '/product-specs/new-product-feature/' %}active{% endif %}"
+       aria-current="true">
+        Создать характеристику для товара
+    </a>
+    <!--
+    <a href="{% url 'update-product-features' %}"
+       class="list-group-item list-group-item-action {% if request.path == '/product-specs/update-product-features/' %}active{% endif %}"
+       aria-current="true">
+        Редактировать характеристику для товара
+    </a>
+    -->
+</div>
