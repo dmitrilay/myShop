@@ -17,7 +17,7 @@ $('select[name="category-validators"]').on('change', function() {
 
             var option_value
             for (var key in data['result']){
-                option_value += "<option value=" + key + ">" + key + "</option>"
+                option_value += `<option value="${key}">${key}</option>`
             }
 
             html_select = `

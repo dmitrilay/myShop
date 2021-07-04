@@ -72,6 +72,7 @@ class CreateFeatureView(View):
             feature_key=feature,
             valid_feature_value=value
         )
+
         if not created:
             return JsonResponse({
                 "error": f"Значение '{value}' уже существует."
