@@ -1,4 +1,4 @@
-    $('select[name="category-validators"]').on('change', function() {
+$('select[name="category-validators"]').on('change', function() {
     var categoryId = this.value;
     data = {
         category_id: categoryId
@@ -14,10 +14,21 @@
         url: "/product-specs/feature-choice/",
         success: function(data){
             $(".feature-validator-div").css('display', 'block');
-            $(".feature-validator-div").append(data['result'])
+
+            var option_value
+            for (var key in data['result']){
+                option_value += "<option value=" + key + ">" + key + "</option>"
+            }
+
+            html_select = `
+            <select class="form-select" name="feature-validators" id="feature-validators-id" aria-label="Default select example">
+                <option selected>---</option> ${option_value} </select>`;
+
+            $(".feature-validator-div").append(html_select)
         }
     })
 });
+
 $(document).on('change', 'select[name="feature-validators"]', function(){
     $('.feature-value-div').empty()
     $('.errors').empty()

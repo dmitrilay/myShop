@@ -185,23 +185,16 @@ class SearchProductAjaxView(View):
 
 
 class FeatureChoiceView(View):
-    """Выгружает характеристики для определенной категории, и формирует html ответ"""
+    """Выгружает характеристики для определенной категории"""
 
     @staticmethod
     def get(request):
-        option = '<option value="{value}">{option_name}</option>'
-        html_select = """
-            <select class="form-select" name="feature-validators" id="feature-validators-id" aria-label="Default select example">
-                <option selected>---</option>
-                {result}
-            </select>
-                    """
-        feature_key_qs = CategoryFeature.objects.filter(category_id=int(request.GET.get('category_id')))
-        res_string = ""
+        category_id = int(request.GET.get('category_id'))
+        feature_key_qs = CategoryFeature.objects.filter(category_id=category_id)
+        result_dict = dict()
         for item in feature_key_qs:
-            res_string += option.format(value=item.feature_name, option_name=item.feature_name)
-        html_select = html_select.format(result=res_string)
-        return JsonResponse({"result": html_select, "value": int(request.GET.get('category_id'))})
+            result_dict[item.feature_name] = item.feature_name
+        return JsonResponse({"result": result_dict, "value": category_id})
 
 
 # -------------------------------------------
