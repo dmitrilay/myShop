@@ -1,4 +1,5 @@
 $(document).on('click', '#create-validator', function (){
+    alert('STOP')
     var catgoryId = $("#category-validators-id").val();
     var featureName = $("#feature-validators-id").val();
     var featureValue = $("#feature-value").val()

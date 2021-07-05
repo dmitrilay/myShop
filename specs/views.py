@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from .models import CategoryFeature, FeatureValidator, ProductFeatures
 from .forms import NewCategoryFeatureKeyForm, NewCategoryForm
 from shop.models import Category, Product
+import json
 
 
 # -------------------------------------------
@@ -103,22 +104,18 @@ class AttachNewFeatureToProduct(View):
 
     @staticmethod
     def get(request):
-        res_string = ""
-        product = Product.objects.get(id=int(request.GET.get('product_id')))
-        existing_features = list(set([item.feature.feature_name for item in product.features.all()]))
-        category_features = CategoryFeature.objects.filter(category=product.category).exclude(
+        product_id = Product.objects.get(id=int(request.GET.get('product_id')))
+        existing_features = list(set([item.feature.feature_name for item in product_id.features.all()]))
+        print(existing_features)
+        category_features = CategoryFeature.objects.filter(
+            category=product_id.category).exclude(
             feature_name__in=existing_features)
-        option = '<option value="{value}">{option_name}</option>'
-        html_select = """
-            <select class="form-select" name="product-category-features" id="product-category-features-id" aria-label="Default select example">
-                <option selected>---</option>
-                {result}
-            </select>
-                    """
+
+        dict_result = dict()
         for item in category_features:
-            res_string += option.format(value=item.category.id, option_name=item.feature_name)
-        html_select = html_select.format(result=res_string)
-        return JsonResponse({"features": html_select})
+            dict_result[item.id] = [item.category.id, item.feature_name]
+        json_string = json.dumps(dict_result)
+        return JsonResponse({"features": json_string})
 
 
 class ProductFeatureChoicesAjaxView(View):
@@ -126,27 +123,17 @@ class ProductFeatureChoicesAjaxView(View):
 
     @staticmethod
     def get(request):
-        res_string = ""
         category = Category.objects.get(id=int(request.GET.get('category_id')))
-        feature_key = CategoryFeature.objects.get(
-            category=category,
-            feature_name=request.GET.get('product_feature_name')
-        )
-        validators_qs = FeatureValidator.objects.filter(
-            category=category,
-            feature_key=feature_key
-        )
-        option = '<option value="{value}">{option_name}</option>'
-        html_select = """
-            <select class="form-select" name="product-category-features-choices" id="product-category-features-choices-id" aria-label="Default select example">
-                <option selected>---</option>
-                {result}
-            </select>
-                    """
+        feature_name = request.GET.get('product_feature_name')
+        feature_key = CategoryFeature.objects.get(category=category, feature_name=feature_name)
+        validators_qs = FeatureValidator.objects.filter(category=category, feature_key=feature_key)
+
+        dict_result = dict()
         for item in validators_qs:
-            res_string += option.format(value=item.id, option_name=item.valid_feature_value)
-        html_select = html_select.format(result=res_string)
-        return JsonResponse({"features": html_select})
+            dict_result[item.id] = [item.id, item.valid_feature_value]
+
+        json_string = json.dumps(dict_result)
+        return JsonResponse({"features": json_string})
 
 
 class CreateNewProductFeatureAjaxView(View):
@@ -154,18 +141,11 @@ class CreateNewProductFeatureAjaxView(View):
 
     @staticmethod
     def get(request):
-        p1 = request.GET.get('product')
-        product = Product.objects.get(name=p1)
-        category_feature = CategoryFeature.objects.get(
-            category=product.category,
-            feature_name=request.GET.get('category_feature')
-        )
+        product = Product.objects.get(name=request.GET.get('product'))
+        feature_name = request.GET.get('category_feature')
         value = request.GET.get('value')
-        feature = ProductFeatures.objects.create(
-            feature=category_feature,
-            product=product,
-            value=value
-        )
+        category_feature = CategoryFeature.objects.get(category=product.category, feature_name=feature_name)
+        feature = ProductFeatures.objects.create(feature=category_feature, product=product, value=value)
         product.features.add(feature)
         return JsonResponse({"OK": "OK"})
 

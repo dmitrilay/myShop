@@ -17,12 +17,16 @@ $(document).on('click', "#create-product-feature", function (){
         }
     })
 })
+
+
 function removeProduct(){
     $(".search-results").css('display', 'block')
     $(".product-search-ajax").css('display', 'block')
     $(".product-feature-choices").empty()
     $(".product-feature-choices-values").empty()
 }
+
+
 function getProduct(productId, title){
     $('.product').append(
         '<div class="alert alert-info alert-dismissible show" id="product-title" role="alert">' + title +
@@ -67,15 +71,21 @@ $(document).on('change', 'select[name="product-category-features"]', function ()
         }
     })
 })
+
+
 $(document).on('change', 'select[name="product-category-features-choices"]', function (){
     $("#create-product-feature").css('display', 'block')
 })
+
+
 $('select[name="category-validators"]').on('change', function() {
 $(".product").empty()
 $(".errors").empty()
 $("#search-product-results").empty()
 $(".product-search-ajax").css('display', 'block')
 });
+
+
 $('input[name="search-text"]').on('input', function(){
 if(this.value.length == 0){
     $(".search-results").css('display', 'none')
