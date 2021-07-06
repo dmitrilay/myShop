@@ -1,4 +1,4 @@
-{% extends "shop/base.html" %}
+{% extends "base.html" %}
 
 {% load search_filter %}
 
@@ -8,10 +8,6 @@
 
 
 {% block content %}
-<form class="d-flex mt-3" action="" method="GET">
-    <input class="form-control me-2" name="search" type="search" placeholder="Поиск товара" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Поиск</button>
-</form>
 <hr>
 <form action="" method="GET">
     {{ category|product_spec }}

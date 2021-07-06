@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru" class="h-100">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Комиссионный магазин{% endblock %}</title>
+    <!--css-->
+    {% include 'include/link.html' %}
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <!--Навбар-->
+    {% include 'include/home_page/navbar.html' %}
+    <br>
+    <!--Всплывающие сообщение-->
+    {% include 'include/home_page/message.html' %}
+</header>
+
+<div class="container">
+    <!--Контент-->
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!--Start Футер-->
+<footer id="567" class="footer mt-auto py-0">
+    {% include 'include/home_page/footer-mobile.html' %}
+    {% include 'include/home_page/footer.html' %}
+</footer>
+<!--script-->
+{% include 'include/script.html' %}
+</body>
+</html>
