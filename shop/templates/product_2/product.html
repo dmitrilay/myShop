@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="wrapper">
+
+    <!-- slug путь:) -->
+    <div class="breadcrumb-area ptb-60 ptb-sm-30">
+        <div class="container">
+            <div class="breadcrumb">
+                <ul>
+                    <li><a href="{% url 'shop:category_list' %}">Категории</a></li>
+                    <li><a href="{{ product.category.get_absolute_url }}">{{product.category }}</a></li>
+                    <li class="active"><a href="#">{{product.name }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="main-product-thumbnail pb-60">
+        <div class="container">
+            <div class="row">
+
+                <!-- Карусель фотографий товара -->
+                <div class="col-lg-5 col-md-5">
+                    {% include 'product_2/include/product_photo.html' %}
+                </div>
+                <!--  -->
+
+                <!-- Название товара и корзина -->
+                <div class="col-lg-7 col-md-5">
+                    <div class="thubnail-desc fix">
+                        <h3 class="product-header">Samsung Galaxy A51 64GB</h3>
+
+                        <div class="pro-price mb-10">
+                            <p class="price">16500</p>
+                        </div>
+
+                        <div class="box-quantity">
+                            <form action="#">
+                                <input class="number" id="numeric" type="number" min="1" value="1">
+                                <a class="add-cart" href="cart.html">Купить</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+
+            </div>
+        </div>
+    </div>
+
+    <!--    Описание и характеристики-->
+    {% include 'product_2/include/description_and_characteristics.html' %}
+
+</div>
+{% endblock content %}
