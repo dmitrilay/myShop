@@ -1,26 +1,36 @@
 <div class="tab-content">
-    <div id="thumb1" class="tab-pane active">
-        <a data-fancybox="images" href="https://img.mvideo.ru/Big/30047894bb.jpg"><img src="https://img.mvideo.ru/Big/30047894bb.jpg" alt="product-view"></a>
-    </div>
-    <div id="thumb2" class="tab-pane">
-        <a data-fancybox="images" href="https://img.mvideo.ru/Big/30047894bb1.jpg"><img src="https://img.mvideo.ru/Big/30047894bb1.jpg" alt="product-view"></a>
-    </div>
-    <div id="thumb3" class="tab-pane">
-        <a data-fancybox="images" href="https://img.mvideo.ru/Big/30047894bb5.jpg"><img src="https://img.mvideo.ru/Big/30047894bb5.jpg" alt="product-view"></a>
-    </div>
-    <div id="thumb4" class="tab-pane">
-        <a data-fancybox="images" href="https://img.mvideo.ru/Big/30047894bb6.jpg"><img src="https://img.mvideo.ru/Big/30047894bb6.jpg" alt="product-view"></a>
-    </div>
+
+    {% for image_item in product.productimage.all %}
+        {% if image_item.is_main == True %}
+            <div id="f{{image_item.id}}" class="tab-pane active">
+                <a data-fancybox="images" href="{{ image_item.image.url }}">
+                    <img src="{{ image_item.image.url }}" alt="product-view">
+                </a>
+            </div>
+        {% else %}
+            <div id="f{{image_item.id}}" class="tab-pane">
+                <a data-fancybox="images" href="{{ image_item.image.url }}">
+                    <img src="{{ image_item.image.url }}" alt="product-view">
+                </a>
+            </div>
+        {% endif %}
+    {% endfor %}
 </div>
 
 <div class="product-thumbnail">
     <div class="thumb-menu nav">
-        <a class="active" data-toggle="tab" href="#thumb1"> <img src="https://img.mvideo.ru/Big/30047894bb1.jpg" alt="product-thumbnail"></a>
-
-        <a data-toggle="tab" href="#thumb2"> <img src="https://img.mvideo.ru/Big/30047894bb1.jpg" alt="product-thumbnail"></a>
-
-        <a data-toggle="tab" href="#thumb3"> <img src="https://img.mvideo.ru/Big/30047894bb1.jpg" alt="product-thumbnail"></a>
-
-        <a data-toggle="tab" href="#thumb4"> <img src="https://img.mvideo.ru/Big/30047894bb1.jpg" alt="product-thumbnail"></a>
+        {% for image_item in product.productimage.all %}
+            {% if image_item.is_main == True %}
+                <a class="active" data-toggle="tab" href="#f{{image_item.id}}">
+                    <img src="{{ image_item.image.url }}" alt="product-thumbnail">
+                </a>
+            {% else %}
+                <a data-toggle="tab" href="#f{{image_item.id}}">
+                    <img src="{{ image_item.image.url }}" alt="product-thumbnail">
+                </a>
+            {% endif %}
+        {% endfor %}
     </div>
 </div>
+
+
