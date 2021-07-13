@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <!--css-->
-    {% include 'include/link.html' %}
+    {% include 'specs/include/link.html' %}
     <title>Характеристики товаров</title>
 </head>
 <body>
@@ -13,12 +13,12 @@
     <h3 class="text-center">Админка характеристик</h3>
     <hr>
     <!--message-->
-    {% include 'include/messages.html' %}
+    {% include 'specs/include/messages.html' %}
 
     <div class="row">
         <div class="col-md-4">
             <!--боковое меню-->
-            {% include 'include/side_menu.html' %}
+            {% include 'specs/include/side_menu.html' %}
         </div>
         <div class="col-md-8">
             {% block content %}
@@ -30,7 +30,7 @@
     {% block massfeatures %}
     {% endblock %}
 </div>
-{% include 'include/script.html' %}
+{% include 'specs/include/script.html' %}
 
 {% block js %}
 {% endblock js%}

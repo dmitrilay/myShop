@@ -6,7 +6,7 @@
 <div class="wrapper">
 
     <!-- slug путь:) -->
-    <div class="breadcrumb-area ptb-60 ptb-sm-30">
+    <div class="breadcrumb-area">
         <div class="container">
             <div class="breadcrumb">
                 <ul>
@@ -24,15 +24,15 @@
             <div class="row">
 
                 <!-- Карусель фотографий товара -->
-                <div class="col-lg-5 col-md-5">
+                <div class="col-lg-5 col-md-5 mt-4">
                     {% include 'product_2/include/product_photo.html' %}
                 </div>
                 <!--  -->
 
                 <!-- Название товара и корзина -->
-                <div class="col-lg-7 col-md-5">
+                <div class="col-lg-7 col-md-5 mt-4">
                     <div class="thubnail-desc fix">
-                        <h3 class="product-header">{{product.name }}</h3>
+                        <h3 class="text-muted">{{product.name }}</h3>
 
                         <div class="pro-price mb-10">
                             <p class="text-dark h2 font-weight-bold">
@@ -52,7 +52,9 @@
     </div>
 
     <!--    Описание и характеристики-->
-    {% include 'product_2/include/description_and_characteristics.html' %}
+    <div class="mt-4">
+        {% include 'product_2/include/description_and_characteristics.html' %}
+    </div>
 
 </div>
 {% endblock content %}

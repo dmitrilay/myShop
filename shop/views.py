@@ -18,7 +18,7 @@ class CategoryDetailView(DetailView):
     model = Category
     queryset = Category.objects.all()
     context_object_name = 'category'
-    template_name = 'category_detail.html'
+    template_name = 'shop/product_list/category_detail.html'
     slug_url_kwarg = 'slug'
 
     def get_context_data(self, **kwargs):
@@ -30,10 +30,39 @@ class CategoryDetailView(DetailView):
         q_condition_queries = Q()
         context['categories'] = self.model.objects.all()
 
+        # ------------------------------paginator
+        pf = category.products.all()
+        paginator = Paginator(pf, 4)
+        page_number = self.request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
+        is_paginated = page.has_other_pages()
+        # print('\n\n')
+        # print(is_paginated)
+        # print('\n\n')
+
+        if page.has_previous():
+            prev_url = '?page={}'.format(page.previous_page_number())
+        else:
+            prev_url = ''
+
+        if page.has_next():
+            next_url = '?page={}'.format(page.next_page_number())
+        else:
+            next_url = ''
+
+        context['next_url'] = next_url
+        context['prev_url'] = prev_url
+        context['is_paginated'] = is_paginated
+        context['category_products'] = page
+        context['products'] = page
+        return context
+
+        # ------------------------------
+
         # делаем запрос из сходя из slug
-        # if not query and not self.request.GET:
-        #     context['category_products'] = category.product_set.all()
-        #     return context
+        if not query and not self.request.GET:
+            context['category_products'] = category.products.all()
+            return context
 
         # if query:
         #     products = category.product_set.filter(Q(title__icontains=query))
@@ -106,11 +135,11 @@ def product_detail(request, category_slug, product_slug):
 
 
 def StartPageViews(request):
-    products = Product.objects.filter(available=True)[0:4]
+    products = Product.objects.filter(available=True)[0:8]
     category = 1
     context = {'category': category, 'products': products, }
 
-    return render(request, 'home_page.html', context)
+    return render(request, 'shop/home_page/home_page.html', context)
 
 
 def skupka(request):

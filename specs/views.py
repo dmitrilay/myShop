@@ -19,7 +19,7 @@ class BaseSpecView(View):
 
     @staticmethod
     def get(request):
-        return render(request, 'base.html', {})
+        return render(request, 'specs/base.html', {})
 
 
 # -------------------------------------------
@@ -32,7 +32,7 @@ class CreateNewFeature(View):
     def get(request):
         form = NewCategoryFeatureKeyForm(request.POST or None)
         context = {'form': form}
-        return render(request, 'new_feature.html', context)
+        return render(request, 'specs/new_feature.html', context)
 
     @staticmethod
     def post(request):
@@ -55,7 +55,7 @@ class CreateNewFeatureValidator(View):
     def get(request):
         categories = Category.objects.all()
         context = {'categories': categories}
-        return render(request, 'new_validator.html', context)
+        return render(request, 'specs/new_validator.html', context)
 
 
 class CreateFeatureView(View):
@@ -96,7 +96,7 @@ class NewProductFeatureView(View):
     def get(request):
         categories = Category.objects.all()
         context = {'categories': categories}
-        return render(request, 'new_product_feature.html', context)
+        return render(request, 'specs/new_product_feature.html', context)
 
 
 class AttachNewFeatureToProduct(View):

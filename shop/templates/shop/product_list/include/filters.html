@@ -1,0 +1,26 @@
+{% load search_filter %}
+
+<button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample">
+    Фильтры
+</button>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">ФИЛЬТРЫ</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div>
+            <hr>
+            <form action="" method="GET">
+                {{ category|product_spec }}
+                <p class="text-center">
+                    <button class="btn btn-outline-success" type="submit">Показать</button>
+                    <button class="btn btn-outline-info" type="submit">Сбросить</button>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
