@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>ТЕСТОВАЯ СТРАНИЦА</h1>
+<h1>{{ product }}</h1>
+
+    {% for c in products %}
+        <h1>{{ c.name }}</h1>
+    {% endfor %}
+
+{% endblock %}
