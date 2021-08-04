@@ -14,10 +14,11 @@
         <div>
             <hr>
             <form action="" method="GET">
-                {{ category|product_spec }}
+
+                {% product_spec category %}
                 <p class="text-center">
                     <button class="btn btn-outline-success" type="submit">Показать</button>
-                    <button class="btn btn-outline-info" type="submit">Сбросить</button>
+                    <a class="btn btn-outline-info" href="?{{ page }}">Сбросить</a>
                 </p>
             </form>
         </div>

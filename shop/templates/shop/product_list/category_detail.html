@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% load search_filter %}
 
 {% block productfilter %}
@@ -6,6 +7,7 @@
 
 
 {% block content %}
+
 <!--Фильтры-->
 {% include 'shop/product_list/include/filters.html' %}
 
@@ -33,5 +35,6 @@
 </div>
 <!--Навигационная панель-->
 {% include 'shop/product_list/include/pagination.html' %}
+
 
 {% endblock content %}
