@@ -4,7 +4,6 @@ import os
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 INSTALLED_APPS = [
-    'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'account.apps.AccountConfig',
@@ -17,6 +16,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'specs',
+    'specifications',
+    'shop',
 ]
 
 MIDDLEWARE = [
