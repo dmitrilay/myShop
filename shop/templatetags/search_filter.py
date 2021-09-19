@@ -2,6 +2,9 @@ from collections import defaultdict
 from django import template
 from django.utils.safestring import mark_safe
 from specs.models import ProductFeatures
+from specifications.models import *
+from shop.models import *
+from django.db.models import Q
 
 register = template.Library()
 
@@ -17,17 +20,29 @@ def product_spec(context, category):
     product_features = ProductFeatures.objects.filter(product__category=category).select_related('feature')
     feature_and_values = defaultdict(list)
 
+    pda = Product.objects.all()
+    q_condition_queries = Q()
+    for i in pda:
+        q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
+    product_features2 = CharacteristicValue.objects.filter(q_condition_queries).prefetch_related(
+        'name_value', 'name_spec')
+
     get_list = {}
-    # print('================')
-    # print(context['request'].GET)
     get_list = context['request'].GET
     # for item in request.GET:
     # get_list[item] = request.GET.getlist(item)
 
-    for pf in product_features:
-        p_1 = feature_and_values[(pf.feature.feature_name, pf.feature.feature_filter_name)]
-        if pf.value not in p_1:
-            feature_and_values[(pf.feature.feature_name, pf.feature.feature_filter_name)].append(pf.value)
+    # Оригинал
+    # for pf in product_features:
+    #     p_1 = feature_and_values[pf.feature.feature_name, pf.feature.feature_filter_name]
+    #     if pf.value not in p_1:
+    #         feature_and_values[pf.feature.feature_name, pf.feature.feature_filter_name].append(pf.value)
+
+    # Переделка
+    for pf in product_features2:
+        pr_1, pr_2 = pf.name_spec.name, pf.name_value.name
+        if pr_2 not in feature_and_values[pr_1, pr_1]:
+            feature_and_values[pr_1, pr_1].append(pr_2)
 
     search_filter_body = """<div class="col-md-12">{}</div>"""
     gl = 0

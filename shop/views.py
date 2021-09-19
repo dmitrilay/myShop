@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+
+from specifications.models import CharacteristicValue, ProductSpec
 from .models import Category, Product, ProductImage
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator
@@ -57,10 +59,68 @@ class CategoryDetailView(DetailView):
                     else:
                         q_condition_queries.add(Q(**{'value': value}), Q.OR)
 
+            # print(q_condition_queries)
+
             if len(q_condition_queries) > 0:
-                pf = ProductFeatures.objects.filter(q_condition_queries).prefetch_related('product', 'feature').values(
-                    'product_id')
-                products = Product.objects.filter(id__in=[pf_['product_id'] for pf_ in pf])
+                # cтарый код
+                # pf = ProductFeatures.objects.filter(q_condition_queries).prefetch_related('product', 'feature').values(
+                #     'product_id')
+
+                # products = Product.objects.filter(id__in=[pf_['product_id'] for pf_ in pf])
+                # print(products)
+                # ========================================
+                # новый код
+
+                # q_condition_queries2 = Q()
+                # test = []
+                # for key, value in url_kwargs.items():
+                #     if not key == 'price_sort':
+                #         # print(key, value)
+                #         # q_condition_queries2.add(Q(name_value__name=value), Q.OR)
+                #         q_condition_queries2.add(Q(name_value__name=value), Q.OR)
+                #         test.append(Q(name_value__name=value))
+
+                pda = Product.objects.all()
+
+                p1 = (i.name_spec for i in pda)
+                f = CharacteristicValue.objects.filter(name_product__name__in=p1).prefetch_related(
+                    'name_value', 'name_spec', 'name_product')
+
+                dict_spec_test = {}
+                for i in f:
+                    for key, value in url_kwargs.items():
+                        if not key == 'price_sort':
+                            if i.name_spec.name == key:
+                                if i.name_value.name in value:
+                                    if not dict_spec_test.get(i.name_product):
+                                        dict_spec_test[i.name_product] = 0
+
+                                    c = dict_spec_test[i.name_product] + 1
+                                    dict_spec_test[i.name_product] = c
+
+                # =========================================
+                # Узнаем кол-во параметров в фильтре
+                len_pr = len(url_kwargs.values())
+                if url_kwargs.get('price_sort'):
+                    if url_kwargs.get('page'):
+                        max_v = len_pr - 2
+                    else:
+                        max_v = len_pr - 1
+                else:
+                    max_v = len_pr
+                # Конец
+                # =========================================
+
+                orm_z = []
+                for key, value in dict_spec_test.items():
+                    if value == max_v:
+                        orm_z.append(key)
+
+                products = Product.objects.filter(name_spec__in=[pf_ for pf_ in orm_z])
+                # products = orm_z
+                # Конец нового кода
+                # ========================================
+                # products = category.products.all()
             else:
                 products = category.products.all()
 
@@ -72,9 +132,8 @@ class CategoryDetailView(DetailView):
             else:
                 products = products.order_by('price')
 
-        # ==============================
+        # =========================================
         # paginator
-        # ==============================
         paginator = Paginator(products, 3)
         page_number = self.request.GET.get('page')
         page = paginator.get_page(page_number)
