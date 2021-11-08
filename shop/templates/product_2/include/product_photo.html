@@ -21,11 +21,11 @@
     <div class="thumb-menu nav">
         {% for image_item in product.productimage.all %}
             {% if image_item.is_main == True %}
-                <a class="active" data-toggle="tab" href="#f{{image_item.id}}">
+                <a class="active" data-bs-toggle="tab" href="#f{{image_item.id}}">
                     <img src="{{ image_item.image.url }}" alt="product-thumbnail">
                 </a>
-            {% else %}
-                <a data-toggle="tab" href="#f{{image_item.id}}">
+                {% else %}
+                <a data-bs-toggle="tab" href="#f{{image_item.id}}">
                     <img src="{{ image_item.image.url }}" alt="product-thumbnail">
                 </a>
             {% endif %}

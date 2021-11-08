@@ -18,18 +18,19 @@ def import_js(request):
         return dict_1, dict_2, dict_3
 
     dict_value_spec, dict_spec_db, dict_product_db = {}, {}, {}
-    data_js = opening_closing_file(action='r', name='spec_json.txt', type_f='json')
+    # data_js = opening_closing_file(action='r', name='spec_json.txt', type_f='json')
+    data_js = opening_closing_file(action='r', name='spec.txt', type_f='json')
 
     dict_specifications, dict_value_spec, dict_product = spec_value_is_db()
     dict_bulk_spec, dict_bulk_value, dict_bulk_product = {}, {}, {}
 
-    for i in data_js:
-        name_product = i[0]
+    for i, i2 in data_js.items():
+        name_product = i
         if not dict_product.get(name_product):  # Если нет такого значения в базе
             if not dict_bulk_product.get(name_product):  # Если нет такого значения в словаре
                 dict_bulk_product[name_product] = (ProductSpec(name=name_product))
 
-        for name_spec_js, value_spec_js in i[1].items():
+        for name_spec_js, value_spec_js in i2.items():
             if not dict_specifications.get(name_spec_js):  # Если нет такого значения в базе
                 if not dict_bulk_spec.get(name_spec_js):  # Если нет такого значения в словаре
                     dict_bulk_spec[name_spec_js] = (Specifications(name=name_spec_js))
@@ -57,9 +58,9 @@ def import_js(request):
         dict_conv_db[f] = [p, t, v]
 
     dict_conv_js = {}
-    for rel_s in data_js:
-        p = rel_s[0]
-        for i, i2 in rel_s[1].items():
+    for rel_s, rel_s2 in data_js.items():
+        p = rel_s
+        for i, i2 in rel_s2.items():
             t = i
             v = i2
             f = f'{p}{t}{v}'
@@ -96,3 +97,32 @@ def opening_closing_file(data=None, name=None, action=None, type_f=None):
             else:
                 data = file.read()
         return data
+
+
+def priority_spec(request):
+    js_dict = {}
+    data_js = opening_closing_file(action='r', name='priority_spec.txt', type_f='json')
+
+    for key, value in data_js.items():
+        if not js_dict.get(key):
+            js_dict[key] = [*value.keys(), *value.values()]
+
+    spec = Specifications.objects.all()
+    for i in spec:
+        name_key = i.name
+        if js_dict.get(name_key):
+            i.participation_filtering = js_dict[name_key][0]
+            i.priority_spec = js_dict[name_key][1]
+    Specifications.objects.bulk_update(spec, ['participation_filtering', 'priority_spec'])
+    context = {'product': 'update', 'category': 'пустота'}
+    return render(request, 'base.html', context)
+
+
+def delete_spec(request):
+    CharacteristicValue.objects.all().delete()
+    ProductSpec.objects.all().delete()
+    ValuesSpec.objects.all().delete()
+    Specifications.objects.all().delete()
+
+    context = {'product': 'update', 'category': 'пустота'}
+    return render(request, 'base.html', context)

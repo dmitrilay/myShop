@@ -1,8 +1,10 @@
 <!-- Описание и характеристики -->
+
+{% load search_filter %}
 <div class="thumnail-desc pb-60">
-    <div class="container">
+
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8 p-0">
 
                 <ul class="main-thumb-desc nav">
                     <li><a class="active" data-bs-toggle="tab" href="#dtail">Описание</a></li>
@@ -14,11 +16,12 @@
                         {{ product.description|linebreaks }}
                     </div>
                     <div id="review" class="tab-pane">
-                        22222
+                        {%spec%}
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
 <!--  -->

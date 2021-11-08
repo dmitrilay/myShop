@@ -17,15 +17,18 @@ def test123(data):
 # @register.filter
 @register.simple_tag(takes_context=True)
 def product_spec(context, category):
-    product_features = ProductFeatures.objects.filter(product__category=category).select_related('feature')
+    # name_spec__participation_filtering=True
+    # product_features = ProductFeatures.objects.filter(product__category=category).select_related('feature')
     feature_and_values = defaultdict(list)
 
     pda = Product.objects.all()
     q_condition_queries = Q()
     for i in pda:
         q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
-    product_features2 = CharacteristicValue.objects.filter(q_condition_queries).prefetch_related(
-        'name_value', 'name_spec')
+
+    product_features2 = CharacteristicValue.objects.filter(q_condition_queries,
+                                                           name_spec__participation_filtering=True).prefetch_related(
+        'name_value', 'name_spec').order_by('name_spec__priority_spec')
 
     get_list = {}
     get_list = context['request'].GET
@@ -95,3 +98,13 @@ def page_replace(context, page=1):
     context_data = context['request'].GET.copy()
     context_data['page'] = page
     return context_data.urlencode()
+
+
+@register.simple_tag(takes_context=True)
+def spec(context, page=1):
+    f = CharacteristicValue.objects.filter(name_product__name=context['object'].name_spec).prefetch_related(
+        'name_value', 'name_spec', 'name_product')
+    p = ''
+    for i in f:
+        p += f'<div class="text-muted">{i}</div>'
+    return mark_safe(p)

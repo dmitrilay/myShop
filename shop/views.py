@@ -71,19 +71,11 @@ class CategoryDetailView(DetailView):
                 # ========================================
                 # новый код
 
-                # q_condition_queries2 = Q()
-                # test = []
-                # for key, value in url_kwargs.items():
-                #     if not key == 'price_sort':
-                #         # print(key, value)
-                #         # q_condition_queries2.add(Q(name_value__name=value), Q.OR)
-                #         q_condition_queries2.add(Q(name_value__name=value), Q.OR)
-                #         test.append(Q(name_value__name=value))
-
                 pda = Product.objects.all()
 
                 p1 = (i.name_spec for i in pda)
-                f = CharacteristicValue.objects.filter(name_product__name__in=p1).prefetch_related(
+                f = CharacteristicValue.objects.filter(name_product__name__in=p1,
+                                                       ).prefetch_related(
                     'name_value', 'name_spec', 'name_product')
 
                 dict_spec_test = {}

@@ -1,5 +1,6 @@
 {% load search_filter %}
 
+
 <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
         aria-controls="offcanvasExample">
     Фильтры
@@ -18,7 +19,7 @@
                 {% product_spec category %}
                 <p class="text-center">
                     <button class="btn btn-outline-success" type="submit">Показать</button>
-                    <a class="btn btn-outline-info" href="?{{ page }}">Сбросить</a>
+                    <a class="btn btn-outline-danger" href="?{{ page }}">Сбросить</a>
                 </p>
             </form>
         </div>

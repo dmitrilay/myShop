@@ -35,13 +35,24 @@
                         <h3 class="text-muted">{{product.name }}</h3>
 
                         <div class="pro-price mb-10">
-                            <p class="text-dark h2 font-weight-bold">
-                                {{ product.price }}<span class="h6 font-weight-bold">₽</span>
-                            </p>
+                            <p class="text-dark h1 font-weight-bold"><strong>
+                                {{ product.price }}<span class="h2 font-weight-bold"><strong>₽</strong></span>
+                            </strong></p>
                         </div>
 
+                        <!-- Добавить в корзину -->
                         <div class="box-quantity">
-                            {% include 'product_2/include/basket_button.html' %}
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                {% csrf_token %}
+                                <div style="display: none">{{ cart_product_form.quantity }}</div>
+                                <button type="submit" class="btn btn-outline-warning">Добавить в корзину</button>
+                            </form>
+                        </div>
+
+                        <br>
+                        <!--    Описание и характеристики-->
+                        <div class="">
+                            {% include 'product_2/include/description_and_characteristics.html' %}
                         </div>
                     </div>
                 </div>
@@ -51,10 +62,7 @@
         </div>
     </div>
 
-    <!--    Описание и характеристики-->
-    <div class="mt-4">
-        {% include 'product_2/include/description_and_characteristics.html' %}
-    </div>
+
 
 </div>
 {% endblock content %}

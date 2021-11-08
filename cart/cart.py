@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from shop.models import Product
 
+
 class Cart(object):
     def __init__(self, request):
         """Инициализация объекта корзины."""
@@ -58,7 +59,7 @@ class Cart(object):
             for item in self.cart.values()
         )
 
-    def clear(self):# Очистка корзины.
+    def clear(self):  # Очистка корзины.
         del self.session[settings.CART_SESSION_ID]
         self.session.modified = True
-        #self.save()
+        # self.save()

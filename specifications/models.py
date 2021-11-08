@@ -14,6 +14,8 @@ class CategoryProducts(models.Model):
 
 class Specifications(models.Model):
     name = models.CharField(max_length=100)
+    participation_filtering = models.BooleanField(default=False)
+    priority_spec = models.CharField(max_length=10, default=99)
 
     def __str__(self):
         return self.name

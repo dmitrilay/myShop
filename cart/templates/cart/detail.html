@@ -9,45 +9,35 @@
 
 <br>
 
-<div class="col-md-7 mb-7 sm-7">
-    <table class="table table-sm">
-        <thead>
-        <tr>
-            <th>Продукт</th>
-            <th>Цена</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in cart %}
-        {% with product=item.product %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td class="num">{{ item.total_price }}₽</td>
-            <td>
-                <!-- Modal -->
-                {% include 'cart/include/editing_the_bucket.html' %}
-                <!-- Modal -->
-            </td>
-        </tr>
-        {% endwith %}
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-sm-12 col-md-7">
+            {% for item in cart %}
+                {% with product=item.product %}
+                    <div class="row">
+                        <img class="col-2 img-fluid img-thumbnail" src="{{ product.image.url }}" alt="">
+                        <div class="col-5 text-muted">{{ product.name }}</div>
+                        <div class="col-2">{{ item.total_price }}₽</div>
+                        <div class="col-2">{% include 'cart/include/editing_the_bucket.html' %}</div>
+                    </div>
+                    <br>
+                {% endwith %}
+            {% endfor %}
 
-    <div>
-        <h5>В корзине: {{ cart.get_total_price }}₽</h5>
+    </div>
+
+    <div class="col-sm-12 col-md-3 bg-light rounded">
+        <div><a href="{% url 'shop:category_list' %}" class="button light">Вернутся в каталог</a></div>
+        <br>
+        <div class="text-muted">В корзине:
+            <span class="fs-6 text-dark fw-bold">{{ cart.get_total_price }}₽</span>
+        </div>
+        <br>
+        <div class="d-grid gap-2">
+            <a href="{% url 'orders:order_create' %}" class="btn btn-outline-warning btn-lg me-md-2">Продолжить</a>
+        </div>
     </div>
 </div>
 
-
-<br><br><br>
-
-<div class="form-group col-md-6 mb-0">
-    <div><a href="{% url 'orders:order_create' %}" class="btn btn-outline-warning btn-lg btn-block">Продолжить</a></div>
-    <br>
-    <div><a href="{% url 'shop:product_list' %}" class="button light">Вернутся в каталог</a></div>
-</div>
 
 {% endblock %}
 
