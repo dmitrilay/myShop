@@ -6,52 +6,31 @@ from shop.models import *
 from django.db.models import Q
 from django.core.cache import cache
 
-# from specs.models import ProductFeatures
 register = template.Library()
 
 
-@register.filter
-def test123(data):
-    return f'{data} вот это фильтр'
-
-
-# @register.filter
 @register.simple_tag(takes_context=True)
 def product_spec(context, category):
-    # name_spec__participation_filtering=True
-    # product_features = ProductFeatures.objects.filter(product__category=category).select_related('feature')
     feature_and_values = defaultdict(list)
 
     pda = cache.get('pda')
     if not pda:
         pda = Product.objects.all()
-        cache.set('pda', pda, 60)
+        cache.set('pda', pda, 600)
 
     q_condition_queries = Q()
     for i in pda:
         q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
 
-    product_features2 = cache.get('product_features2')
-    if not product_features2:
-        pr_re = ('name_value', 'name_spec')
-        product_features2 = CharacteristicValue.objects.filter(q_condition_queries,
-                                                           name_spec__participation_filtering=True).prefetch_related(
-            *pr_re).order_by('name_spec__priority_spec')
-        cache.set('product_features2', product_features2, 60)
+    product_features = cache.get('product_features')
+    if not product_features:
+        pf = CharacteristicValue.objects.filter(q_condition_queries, name_spec__participation_filtering=True)
+        product_features = pf.select_related('name_value', 'name_spec').order_by('name_spec__priority_spec')
+        cache.set('product_features', product_features, 600)
 
-    get_list = {}
     get_list = context['request'].GET
-    # for item in request.GET:
-    # get_list[item] = request.GET.getlist(item)
 
-    # Оригинал
-    # for pf in product_features:
-    #     p_1 = feature_and_values[pf.feature.feature_name, pf.feature.feature_filter_name]
-    #     if pf.value not in p_1:
-    #         feature_and_values[pf.feature.feature_name, pf.feature.feature_filter_name].append(pf.value)
-
-    # Переделка
-    for pf in product_features2:
+    for pf in product_features:
         pr_1, pr_2 = pf.name_spec.name, pf.name_value.name
         if pr_2 not in feature_and_values[pr_1, pr_1]:
             feature_and_values[pr_1, pr_1].append(pr_2)
