@@ -19,7 +19,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    # image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
@@ -45,18 +45,18 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='productimage', blank=True, null=True, default=None,
-                                on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products_images/')
-    is_main = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    product = models.ForeignKey(Product, blank=True,
+                                null=True, default=None, on_delete=models.CASCADE, verbose_name="Продукт")
+    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+    is_main = models.BooleanField(default=False, verbose_name="Главное изображение")
+    is_active = models.BooleanField(default=True, verbose_name="Показывать изображение")
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    name = models.CharField(max_length=200, db_index=True, default='1')
+    name = models.CharField(max_length=200, db_index=True, default=1, verbose_name="Имя")
 
     def __str__(self):
-        return "%s" % self.id
+        return "%s" % self.pk
 
     class Meta:
-        verbose_name = 'Фотография'
+        verbose_name = 'Фотографию'
         verbose_name_plural = 'Фотографии'

@@ -8,8 +8,6 @@
 
 {% block content %}
 
-
-
 <nav aria-label="breadcrumb" class="mt-5">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'shop:category_list' %}">Категории</a></li>
@@ -23,7 +21,14 @@
     {% for product in category_products %}
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card h-100">
-            <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+            {% for prw in product.productimage_set.all %}
+                {% if prw.is_main  %}
+                    <a href="{{ product.get_absolute_url }}">
+                        <img class="card-img-top" src="{{prw.image.url}}" alt="">
+                    </a>
+                {% endif %}
+            {% endfor %}
+
             <div class="card-body">
                 <h4 class="card-title">
                     <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>

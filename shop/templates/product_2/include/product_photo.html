@@ -1,6 +1,5 @@
 <div class="tab-content">
-
-    {% for image_item in product.productimage.all %}
+    {% for image_item in product.productimage_set.all %}
         {% if image_item.is_main == True %}
             <div id="f{{image_item.id}}" class="tab-pane active">
                 <a data-fancybox="images" href="{{ image_item.image.url }}">
@@ -8,7 +7,7 @@
                 </a>
             </div>
         {% else %}
-            <div id="f{{image_item.id}}" class="tab-pane">
+            <div id="{{image_item.id}}" class="tab-pane">
                 <a data-fancybox="images" href="{{ image_item.image.url }}">
                     <img src="{{ image_item.image.url }}" alt="product-view">
                 </a>
@@ -19,7 +18,7 @@
 
 <div class="product-thumbnail">
     <div class="thumb-menu nav">
-        {% for image_item in product.productimage.all %}
+        {% for image_item in product.productimage_set.all %}
             {% if image_item.is_main == True %}
                 <a class="active" data-bs-toggle="tab" href="#f{{image_item.id}}">
                     <img src="{{ image_item.image.url }}" alt="product-thumbnail">

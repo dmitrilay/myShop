@@ -1,11 +1,13 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+
 from .models import Category, Product
 from .models import *
 
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 0
+    extra = 1
 
 
 @admin.register(Category)
@@ -21,13 +23,18 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'available']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
+    # fields = ['name', 'slug', 'price', 'category', 'features', 'productimage.image']
 
 
+@admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in ProductImage._meta.fields]
+    list_display = ['id', 'product', 'get_html_img']
+    list_display_links = ['id', 'product']
+    fields = ['product', 'image', 'name', 'is_main', 'is_active', 'created', 'updated']
+    readonly_fields = ('is_main', 'is_active', 'created', 'updated')
 
-    class Meta:
-        model = ProductImage
+    def get_html_img(self, object):
+        if object.image:
+            return mark_safe(f"<img src='{object.image.url}' width=60>")
 
-
-admin.site.register(ProductImage, ProductImageAdmin)
+    get_html_img.short_description = 'Изображение'

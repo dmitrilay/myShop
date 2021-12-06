@@ -15,7 +15,7 @@ from django.db.models import Q
 
 class CategoryDetailView(DetailView):
     model = Category
-    queryset = Category.objects.all()
+    # queryset = Category.objects.all()
     context_object_name = 'category'
     template_name = 'shop/product_list/category_detail.html'
     slug_url_kwarg = 'slug'
@@ -126,7 +126,7 @@ class CategoryDetailView(DetailView):
 
         # =========================================
         # paginator
-        paginator = Paginator(products, 3)
+        paginator = Paginator(products, 12)
         page_number = self.request.GET.get('page')
         page = paginator.get_page(page_number)
         is_paginated = page.has_other_pages()
@@ -168,7 +168,7 @@ class ProductDetailView(DetailView):
 
     def get_queryset(self, queryset=None):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
-        queryset = Product.objects.filter(slug=slug, available=True)
+        queryset = Product.objects.filter(slug=slug, available=True).prefetch_related('productimage_set')
         return queryset
 
 
@@ -176,7 +176,18 @@ class HomeListView(ListView):
     model = Product
     template_name = 'shop/home_page/home_page.html'
     context_object_name = 'products'
-    queryset = Product.objects.filter(available=True).select_related('category')
+
+    def get_queryset(self):
+        only = ('name', 'price')
+        queryset = Product.objects.prefetch_related('productimage_set').filter(available=True).only(*only)
+        context = []
+        image = None
+        for i in queryset:
+            for i2 in i.productimage_set.all():
+                if i2.is_main:
+                    image = i2.image
+            context.append({'name': i.name, 'price': i.price, 'image': image, 'get_absolute_url': i.get_absolute_url()})
+        return context
 
 
 class BuyingUp(TemplateView):
