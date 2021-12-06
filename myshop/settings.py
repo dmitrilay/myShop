@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 
+import django.core.cache.backends.filebased
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 INSTALLED_APPS = [
@@ -128,3 +130,11 @@ CELERY_RESULT_SERIALIZER = 'json'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+"""КЕШИРОВАНИЕ"""
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'django_cache')
+    }
+}

@@ -7,7 +7,7 @@ from .models import *
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 1
+    extra = 0
 
 
 @admin.register(Category)

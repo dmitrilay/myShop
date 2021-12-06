@@ -1,11 +1,12 @@
 from collections import defaultdict
 from django import template
 from django.utils.safestring import mark_safe
-from specs.models import ProductFeatures
 from specifications.models import *
 from shop.models import *
 from django.db.models import Q
+from django.core.cache import cache
 
+# from specs.models import ProductFeatures
 register = template.Library()
 
 
@@ -21,14 +22,22 @@ def product_spec(context, category):
     # product_features = ProductFeatures.objects.filter(product__category=category).select_related('feature')
     feature_and_values = defaultdict(list)
 
-    pda = Product.objects.all()
+    pda = cache.get('pda')
+    if not pda:
+        pda = Product.objects.all()
+        cache.set('pda', pda, 60)
+
     q_condition_queries = Q()
     for i in pda:
         q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
 
-    product_features2 = CharacteristicValue.objects.filter(q_condition_queries,
+    product_features2 = cache.get('product_features2')
+    if not product_features2:
+        pr_re = ('name_value', 'name_spec')
+        product_features2 = CharacteristicValue.objects.filter(q_condition_queries,
                                                            name_spec__participation_filtering=True).prefetch_related(
-        'name_value', 'name_spec').order_by('name_spec__priority_spec')
+            *pr_re).order_by('name_spec__priority_spec')
+        cache.set('product_features2', product_features2, 60)
 
     get_list = {}
     get_list = context['request'].GET

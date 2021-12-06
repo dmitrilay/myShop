@@ -1,21 +1,74 @@
-from django.shortcuts import render, get_object_or_404
-
 from specifications.models import CharacteristicValue, ProductSpec
 from .models import Category, Product, ProductImage
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator
-
-from django.views.generic import DetailView
-from django.views.generic import ListView
-from django.views.generic import TemplateView
-
-from specs.models import ProductFeatures
+from django.views.generic import DetailView, ListView, TemplateView
 from django.db.models import Q
+
+
+class CategoryDetailView2(ListView):
+    model = Product
+    context_object_name = 'category_products'
+    template_name = 'shop/product_list/cat_product_list.html'
+    slug_url_kwarg = 'slug'
+    paginate_by = 4
+
+    @staticmethod
+    def find_get(f, url_kwargs):
+        """Поиск товара по get запросу"""
+        dict_spec_test = {}
+        for i in f:
+            for key, value in url_kwargs.items():
+                if i.name_spec.name == key:
+                    if i.name_value.name in value:
+                        if not dict_spec_test.get(i.name_product):
+                            dict_spec_test[i.name_product] = 0
+
+                        c = dict_spec_test[i.name_product] + 1
+                        dict_spec_test[i.name_product] = c
+        return dict_spec_test.keys()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.get(slug=self.kwargs.get(self.slug_url_kwarg, None))
+        return context
+
+    def get_queryset(self, queryset=None):
+        slug = self.kwargs.get(self.slug_url_kwarg, None)
+
+        # Категория товаров
+        url_kwargs = {}
+        q_condition_queries = Q()
+        # Поиск get параметров,фильтрация и запись в масив
+        for item in self.request.GET:
+            if item != 'price_sort' and item != 'page':
+                url_kwargs[item] = self.request.GET.getlist(item)
+
+        if len(url_kwargs) != 0:
+            for key, value in url_kwargs.items():
+                if isinstance(value, list):  # Является ли переданный обьект листом
+                    q_condition_queries.add(Q(**{'value__in': value}), Q.OR)
+                else:
+                    q_condition_queries.add(Q(**{'value': value}), Q.OR)
+
+            pda = Product.objects.all().only('name_spec')
+            p1 = (i.name_spec for i in pda)
+            pf = ('name_value', 'name_spec', 'name_product')
+            f = CharacteristicValue.objects.filter(name_product__name__in=p1).select_related(*pf)
+            data = self.find_get(f, url_kwargs)
+
+            # Запрос для получения товаров
+            queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data]).select_related(
+                'category').prefetch_related('productimage_set')
+        else:
+            print('111')
+            queryset = Product.objects.filter(category__slug=slug).select_related(
+                'category').prefetch_related('productimage_set')
+        return queryset
 
 
 class CategoryDetailView(DetailView):
     model = Category
-    # queryset = Category.objects.all()
     context_object_name = 'category'
     template_name = 'shop/product_list/category_detail.html'
     slug_url_kwarg = 'slug'
@@ -36,15 +89,6 @@ class CategoryDetailView(DetailView):
 
         if not self.request.GET:
             products = category.products.order_by('price')
-        # elif get_list.get('page') or get_list.get('price_sort') and len(get_list) <= 2:
-        #     try:
-        #         if get_list['price_sort'][0] == '1':
-        #             products = category.products.order_by('price')
-        #         elif get_list['price_sort'][0] == '2':
-        #             products = category.products.order_by('-price')
-        #     except Exception:
-        #         products = category.products.order_by('price')
-
         else:
             for item in self.request.GET:
                 if len(self.request.GET.getlist(item)) > 1:
@@ -59,24 +103,12 @@ class CategoryDetailView(DetailView):
                     else:
                         q_condition_queries.add(Q(**{'value': value}), Q.OR)
 
-            # print(q_condition_queries)
-
             if len(q_condition_queries) > 0:
-                # cтарый код
-                # pf = ProductFeatures.objects.filter(q_condition_queries).prefetch_related('product', 'feature').values(
-                #     'product_id')
-
-                # products = Product.objects.filter(id__in=[pf_['product_id'] for pf_ in pf])
-                # print(products)
-                # ========================================
-                # новый код
-
                 pda = Product.objects.all()
 
                 p1 = (i.name_spec for i in pda)
-                f = CharacteristicValue.objects.filter(name_product__name__in=p1,
-                                                       ).prefetch_related(
-                    'name_value', 'name_spec', 'name_product')
+                pf = ('name_value', 'name_spec', 'name_product')
+                f = CharacteristicValue.objects.filter(name_product__name__in=p1).prefetch_related(*pf)
 
                 dict_spec_test = {}
                 for i in f:

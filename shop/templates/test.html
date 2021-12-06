@@ -3,10 +3,16 @@
 
 {% block content %}
 <h1>ТЕСТОВАЯ СТРАНИЦА</h1>
-<h1>{{ product }}</h1>
 
-    {% for c in products %}
-        <h1>{{ c.name }}</h1>
+{% for products in product %}
+<h1>{{ products.name }}</h1>
+{% endfor %}
+
+<ul>
+    {% for p in page_obj.paginator.page_range %}
+    <li>
+        <a href="?page={{ p }}">{{ p }}</a>
+    </li>
     {% endfor %}
-
+</ul>
 {% endblock %}
