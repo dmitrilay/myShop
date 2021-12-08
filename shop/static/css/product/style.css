@@ -7,7 +7,7 @@
     2. Newsletter Popup CSS
     3. Header CSS
         3.1 Header Top CSS
-        3.2 Header Bottom CSS 
+        3.2 Header Bottom CSS
     4. Slider CSS
     5. New Products CSS
     6. Company Policy CSS
@@ -28,7 +28,7 @@
     21. About Us CSS
     22. My Account CSS
     23. Home Three CSS
-  
+
 -----------------------------------------------------*/
 
 /*----------------------------------------*/
@@ -445,7 +445,7 @@ ul.ht-dropdown.dropdown-style-two li {
 }
 
 /*----------------------------------------*/
-/* 3.2 Header Bottom CSS 
+/* 3.2 Header Bottom CSS
 /*----------------------------------------*/
 .header-sticky.sticky {
     -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
@@ -907,11 +907,11 @@ ul.ht-dropdown.dropdown-style-two li {
     background: #31a2e2;
 }
 
-.new-pro-active .owl-nav div, .side-product-list-active .owl-nav div, 
-.best-selling-pro .owl-nav div, .blog-active .owl-nav div,.blog-active2 .owl-nav div, .testext_active .owl-nav div, 
-.best-seller-pro-active .owl-nav div, 
-.hand-tool-active .owl-nav div, 
-.new-upsell-pro .owl-nav div, 
+.new-pro-active .owl-nav div, .side-product-list-active .owl-nav div,
+.best-selling-pro .owl-nav div, .blog-active .owl-nav div,.blog-active2 .owl-nav div, .testext_active .owl-nav div,
+.best-seller-pro-active .owl-nav div,
+.hand-tool-active .owl-nav div,
+.new-upsell-pro .owl-nav div,
 .testimonial__container .dcare-arrow, .home-2 .best-seller-pro .owl-nav div, .best-selling-items .owl-nav div,
   .best-seller-unique .owl-nav div {
     background: #f1f1f1;
@@ -1041,7 +1041,7 @@ ul.ht-dropdown.dropdown-style-two li {
 .product-list li a.active,
 .best-selling-items .product-list li a.active {
     color: #f1ac06;
-    border-color:#f1ac06; 
+    border-color:#f1ac06;
 }
 .new-products .product-list {
     margin-bottom: 30px;
@@ -2817,7 +2817,7 @@ p.checkout-coupon input[type="submit"] {
     margin-right: 5px;
 }
 .blog-img.blog-single-img{
-    margin-bottom: 0;                                                   
+    margin-bottom: 0;
 }
 .category-text {
     font-size: 16px;
