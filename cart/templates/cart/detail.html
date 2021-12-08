@@ -14,7 +14,11 @@
             {% for item in cart %}
                 {% with product=item.product %}
                     <div class="row">
-                        <img class="col-2 img-fluid img-thumbnail" src="{{ product.image.url }}" alt="">
+                        {% for prw in product.productimage_set.all %}
+                            {% if prw.is_main %}
+                                <img class="col-2 img-fluid img-thumbnail" src="{{ prw.image.url }}" alt="">
+                            {% endif %}
+                        {% endfor %}
                         <div class="col-5 text-muted">{{ product.name }}</div>
                         <div class="col-2">{{ item.total_price }}₽</div>
                         <div class="col-2">{% include 'cart/include/editing_the_bucket.html' %}</div>

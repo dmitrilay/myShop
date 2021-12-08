@@ -19,11 +19,22 @@
                     <div class="modal-body">
                         <form action="{% url 'cart:cart_add' product.id %}" method="post">
                             {% csrf_token %}
-                            {{ item.update_quantity_form.quantity|as_crispy_field }}
-                            {{ item.update_quantity_form.update|as_crispy_field }}
+
+                            <div class="row">
+                                <div class="col-8">
+                                    {{ item.update_quantity_form.update|as_crispy_field }}
+                                    {{ item.update_quantity_form.quantity|as_crispy_field }}
+                                </div>
+                                <div class="col-4">
+                                    <br><br>
+                                    <a class="btn btn-outline-danger" href="{% url 'cart:cart_remove' product.id%}">X</a>
+                                </div>
+
+                            </div>
+
+
                             <br>
                             <input class="btn btn-outline-success" type="submit" value="ОК">
-                            <a class="btn btn-outline-danger" href="{% url 'cart:cart_remove' product.id%}">X</a>
                         </form>
                     </div>
                 </div>

@@ -96,8 +96,8 @@ class HomeListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        only = ('name', 'price')
-        queryset = Product.objects.prefetch_related('productimage_set').filter(available=True).only(*only)
+        queryset = Product.objects.select_related('category')
+        queryset = queryset.prefetch_related('productimage_set').filter(available=True)
         context = []
         image = None
         for i in queryset:
