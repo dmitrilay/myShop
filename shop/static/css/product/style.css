@@ -13,7 +13,7 @@
     6. Company Policy CSS
     7. Signup Newsletter CSS
     8. Footer CSS
-    9. Breadcrumb CSS
+    9. Breadcrumb CSS (строка навигации на странице товара)
     10. Shop Page CSS
     11. Product Page CSS
     12. Cart & Wish List CSS
@@ -1423,13 +1423,10 @@ ul.ht-dropdown.dropdown-style-two li {
 /*----------------------------------------*/
 .breadcrumb-area .breadcrumb {
     background-color: #f5f5f5;
-    margin-bottom: 0;
-    padding: 25px 15px;
+    padding: 20px 0px 20px 0px;
 }
-
-.breadcrumb-area .breadcrumb li.active a,.breadcrumb li:hover a {
-    color: #f1ac06;
-}
+.breadcrumb-area .breadcrumb ul {margin: 0px 0px 0px 0px;}
+.breadcrumb-area .breadcrumb li.active a,.breadcrumb li:hover a {color: #f1ac06;}
 
 /*----------------------------------------*/
 /* 10. Shop Page CSS

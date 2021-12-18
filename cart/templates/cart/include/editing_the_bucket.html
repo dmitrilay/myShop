@@ -26,13 +26,10 @@
                                     {{ item.update_quantity_form.quantity|as_crispy_field }}
                                 </div>
                                 <div class="col-4">
-                                    <br><br>
+                                    <label></label>
                                     <a class="btn btn-outline-danger" href="{% url 'cart:cart_remove' product.id%}">X</a>
                                 </div>
-
                             </div>
-
-
                             <br>
                             <input class="btn btn-outline-success" type="submit" value="ОК">
                         </form>

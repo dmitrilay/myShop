@@ -20,22 +20,21 @@
 <br><br>
 <div class="row">
     {% for product in category_products %}
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100">
+    <div class="col-md-3 border-end border-bottom m-2">
+        <div class="col-10 mx-3">
             {% for prw in product.productimage_set.all %}
             {% if prw.is_main %}
-            <a href="{{ product.get_absolute_url }}">
+            <a  href="{{ product.get_absolute_url }}">
                 <img class="card-img-top" src="{{prw.image.url}}" alt="">
             </a>
             {% endif %}
             {% endfor %}
-
-            <div class="card-body">
-                <h4 class="card-title">
-                    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-                </h4>
-                <h5>{{ product.price }} руб.</h5>
-            </div>
+        </div>
+        <div class="col-12 top-0 mt-2 mx-3">
+            <a class="text-dark" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+        </div>
+        <div class="col-10 mx-3">
+            <h1 class="text-warning bg-dark bg-gradient rounded text-center fw-bolder fs-3 text">{{ product.price }}₽</h1>
         </div>
     </div>
     {% endfor %}

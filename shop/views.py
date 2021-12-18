@@ -82,11 +82,22 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         cart_product_form = CartAddProductForm()
         context['cart_product_form'] = cart_product_form
+
+        se_re = ('name_value', 'name_spec', 'name_product')
+        f = CharacteristicValue.objects.filter(name_product__name=context['object'].name_spec).select_related(*se_re)
+        context['spec_wi'] = f
+        for i in f:
+            if str(i.name_spec).find('Бренд') >= 0:
+                context['brand_cast'] = i.name_value
+                context['url_cast'] = f"/category/{self.kwargs['category_slug']}/?Бренд={i.name_value}"
+                break
+
         return context
 
     def get_queryset(self, queryset=None):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
-        queryset = Product.objects.filter(slug=slug, available=True).prefetch_related('productimage_set')
+        queryset = Product.objects.filter(slug=slug, available=True)
+        queryset = queryset.select_related('category').prefetch_related('productimage_set')
         return queryset
 
 
