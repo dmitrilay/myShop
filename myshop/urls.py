@@ -4,14 +4,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # path('spec/', include('specifications.urls')),
-    # path('product-specs/', include('specs.urls')),
+    path('spec/', include('specifications.urls')),
+    path('product-specs/', include('specifications.urls')),
+
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('account/', include('account.urls')),
     path('', include('shop.urls', namespace='shop')),
-    path('specifications/', include('specifications.urls')),
+
 
 
 ]

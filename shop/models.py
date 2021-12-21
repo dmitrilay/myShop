@@ -2,6 +2,18 @@ from django.db import models
 from django.urls import reverse
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=200, db_index=True, verbose_name='бренд')
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренды'
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -19,7 +31,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    # image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    brand = models.ForeignKey('Brand', related_name='brands', on_delete=models.SET_NULL, blank=False, null=True,
+                              verbose_name='бренд')
+    condition = models.CharField(max_length=100, db_index=True, blank=False, verbose_name='состояние')
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
@@ -29,7 +43,6 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # features = models.ManyToManyField("specs.ProductFeatures", blank=True, related_name='features_for_product')
 
     class Meta:
         ordering = ('name',)

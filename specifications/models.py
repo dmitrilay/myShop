@@ -2,7 +2,7 @@ from django.db import models
 
 
 class CategoryProducts(models.Model):
-    name_cat = models.CharField(max_length=100)
+    name_cat = models.CharField(max_length=100, unique=True, verbose_name="название")
 
     def __str__(self):
         return self.name_cat
@@ -38,7 +38,8 @@ class ValuesSpec(models.Model):
 
 class CharacteristicValue(models.Model):
     name_product = models.ForeignKey('ProductSpec', on_delete=models.SET_DEFAULT, default=0, null=True)
-    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_DEFAULT, default=0, null=True)
+    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_DEFAULT, default=0,
+                                  null=True)
     name_value = models.ForeignKey('ValuesSpec', on_delete=models.SET_DEFAULT, default=0)
     cat = models.ForeignKey('CategoryProducts', on_delete=models.SET_DEFAULT, default=0)
 
