@@ -1,5 +1,6 @@
 import json
 import os
+from collections import defaultdict
 from pyexpat.errors import messages
 
 from django.http import HttpResponseRedirect, JsonResponse
@@ -13,37 +14,13 @@ from .forms import NewCategoryFeatureKeyForm
 from .models import *
 
 
-# -------------------------------------------
-# Главная страница
-# -------------------------------------------
-class BaseSpecView(TemplateView):
-    template_name = 'specs/base.html'
-
-
-# -------------------------------------------
-# Создание новой характеристики
-# -------------------------------------------
-class CreateNewFeature(FormView):
-    template_name = 'specs/new_feature.html'
-    form_class = NewCategoryFeatureKeyForm
-    context_object_name = 'form'
-    success_url = '/spec/'
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-
-# -------------------------------------------
-# Создание значения для характеристики
-# -------------------------------------------
-class CreateNewFeatureValidator(View):
-
+class AllSpecView(View):
     @staticmethod
     def get(request):
-        categories = Category.objects.all()
+        categories = CategoryProducts.objects.all()
+        print(categories)
         context = {'categories': categories}
-        return render(request, 'specs/new_validator.html', context)
+        return render(request, 'specs/new_product_feature.html', context)
 
 
 # -------------------------------------------
@@ -54,21 +31,25 @@ class NewProductFeatureView(View):
 
     @staticmethod
     def get(request):
-        categories = Category.objects.all()
+        categories = CategoryProducts.objects.all()
+        print(categories)
         context = {'categories': categories}
         return render(request, 'specs/new_product_feature.html', context)
 
 
-# -------------------------------------------
-# Остальное
-# -------------------------------------------
-class UpdateProductFeaturesView(View):
+class CreateNewProductFeatureAjaxView(View):
+    """Создаем характеристику для товара"""
+
     @staticmethod
     def get(request):
-        pass
-        # categories = Category.objects.all()
-        # context = {'categories': categories}
-        # return render(request, 'update_product_features.html', context)
+        print('11111111111111')
+        product = Product.objects.get(name=request.GET.get('product'))
+        feature_name = request.GET.get('category_feature')
+        value = request.GET.get('value')
+        category_feature = CategoryProducts.objects.get(category=product.category, feature_name=feature_name)
+        feature = Specifications.objects.create(feature=category_feature, product=product, value=value)
+        product.features.add(feature)
+        return JsonResponse({"OK": "OK"})
 
 
 # -------------------------------------------
@@ -87,14 +68,12 @@ def import_js(request):
         return dict_1, dict_2, dict_3
 
     dict_value_spec, dict_spec_db, dict_product_db = {}, {}, {}
-    # data_js = opening_closing_file(action='r', name='spec_json.txt', type_f='json')
-    data_js = opening_closing_file(action='r', name='spec.txt', type_f='json')
+    data_json = opening_closing_file(action='r', name='spec.txt', type_f='json')
 
     dict_specifications, dict_value_spec, dict_product = spec_value_is_db()
     dict_bulk_spec, dict_bulk_value, dict_bulk_product = {}, {}, {}
 
-    for i, i2 in data_js.items():
-        name_product = i
+    for name_product, i2 in data_json.items():
         if not dict_product.get(name_product):  # Если нет такого значения в базе
             if not dict_bulk_product.get(name_product):  # Если нет такого значения в словаре
                 dict_bulk_product[name_product] = (ProductSpec(name=name_product))
@@ -127,7 +106,7 @@ def import_js(request):
         dict_conv_db[f] = [p, t, v]
 
     dict_conv_js = {}
-    for rel_s, rel_s2 in data_js.items():
+    for rel_s, rel_s2 in data_json.items():
         p = rel_s
         for i, i2 in rel_s2.items():
             t = i
@@ -197,13 +176,50 @@ def delete_spec(request):
     return render(request, 'base.html', context)
 
 
-###-------------------------------------
+# -------------------------------------
+# -------------------------------------
+# -------------------------------------
+# -------------------------------------
+# -------------------------------------
+# -------------------------------------
+# -------------------------------------
+
+# -------------------------------------------
+# Главная страница
+# -------------------------------------------
+class BaseSpecView(TemplateView):
+    template_name = 'specs/base.html'
 
 
 # -------------------------------------------
 # Создание новой характеристики
 # -------------------------------------------
+class CreateNewFeature(FormView):
+    template_name = 'specs/new_feature.html'
+    form_class = NewCategoryFeatureKeyForm
+    context_object_name = 'form'
+    success_url = '/spec/'
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+# -------------------------------------------
+# Создание значения для характеристики
+# -------------------------------------------
+class CreateNewFeatureValidator(View):
+
+    @staticmethod
+    def get(request):
+        categories = Category.objects.all()
+        context = {'categories': categories}
+        return render(request, 'specs/new_validator.html', context)
+
+
+# -------------------------------------------
+# Создание новой характеристики
+# -------------------------------------------
 
 class CreateFeatureView(View):
     """Создание значения для характеристики 2"""
@@ -284,33 +300,9 @@ class ProductFeatureChoicesAjaxView(View):
         return JsonResponse({"features": json_string})
 
 
-class CreateNewProductFeatureAjaxView(View):
-    """Создаем характеристику для товара"""
-
-    @staticmethod
-    def get(request):
-        product = Product.objects.get(name=request.GET.get('product'))
-        feature_name = request.GET.get('category_feature')
-        value = request.GET.get('value')
-        category_feature = CategoryProducts.objects.get(category=product.category, feature_name=feature_name)
-        feature = Specifications.objects.create(feature=category_feature, product=product, value=value)
-        product.features.add(feature)
-        return JsonResponse({"OK": "OK"})
-
-
 # -------------------------------------------
 # Унивирсальные классы
 # -------------------------------------------
-class SearchProductAjaxView(View):
-    """Динамический поиск товара по имени"""
-
-    @staticmethod
-    def get(request):
-        query = request.GET.get('query')
-        category_id = request.GET.get('category_id')
-        category = Category.objects.get(id=int(category_id))
-        products = list(Product.objects.filter(category=category, name__icontains=query).values())
-        return JsonResponse({"result": products})
 
 
 class FeatureChoiceView(View):
@@ -319,14 +311,22 @@ class FeatureChoiceView(View):
     @staticmethod
     def get(request):
         сat_id = request.GET.get('category_id')
+        # select_related(*pf)
         pf = ('name',)
         # f = CharacteristicValue.objects.filter(cat__id=сat_id).select_related(*pf)
         f = Specifications.objects.filter(characteristicvalue__cat__id='1').distinct()
-        print('---------------')
-        print('---------------')
-        print('---------------')
-        print('---------------')
-        print('---------------')
+
+        # f3 = Specifications.objects.get(pk=100)
+        # print(f3)
+        # f2 = ValuesSpec.objects.filter(characteristicvalue__name_spec__id='100').distinct()
+        # for i2423 in f2:
+        #     print(i2423)
+        #
+        # print('---------------')
+        # print('---------------')
+        # print('---------------')
+        # print('---------------')
+        # print('---------------')
         result_dict = dict()
         for item in f:
             result_dict[item.name] = item.name
@@ -346,110 +346,74 @@ class FeatureChoiceView(View):
 #         # return render(request, 'update_product_features.html', context)
 
 
-class ShowProductFeaturesForUpdate(View):
-    @staticmethod
-    def get(request):
-        pass
-        # product = Product.objects.get(id=int(request.GET.get('product_id')))
-        # features_values_qs = product.features.all()
-        # print('\n\n\n')
-        # print(product)
-        #
-        # head = """
-        # <hr>
-        #     <div class="row">
-        #         <div class="col-md-4">
-        #             <h4 class="text-center">Характеристика</h4>
-        #         </div>
-        #         <div class="col-md-4">
-        #             <h4 class="text-center">Текущее значение</h4>
-        #         </div>
-        #         <div class="col-md-4">
-        #             <h4 class="text-center">Новое значение</h4>
-        #         </div>
-        #     </div>
-        # <div class='row'>{}</div>
-        # <div class="row">
-        # <hr>
-        # <div class="col-md-4">
-        # </div>
-        # <div class="col-md-4">
-        #     <p class='text-center'><button class="btn btn-success" id="save-updated-features">Сохранить</button></p>
-        # </div>
-        # <div class="col-md-4">
-        # </div>
-        # </div>
-        # """
-        # option = '<option value="{value}">{option_name}</option>'
-        # select_values = """
-        #     <select class="form-select" name="feature-value" id="feature-value" aria-label="Default select example">
-        #         <option selected>---</option>
-        #         {result}
-        #     </select>
-        #             """
-        # mid_res = ""
-        # select_different_values_dict = defaultdict(list)
-        # for item in features_values_qs:
-        #     fv_qs = FeatureValidator.objects.filter(category=item.product.category, feature_key=item.feature).values()
-        #
-        #     for fv in fv_qs:
-        #         if fv['valid_feature_value'] == item.value:
-        #             pass
-        #         else:
-        #             select_different_values_dict[fv['feature_key_id']].append(fv['valid_feature_value'])
-        #     feature_field = '<input type="text" class="form-control" id="{id}" value="{value}" disabled/>'
-        #     current_feature_value = """
-        #     <div class='col-md-4 feature-current-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-        #                             """
-        #     body_feature_field = """
-        #     <div class='col-md-4 feature-name' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-        #                         """
-        #     body_feature_field_value = """
-        #     <div class='col-md-4 feature-new-value' style='margin-top:10px; margin-bottom:10px;'>{}</div>
-        #     """
-        #     body_feature_field = body_feature_field.format(
-        #         feature_field.format(id=item.feature.id, value=item.feature.feature_name))
-        #     current_feature_value_mid_res = ""
-        #     for item_ in select_different_values_dict[item.feature.id]:
-        #         current_feature_value_mid_res += option.format(value=item.feature.id, option_name=item_)
-        #     body_feature_field_value = body_feature_field_value.format(
-        #         select_values.format(item.feature.id, result=current_feature_value_mid_res)
-        #     )
-        #     current_feature_value = current_feature_value.format(
-        #         feature_field.format(id=item.feature.id, value=item.value))
-        #     m = body_feature_field + current_feature_value + body_feature_field_value
-        #     mid_res += m
-        # result = head.format(mid_res)
-        # return JsonResponse({"result": result})
-
-
 class UpdateProductFeaturesAjaxView(View):
     @staticmethod
     def post(request):
-        pass
-        # features_names = request.POST.getlist('features_names')
-        # features_current_values = request.POST.getlist('features_current_values')
-        # new_feature_values = request.POST.getlist('new_feature_values')
-        # data_for_update = [{'feature_name': name, 'current_value': curr_val, 'new_value': new_val} for
-        #                    name, curr_val, new_val
-        #                    in zip(features_names, features_current_values, new_feature_values)]
-        # product = Product.objects.get(title=request.POST.get('product'))
-        # for item in product.features.all():
-        #     for item_for_update in data_for_update:
-        #         if item.feature.feature_name == item_for_update['feature_name']:
-        #             if item.value != item_for_update['new_value'] and item_for_update['new_value'] != '---':
-        #                 cf = CategoryFeature.objects.get(
-        #                     category=product.category,
-        #                     feature_name=item_for_update['feature_name']
-        #                 )
-        #                 item.value = FeatureValidator.objects.get(
-        #                     category=product.category,
-        #                     feature_key=cf,
-        #                     valid_feature_value=item_for_update['new_value']
-        #                 ).valid_feature_value
-        #                 item.save()
-        # messages.add_message(
-        #     request, messages.SUCCESS,
-        #     f'Значения характеристик для товара {product.name} успешно обновлены'
-        # )
-        # return JsonResponse({"result": "ok"})
+        # pass
+        features_names = request.POST.getlist('features_names')
+        features_current_values = request.POST.getlist('features_current_values')
+        new_feature_values = request.POST.getlist('new_feature_values')
+        data_for_update = [{'feature_name': name, 'current_value': curr_val, 'new_value': new_val} for
+                           name, curr_val, new_val
+                           in zip(features_names, features_current_values, new_feature_values)]
+        product = Product.objects.get(title=request.POST.get('product'))
+        for item in product.features.all():
+            for item_for_update in data_for_update:
+                if item.feature.feature_name == item_for_update['feature_name']:
+                    if item.value != item_for_update['new_value'] and item_for_update['new_value'] != '---':
+                        cf = CategoryProducts.objects.get(
+                            category=product.category,
+                            feature_name=item_for_update['feature_name']
+                        )
+                        item.value = Specifications.objects.get(
+                            category=product.category,
+                            feature_key=cf,
+                            valid_feature_value=item_for_update['new_value']
+                        ).valid_feature_value
+                        item.save()
+        messages.add_message(
+            request, messages.SUCCESS,
+            f'Значения характеристик для товара {product.name} успешно обновлены'
+        )
+        return JsonResponse({"result": "ok"})
+
+
+# -------------------------------------------
+# Редактирование характеристик для товара
+# -------------------------------------------
+class UpdateProductFeaturesView(View):
+    @staticmethod
+    def get(request):
+        categories = CategoryProducts.objects.all()
+        context = {'categories': categories}
+        return render(request, 'specs/update_product_features.html', context)
+
+
+class SearchProductAjaxView(View):
+    """Динамический поиск товара по имени"""
+
+    @staticmethod
+    def get(request):
+        query = request.GET.get('query')
+        if len(query) > 2:
+            category_id = request.GET.get('category_id')
+            category = CategoryProducts.objects.get(id=int(category_id))
+            products = list(ProductSpec.objects.filter(category=category, name__icontains=query).values())
+        else:
+            products = ''
+        return JsonResponse({"result": products})
+
+
+class ShowProductFeaturesForUpdate(View):
+    @staticmethod
+    def get(request):
+        id_product = (request.GET.get('product'))
+        product = ProductSpec.objects.get(name=id_product)
+        pf = ('name_product', 'name_spec', 'name_value')
+        features = CharacteristicValue.objects.filter(name_product=product.id).select_related(*pf)
+
+        select_different_values_dict = defaultdict(list)
+        for item in features:
+            select_different_values_dict[str(item.name_spec)] = str(item.name_value)
+
+        return JsonResponse({"result": select_different_values_dict})

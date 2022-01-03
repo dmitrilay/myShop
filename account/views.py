@@ -15,7 +15,8 @@ from django.contrib.auth.views import LoginView
 class user_login(LoginView):
     template_name = 'login.html'
     form_class = LoginForm
-    #success_url = reverse_lazy('/')
+    # success_url = reverse_lazy('/')
+
 
 '''
 def user_login(request):
@@ -38,6 +39,7 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'account/login.html', {'form': form})
 '''
+
 
 # @login_required
 def dashboard(request):

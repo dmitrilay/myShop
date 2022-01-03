@@ -16,6 +16,7 @@ class Specifications(models.Model):
     name = models.CharField(max_length=100)
     participation_filtering = models.BooleanField(default=False)
     priority_spec = models.CharField(max_length=10, default=99)
+    category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -27,6 +28,7 @@ class Specifications(models.Model):
 
 class ValuesSpec(models.Model):
     name = models.CharField(max_length=100)
+    spec = models.ForeignKey('Specifications', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -53,6 +55,7 @@ class CharacteristicValue(models.Model):
 
 class ProductSpec(models.Model):
     name = models.CharField(max_length=100)
+    category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, blank=False, null=True)
 
     def __str__(self):
         return f'{self.name}'

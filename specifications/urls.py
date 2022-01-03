@@ -3,6 +3,8 @@ from . import views
 from .views import *
 
 urlpatterns = [
+    path('', AllSpecView.as_view(), name='product-list-for-features'),
+
     path('', BaseSpecView.as_view(), name='product-list-for-features'),
     path('new-feature/', CreateNewFeature.as_view(), name='new-feature'),
     path('new-validator/', CreateNewFeatureValidator.as_view(), name='new-validator'),
@@ -19,6 +21,7 @@ urlpatterns = [
     path('update-product-features/', UpdateProductFeaturesView.as_view(), name='update-product-features'),
     path('show-product-features-for-update/', ShowProductFeaturesForUpdate.as_view(),
          name='show-product-features-for-update'),
+
     path('update-product-features-ajax/', UpdateProductFeaturesAjaxView.as_view(), name='update-product-features-ajax'),
 
     path('import', views.import_js, name='import_js'),  # http://127.0.0.1:8000/specifications/import

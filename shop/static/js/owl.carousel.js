@@ -11,7 +11,7 @@ $(function() {
     autoplay: true,
     smartSpeed: 200,
     dots: false,
-    responsive:{0:{items:2,},600:{items:3,},1000:{items:4,}}
+    responsive:{0:{items:2,},600:{items:3,},1000:{items:5,}}
   });
 });
 

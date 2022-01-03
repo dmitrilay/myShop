@@ -1,0 +1,9 @@
+{% extends 'specs/base.html' %}
+
+{% block content %}
+<form action="{% url 'new-feature' %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" id="btn_form" class="btn btn-success" value="Создать">
+</form>
+{% endblock %}
