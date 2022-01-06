@@ -28,18 +28,61 @@ function html_designer(p_obj, p_elem, p_class, p_text) {
    return p_obj.appendChild(elem_div)
 }
 
+function html_designer2(p_obj, p_elem, p_class,p_setAtt, p_text) {
+   let elem_div = document.createElement(p_elem)
+   if (p_text != null) {
+      elem_div.innerHTML = p_text
+   }
+   if (p_setAtt !=null){
+      for (let i234 in p_setAtt){
+         // console.log(p_setAtt)
+         elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])   
+      }
+         
+   }
+
+   for (i in p_class) {
+      elem_div.classList.add(p_class[i])
+   }
+   return p_obj.appendChild(elem_div)
+}
+
+function html_select_list(p_obj, p_values, p_class, p_text) {
+   let elem_div = document.createElement('select')
+   if (p_text != null) {
+      elem_div.innerText = p_text
+   }
+
+   for (i in p_class) {
+      elem_div.classList.add(p_class[i])
+   }
+
+   op_obj = p_obj.appendChild(elem_div)
+   let = elem_html = document.createElement('option')
+   elem_html.selected=''
+   elem_html.innerText = '---'
+   op_obj.appendChild(elem_html)
+
+   for (let value in p_values){
+      elem_html = document.createElement('option')
+      elem_html.value=value
+      elem_html.innerText = p_values[value]
+      op_obj.appendChild(elem_html)    
+   }
+}
+
 
 function feature_123(obj) {
    let obj2, obj3
    let elem = document.querySelector('#product-features-update-list')
 
    obj1 = html_designer(elem, 'div', ['row'])
-   obj2 = html_designer(obj1, 'div', ['col-md-4'])
+   obj2 = html_designer(obj1, 'div', ['spec', 'col-12'])
    obj3 = html_designer(obj2, 'h4', ['text-center'], 'Характеристика')
-   obj2 = html_designer(obj1, 'div', ['col-md-4'])
-   obj3 = html_designer(obj2, 'h4', ['text-center'], 'Текущее значение')
-   obj2 = html_designer(obj1, 'div', ['col-md-4'])
-   obj3 = html_designer(obj2, 'h4', ['text-center'], 'Новое значение')
+   // obj2 = html_designer(obj1, 'div', ['spec', 'col-6'])
+   // obj3 = html_designer(obj2, 'h4', ['text-center'], 'Текущее значение')
+   // obj2 = html_designer(obj1, 'div', ['col-md-4'])
+   // obj3 = html_designer(obj2, 'h4', ['text-center'], 'Новое значение')
 
    get_params = '?product=' + obj.innerText
    url = "/spec/show-product-features-for-update/" + get_params
@@ -51,12 +94,29 @@ function feature_123(obj) {
 }
 
 function feature_write(data) {
+   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
+  <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
+  <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/>
+</svg>`
+   
    let elem = document.querySelector('#product-features-update-list')
-   for (i in data['result']) {
-      let elem2 = elem.querySelectorAll('.col-md-4')
-      html_designer(elem2[0], 'div', ['col-md-4', 'feature-name'], i)
-      // console.log(i)
-      // console.log(data['result'][i])
+   for (elem_i in data['result']) {
+      let elem2 = elem.querySelectorAll('.spec')
+      row_div = html_designer(elem2[0], 'div', ['m-3','row',])
+      
+      attib = [['data-bs-toggle','modal'],['data-bs-target','#exampleModal']]
+
+      html_designer2(row_div, 'button', ['btn','btn-primary', 'col-1','mb-1'],attib, svg)
+      html_designer(row_div, 'div', ['col-11', 'col-md-4','mb-1'], elem_i)
+      
+      html_designer2(row_div, 'button', ['btn','btn-primary', 'col-1','mb-1'],attib, svg)
+      html_designer(row_div, 'div', ['col-11','col-md-4','mb-1'], data['result'][elem_i])
+      // html_select_list(elem2[1], data['result'][elem_i], ['form-select','m-3'])
+
+
+      // html_designer(elem2[1], 'div', ['feature-name'], elem_i)
+      // console.log(data['result'][elem_i])
+      
    }
 
 }

@@ -3,6 +3,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+{% include 'specs/update_product_features/modal.html' %}
+
 <div class="category-validator-div">
     <label for="category-validators-id">Категория</label>
     <select class="form-select" name="category-validators" id="category-validators-id"
