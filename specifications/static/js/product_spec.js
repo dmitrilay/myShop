@@ -8,13 +8,36 @@ document.addEventListener('click', function(e) {
       alert_123(obj)
       feature_123(obj)
    }
+   if (obj.getAttribute('att_bootstrap') == 'modal') {
+      editing_characteristics(obj)
+   }
 });
+
 document.addEventListener('input', function(e) {
    let obj = e.target
    if (obj.id == 'search-text') {
       search_text(obj)
    }
 });
+
+
+function editing_characteristics(obj) {
+   // ручной запуск модального окна bootstrap
+   let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+   myModal.show();
+
+
+
+   get_params = `?purpose=1&value_id=${obj.value}`
+   url = "/spec/show-product-features-for-update" + get_params
+   console.log(url)
+   sending_server(url)
+   // .then(function() {
+   //    test(data)
+   // })
+
+
+}
 
 function html_designer(p_obj, p_elem, p_class, p_text) {
    let elem_div = document.createElement(p_elem)
@@ -28,17 +51,17 @@ function html_designer(p_obj, p_elem, p_class, p_text) {
    return p_obj.appendChild(elem_div)
 }
 
-function html_designer2(p_obj, p_elem, p_class,p_setAtt, p_text) {
+function html_designer2(p_obj, p_elem, p_class, p_setAtt, p_text) {
    let elem_div = document.createElement(p_elem)
    if (p_text != null) {
       elem_div.innerHTML = p_text
    }
-   if (p_setAtt !=null){
-      for (let i234 in p_setAtt){
+   if (p_setAtt != null) {
+      for (let i234 in p_setAtt) {
          // console.log(p_setAtt)
-         elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])   
+         elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])
       }
-         
+
    }
 
    for (i in p_class) {
@@ -59,18 +82,17 @@ function html_select_list(p_obj, p_values, p_class, p_text) {
 
    op_obj = p_obj.appendChild(elem_div)
    let = elem_html = document.createElement('option')
-   elem_html.selected=''
+   elem_html.selected = ''
    elem_html.innerText = '---'
    op_obj.appendChild(elem_html)
 
-   for (let value in p_values){
+   for (let value in p_values) {
       elem_html = document.createElement('option')
-      elem_html.value=value
+      elem_html.value = value
       elem_html.innerText = p_values[value]
-      op_obj.appendChild(elem_html)    
+      op_obj.appendChild(elem_html)
    }
 }
-
 
 function feature_123(obj) {
    let obj2, obj3
@@ -96,29 +118,35 @@ function feature_123(obj) {
 function feature_write(data) {
    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
   <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
-  <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/>
-</svg>`
-   
+  <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/></svg>`
+
    let elem = document.querySelector('#product-features-update-list')
+   // console.log(data['result'])
    for (elem_i in data['result']) {
       let elem2 = elem.querySelectorAll('.spec')
-      row_div = html_designer(elem2[0], 'div', ['m-3','row',])
-      
-      attib = [['data-bs-toggle','modal'],['data-bs-target','#exampleModal']]
+      row_div = html_designer(elem2[0], 'div', ['m-3', 'row', ])
 
-      html_designer2(row_div, 'button', ['btn','btn-primary', 'col-1','mb-1'],attib, svg)
-      html_designer(row_div, 'div', ['col-11', 'col-md-4','mb-1'], elem_i)
-      
-      html_designer2(row_div, 'button', ['btn','btn-primary', 'col-1','mb-1'],attib, svg)
-      html_designer(row_div, 'div', ['col-11','col-md-4','mb-1'], data['result'][elem_i])
+      attib = [
+         ['att_bootstrap', 'modal'],
+      ]
+
+
+      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
+      html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
+
+      attib = [
+         ['att_bootstrap', 'modal'],
+         ['value', data['result'][elem_i][0]],
+      ]
+      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
+      html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], data['result'][elem_i][1])
       // html_select_list(elem2[1], data['result'][elem_i], ['form-select','m-3'])
 
 
       // html_designer(elem2[1], 'div', ['feature-name'], elem_i)
       // console.log(data['result'][elem_i])
-      
-   }
 
+   }
 }
 
 function write_form() {
@@ -129,7 +157,7 @@ function write_form() {
    if (obj_dom.style.display == "none") {
       obj_dom.style.display = "";
    }
-};
+}
 
 function search_text(obj) {
    category_id = document.querySelector('#category-validators-id').value
@@ -211,93 +239,3 @@ function alert_123(obj) {
    document.querySelector('.category-validator-div').style.display = 'none' // скрыть строку поиска
    document.querySelector('.product-search-ajax').style.display = 'none' // скрыть строку поиска
 };
-
-
-
-// ------------------------------------------------------------------
-// Основной код 
-// ------------------------------------------------------------------
-
-$(document).on('click', '#save-updated-features', function() {
-   let featureNames = [];
-   let featureCurrentValues = [];
-   let newFeatureValues = []
-
-   $('.feature-name').children('input').each(function() {
-      featureNames.push(this.value); // "this" is the current element in the loop
-   })
-
-   $('.feature-current-value').children('input').each(function() {
-      featureCurrentValues.push(this.value)
-   })
-   console.log($("#product-category-features-id option:selected").text())
-   $('select[name="feature-value"] option:selected').each(function() {
-      newFeatureValues.push(this.text)
-   })
-
-   function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-         const cookies = document.cookie.split(';');
-         for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-               cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-               break;
-            }
-         }
-      }
-      return cookieValue;
-   }
-   let csrftoken = getCookie('csrftoken');
-   let data = {
-      features_names: featureNames,
-      features_current_values: featureCurrentValues,
-      new_feature_values: newFeatureValues,
-      product: $(".product").text(),
-      csrfmiddlewaretoken: csrftoken
-   }
-   $.ajaxSetup({
-      traditional: true
-   });
-   $.ajax({
-      method: "POST",
-      data: data,
-      url: '/product-specs/update-product-features-ajax/',
-      success: function(data) {
-         window.location.href = '/product-specs'
-      }
-   })
-})
-
-function removeProduct() {
-   $(".search-results").css('display', 'block')
-   $(".product-search-ajax").css('display', 'block')
-   $(".product-features-update-list").empty()
-}
-
-function getProduct(productId, name) {
-   // $(".product-features-update-list").css('display', 'block')
-
-   $(".search-results").css('display', 'none')
-   // $("#search-product-results").empty()
-   // $(".product-search-ajax").css('display', 'none')
-   $(".product-feature-choices").css('display', 'block')
-   $(".product-feature-choices-values").css('display', 'block')
-   $('input[name="search-text"]').val("")
-   let data = {
-      product_id: productId
-   }
-   $.ajax({
-      method: "GET",
-      data: data,
-      dataType: "json",
-      url: "/product-specs/show-product-features-for-update/",
-      success: function(data) {
-         $(".product-features-update-list").append(
-            data.result
-         )
-      }
-   })
-}

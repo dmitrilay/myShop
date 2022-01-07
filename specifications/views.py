@@ -322,11 +322,11 @@ class FeatureChoiceView(View):
         # for i2423 in f2:
         #     print(i2423)
         #
-        # print('---------------')
-        # print('---------------')
-        # print('---------------')
-        # print('---------------')
-        # print('---------------')
+        print('---------------')
+        print('---------------')
+        print('---------------')
+        print('---------------')
+        print('---------------')
         result_dict = dict()
         for item in f:
             result_dict[item.name] = item.name
@@ -407,34 +407,60 @@ class SearchProductAjaxView(View):
 class ShowProductFeaturesForUpdate(View):
     @staticmethod
     def get(request):
-        id_product = (request.GET.get('product'))
-        product = ProductSpec.objects.get(name=id_product)
-        pf = ('name_product', 'name_spec', 'name_value')
-        features = CharacteristicValue.objects.filter(name_product=product.id).select_related(*pf)
+        read_get = (request.GET.get('purpose'))
 
-        # spec_id = []
-        # for i13 in features:
-        #     spec_id.append(i13.name_spec.id)
+        if read_get == '1':  # выгрузка всех характеристик по значению
+            value_id = (request.GET.get('value_id'))
+            pf = ('name_product', 'name_spec', 'name_value')
+            features = CharacteristicValue.objects.filter(id=value_id).select_related(*pf)
+            f = features[0].name_spec
+            all_features = ValuesSpec.objects.filter(characteristicvalue__name_spec=f).distinct()
+            select_different_values_dict = defaultdict(list)
+            for i in all_features:
+                # print(all_features[0].characteristicvalue_set.name_product)
+                p = str(i)
+                select_different_values_dict[p].append(p)
+            # debug_qur()
 
-        # spec_data_list = {}
-        # features2 = CharacteristicValue.objects.filter(name_spec__in=spec_id).select_related(*pf)
-        #
-        # for i241 in features2:
-        #     cat_spec = str(i241.name_spec)
-        #     value_spec = str(i241.name_value)
-        #     if spec_data_list.get(cat_spec) is None:
-        #         spec_data_list[cat_spec] = []
-        #     else:
-        #         spec_data_list[cat_spec].append(value_spec)
-        #
-        # for key, value in spec_data_list.items():
-        #     spec_data_list[key] = list(set(value))
+            return JsonResponse({"result": select_different_values_dict})
+        else:
+            id_product = (request.GET.get('product'))
+            product = ProductSpec.objects.get(name=id_product)
+            pf = ('name_product', 'name_spec', 'name_value')
+            features = CharacteristicValue.objects.filter(name_product=product.id).select_related(*pf)
 
-        select_different_values_dict = defaultdict(list)
-        for item in features:
-            key = str(item.name_spec)
-            value = str(item.name_value)
-            select_different_values_dict[key].append(value)
+            # spec_id = []
+            # for i13 in features:
+            #     spec_id.append(i13.name_spec.id)
 
-        # return JsonResponse({"result": select_different_values_dict})
-        return JsonResponse({"result": select_different_values_dict})
+            # spec_data_list = {}
+            # features2 = CharacteristicValue.objects.filter(name_spec__in=spec_id).select_related(*pf)
+            #
+            # for i241 in features2:
+            #     cat_spec = str(i241.name_spec)
+            #     value_spec = str(i241.name_value)
+            #     if spec_data_list.get(cat_spec) is None:
+            #         spec_data_list[cat_spec] = []
+            #     else:
+            #         spec_data_list[cat_spec].append(value_spec)
+            #
+            # for key, value in spec_data_list.items():
+            #     spec_data_list[key] = list(set(value))
+
+            select_different_values_dict = defaultdict(list)
+            for item in features:
+                key = str(item.name_spec)
+                value = str(item.name_value)
+                value_id = str(item.id)
+                select_different_values_dict[key].append(value_id)
+                select_different_values_dict[key].append(value)
+
+            # return JsonResponse({"result": select_different_values_dict})
+            return JsonResponse({"result": select_different_values_dict})
+
+
+def debug_qur():
+    from django.db import connection
+    print('=========================')
+    print(len(connection.queries))
+    print('=========================')
