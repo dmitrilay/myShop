@@ -1,0 +1,9 @@
+/account/migrations
+/cart/migrations
+/specifications/migrations
+/shop/migrations
+/orders/migrations
+/django_cache
+/.idea
+
+db.sqlite3

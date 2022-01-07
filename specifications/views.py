@@ -288,16 +288,16 @@ class ProductFeatureChoicesAjaxView(View):
     @staticmethod
     def get(request):
         category = Category.objects.get(id=int(request.GET.get('category_id')))
-        feature_name = request.GET.get('product_feature_name')
-        feature_key = CategoryProducts.objects.get(category=category, feature_name=feature_name)
-        validators_qs = FeatureValidator.objects.filter(category=category, feature_key=feature_key)
-
-        dict_result = dict()
-        for item in validators_qs:
-            dict_result[item.id] = [item.id, item.valid_feature_value]
-
-        json_string = json.dumps(dict_result)
-        return JsonResponse({"features": json_string})
+        # feature_name = request.GET.get('product_feature_name')
+        # feature_key = CategoryProducts.objects.get(category=category, feature_name=feature_name)
+        # validators_qs = FeatureValidator.objects.filter(category=category, feature_key=feature_key)
+        #
+        # dict_result = dict()
+        # for item in validators_qs:
+        #     dict_result[item.id] = [item.id, item.valid_feature_value]
+        #
+        # json_string = json.dumps(dict_result)
+        # return JsonResponse({"features": json_string})
 
 
 # -------------------------------------------
@@ -412,8 +412,29 @@ class ShowProductFeaturesForUpdate(View):
         pf = ('name_product', 'name_spec', 'name_value')
         features = CharacteristicValue.objects.filter(name_product=product.id).select_related(*pf)
 
+        # spec_id = []
+        # for i13 in features:
+        #     spec_id.append(i13.name_spec.id)
+
+        # spec_data_list = {}
+        # features2 = CharacteristicValue.objects.filter(name_spec__in=spec_id).select_related(*pf)
+        #
+        # for i241 in features2:
+        #     cat_spec = str(i241.name_spec)
+        #     value_spec = str(i241.name_value)
+        #     if spec_data_list.get(cat_spec) is None:
+        #         spec_data_list[cat_spec] = []
+        #     else:
+        #         spec_data_list[cat_spec].append(value_spec)
+        #
+        # for key, value in spec_data_list.items():
+        #     spec_data_list[key] = list(set(value))
+
         select_different_values_dict = defaultdict(list)
         for item in features:
-            select_different_values_dict[str(item.name_spec)] = str(item.name_value)
+            key = str(item.name_spec)
+            value = str(item.name_value)
+            select_different_values_dict[key].append(value)
 
+        # return JsonResponse({"result": select_different_values_dict})
         return JsonResponse({"result": select_different_values_dict})
