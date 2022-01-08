@@ -1,4 +1,6 @@
 var data
+var id_button
+var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
 
 document.querySelector('#category-validators-id').addEventListener('change', write_form);
 
@@ -11,6 +13,10 @@ document.addEventListener('click', function(e) {
    if (obj.getAttribute('att_bootstrap') == 'modal') {
       editing_characteristics(obj)
    }
+   if (obj.id == 'save-vl') {
+      save_value(obj)
+   }
+
 });
 
 document.addEventListener('input', function(e) {
@@ -20,21 +26,46 @@ document.addEventListener('input', function(e) {
    }
 });
 
+function save_value(obj) {
+   console.log(obj)
+   myModal.hide();
+
+}
+
+
 
 function editing_characteristics(obj) {
    // ручной запуск модального окна bootstrap
-   let myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
    myModal.show();
-
 
 
    get_params = `?purpose=1&value_id=${obj.value}`
    url = "/spec/show-product-features-for-update" + get_params
-   console.log(url)
-   sending_server(url)
-   // .then(function() {
-   //    test(data)
-   // })
+
+   sending_server(url).then(function() {
+      // console.log(obj)
+      let elem = document.querySelector('#current-value')
+      elem.innerText = data['result'][1]
+
+      elem = document.querySelector('#select-value')
+      elem.innerHTML = ''
+      attib = [
+         ['selected', ''],
+      ]
+      html_designer2(elem, 'option', [], attib, '---')
+      for (let i in data['result'][0]) {
+         p = data['result'][0][i]
+         // console.log(p)
+         attib = [
+            ['value', p],
+         ]
+         html_designer2(elem, 'option', [], attib, p)
+      }
+
+
+      // alert(data)
+      // test(data)
+   })
 
 
 }

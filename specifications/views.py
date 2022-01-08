@@ -408,21 +408,20 @@ class ShowProductFeaturesForUpdate(View):
     @staticmethod
     def get(request):
         read_get = (request.GET.get('purpose'))
-
         if read_get == '1':  # выгрузка всех характеристик по значению
             value_id = (request.GET.get('value_id'))
             pf = ('name_product', 'name_spec', 'name_value')
             features = CharacteristicValue.objects.filter(id=value_id).select_related(*pf)
             f = features[0].name_spec
+            data = str(f) + ' // ' + str(features[0].name_value)
             all_features = ValuesSpec.objects.filter(characteristicvalue__name_spec=f).distinct()
-            select_different_values_dict = defaultdict(list)
-            for i in all_features:
-                # print(all_features[0].characteristicvalue_set.name_product)
-                p = str(i)
-                select_different_values_dict[p].append(p)
-            # debug_qur()
 
-            return JsonResponse({"result": select_different_values_dict})
+            select_different_values_dict = []
+            for i in all_features:
+                select_different_values_dict.append(str(i))
+            # debug_qur()
+            return JsonResponse({"result": [select_different_values_dict, data]})
+
         else:
             id_product = (request.GET.get('product'))
             product = ProductSpec.objects.get(name=id_product)
