@@ -421,7 +421,17 @@ class ShowProductFeaturesForUpdate(View):
                 select_different_values_dict.append(str(i))
             # debug_qur()
             return JsonResponse({"result": [select_different_values_dict, data]})
+        elif read_get == '2':
+            value_old_id = (request.GET.get('value_id'))
+            new_value_name = (request.GET.get('new_value_name'))
 
+            if new_value_name != '---':
+                features = CharacteristicValue.objects.get(id=value_old_id)
+                z = ValuesSpec.objects.get(name=new_value_name)
+                features.name_value = z
+                features.save()
+
+            return JsonResponse({"result": 1})
         else:
             id_product = (request.GET.get('product'))
             product = ProductSpec.objects.get(name=id_product)

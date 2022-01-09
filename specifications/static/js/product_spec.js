@@ -1,5 +1,9 @@
 var data
 var id_button
+var id_product
+
+var old_value_id
+
 var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
 
 document.querySelector('#category-validators-id').addEventListener('change', write_form);
@@ -13,6 +17,10 @@ document.addEventListener('click', function(e) {
    if (obj.getAttribute('att_bootstrap') == 'modal') {
       editing_characteristics(obj)
    }
+   if (obj.getAttribute('fill') == 'currentColor') {
+      editing_characteristics(obj.parentElement)
+   }
+
    if (obj.id == 'save-vl') {
       save_value(obj)
    }
@@ -27,9 +35,16 @@ document.addEventListener('input', function(e) {
 });
 
 function save_value(obj) {
-   console.log(obj)
    myModal.hide();
+   obj2 = document.querySelector('#product-features-update-list')
+   obj2.innerHTML = ''
 
+   new_value_name = document.querySelector('#select-value')
+   get_params = `?purpose=2&value_id=${old_value_id}&new_value_name=${new_value_name.value}`
+   url = "/spec/show-product-features-for-update" + get_params
+   sending_server(url).then(function() {
+      setTimeout(feature_123, 1000, id_product);
+   })
 }
 
 
@@ -38,12 +53,11 @@ function editing_characteristics(obj) {
    // ручной запуск модального окна bootstrap
    myModal.show();
 
-
+   old_value_id = obj.value
    get_params = `?purpose=1&value_id=${obj.value}`
    url = "/spec/show-product-features-for-update" + get_params
 
    sending_server(url).then(function() {
-      // console.log(obj)
       let elem = document.querySelector('#current-value')
       elem.innerText = data['result'][1]
 
@@ -66,8 +80,6 @@ function editing_characteristics(obj) {
       // alert(data)
       // test(data)
    })
-
-
 }
 
 function html_designer(p_obj, p_elem, p_class, p_text) {
@@ -126,23 +138,20 @@ function html_select_list(p_obj, p_values, p_class, p_text) {
 }
 
 function feature_123(obj) {
+   id_product = obj
    let obj2, obj3
    let elem = document.querySelector('#product-features-update-list')
 
    obj1 = html_designer(elem, 'div', ['row'])
    obj2 = html_designer(obj1, 'div', ['spec', 'col-12'])
    obj3 = html_designer(obj2, 'h4', ['text-center'], 'Характеристика')
-   // obj2 = html_designer(obj1, 'div', ['spec', 'col-6'])
-   // obj3 = html_designer(obj2, 'h4', ['text-center'], 'Текущее значение')
-   // obj2 = html_designer(obj1, 'div', ['col-md-4'])
-   // obj3 = html_designer(obj2, 'h4', ['text-center'], 'Новое значение')
 
    get_params = '?product=' + obj.innerText
    url = "/spec/show-product-features-for-update/" + get_params
    sending_server(url)
       .then(function() {
          feature_write(data)
-         // console.log('готово')
+         console.log(data)
       })
 }
 
@@ -152,7 +161,6 @@ function feature_write(data) {
   <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/></svg>`
 
    let elem = document.querySelector('#product-features-update-list')
-   // console.log(data['result'])
    for (elem_i in data['result']) {
       let elem2 = elem.querySelectorAll('.spec')
       row_div = html_designer(elem2[0], 'div', ['m-3', 'row', ])
@@ -160,7 +168,6 @@ function feature_write(data) {
       attib = [
          ['att_bootstrap', 'modal'],
       ]
-
 
       html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
       html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
@@ -171,12 +178,6 @@ function feature_write(data) {
       ]
       html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
       html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], data['result'][elem_i][1])
-      // html_select_list(elem2[1], data['result'][elem_i], ['form-select','m-3'])
-
-
-      // html_designer(elem2[1], 'div', ['feature-name'], elem_i)
-      // console.log(data['result'][elem_i])
-
    }
 }
 
@@ -191,6 +192,7 @@ function write_form() {
 }
 
 function search_text(obj) {
+   id_product = obj.value
    category_id = document.querySelector('#category-validators-id').value
    get_params = '?query=' + obj.value + '&category_id=' + category_id
    url = "/spec/search-product/" + get_params
@@ -219,7 +221,7 @@ function remove_search_text() {
 function test(data) {
    for (var key in data['result']) {
       name_pr = data['result'][key]['name']
-      id_pr = data['result'][key]['id'] // option_value += `<option value="${key}">${key}</option>`;
+      id_pr = data['result'][key]['id']
 
       let myElement = document.querySelector('#search-product-results')
       let obj_li = document.createElement('li')
