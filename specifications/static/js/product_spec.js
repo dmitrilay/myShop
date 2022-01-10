@@ -161,24 +161,24 @@ function feature_write(data) {
   <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/></svg>`
 
    let elem = document.querySelector('#product-features-update-list')
+   let elem2 = elem.querySelectorAll('.spec')
+
    for (elem_i in data['result']) {
-      let elem2 = elem.querySelectorAll('.spec')
-      row_div = html_designer(elem2[0], 'div', ['m-3', 'row', ])
-
-      attib = [
-         ['att_bootstrap', 'modal'],
-      ]
-
-      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
-      html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
+      row_div = html_designer(elem2[0], 'div', ['mb-2', 'row', 'border', 'rounded', 'col-12', 'col-lg-6'])
 
       attib = [
          ['att_bootstrap', 'modal'],
          ['value', data['result'][elem_i][0]],
       ]
-      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'col-1', 'mb-1'], attib, svg)
-      html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], data['result'][elem_i][1])
+      html_designer2(row_div, 'button', ['btn', 'btn-danger', 'btn-sm', 'col-1', 'm-1', ], attib, svg)
+      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'btn-sm', 'col-1', 'm-1'], attib, svg)
+      // html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
+      name_spec_value = `${elem_i} // ${data['result'][elem_i][1]}`
+      html_designer(row_div, 'div', ['col-9', 'm-0', 'text-truncate'], name_spec_value)
+
+
    }
+   html_designer2(elem2[0], 'button', ['col-12', 'col-lg-6', 'btn', 'btn-outline-success', 'btn-lg', 'mt-6'], attib, 'Добавить характеристику')
 }
 
 function write_form() {
