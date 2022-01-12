@@ -1,38 +1,83 @@
 var data
 var id_button
 var id_product
-
+var name_product_id
 var old_value_id
-
 var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
 
-document.querySelector('#category-validators-id').addEventListener('change', write_form);
+document.addEventListener('change', function(e) {
+   let obj = e.target
+   if (obj.id == 'category-validators-id') {
+      write_form(obj)
+   } else if (obj.id == 'value-spec-validators') {
+      add_characteristics_value(obj)
+   }
 
+})
 document.addEventListener('click', function(e) {
    let obj = e.target
    if (obj.className == 'list-group-item list-group-item-action') {
+      name_product_id = obj.value
       alert_123(obj)
       feature_123(obj)
    }
-   if (obj.getAttribute('att_bootstrap') == 'modal') {
-      editing_characteristics(obj)
-   }
-   if (obj.getAttribute('fill') == 'currentColor') {
-      editing_characteristics(obj.parentElement)
+   // if (obj.getAttribute('att_bootstrap') == 'modal') {
+   //    editing_characteristics(obj)
+   // }
+
+   // Добавление характеристики к товару
+   if (obj.getAttribute('add_spec_modal') == 'modal') {
+      add_characteristics(obj)
    }
 
-   if (obj.id == 'save-vl') {
+   // console.log(obj)
+   // Удаление характеристики из товара
+   // if (obj.getAttribute('fill') == 'currentColor') {
+   //    console.log(obj.children)
+   //    // editing_characteristics(obj.parentElement)
+   //    // alert('удаление')
+   // }
+
+   if (obj.getAttribute('modal') == 'save-vl') {
       save_value(obj)
+   } else if (obj.getAttribute('modal') == 'save-vl2') {
+      save_new_value_spec()
+   }
+
+
+   let btn_del = document.querySelector('#btn-del')
+   if (btn_del.contains(obj)) {
+      alert('удалить2')
+   }
+   let btn_edit = document.querySelector('#btn-edit')
+   if (btn_edit.contains(obj)) {
+      editing_characteristics(obj)
    }
 
 });
-
 document.addEventListener('input', function(e) {
    let obj = e.target
    if (obj.id == 'search-text') {
       search_text(obj)
    }
 });
+
+function save_new_value_spec(obj) {
+   myModal.hide();
+   // obj2 = document.querySelector('#product-features-update-list')
+   // obj2.innerHTML = ''
+
+   let name_characteristic = document.querySelector('#value-spec-validators').value
+   let name_value = document.querySelector('#value-spec-select-validators').value
+   let product = name_product_id
+
+   get_params = `?purpose=5&name_characteristic=${name_characteristic}&name_value=${name_value}&product=${product}`
+   url = "/spec/show-product-features-for-update" + get_params
+   sending_server(url).then(function() {
+      // setTimeout(feature_123, 1000, id_product);
+      console.log('успех')
+   })
+}
 
 function save_value(obj) {
    myModal.hide();
@@ -47,12 +92,76 @@ function save_value(obj) {
    })
 }
 
+function add_characteristics_value(obj) {
+   get_params = `?purpose=4&value_id=${obj.value}`
+   url = "/spec/show-product-features-for-update" + get_params
+   sending_server(url).then(function() {
 
+      attib = [
+         ['aria-label', 'Default select example'],
+         ['id', 'value-spec-select-validators'],
+      ]
+      let elem = document.querySelector('.modal-body')
+      let elem2 = document.querySelector('#value-spec-select-validators')
+      if (elem2 == null) {
+         elem_select = html_designer2(elem, 'select', ['form-select', 'mt-3'], attib, [])
+      } else {
+         elem2.innerHTML = ''
+      }
+
+      attib = [
+         ['aria-label', 'Default select example'],
+         ['class', 'form-select'],
+         ['id', 'value-spec-validators']
+      ]
+
+      html_designer2(elem_select, 'option', [], attib, '---')
+      for (let i in data['result']) {
+         p = data['result'][i]
+         attib = [
+            ['value', i],
+         ]
+         html_designer2(elem_select, 'option', [], attib, p)
+      }
+
+   })
+}
+
+function add_characteristics(obj) {
+   document.querySelector('#save').setAttribute('modal', 'save-vl2')
+
+
+   // .getAttribute('modal') = 'save-vl2'
+   old_value_id = id_product.value
+   get_params = `?purpose=3&value_id=${old_value_id}`
+   url = "/spec/show-product-features-for-update" + get_params
+
+   sending_server(url).then(function() {
+      myModal.show();
+      let elem = document.querySelector('.modal-body')
+      elem.innerHTML = ''
+      attib = [
+         ['aria-label', 'Default select example'],
+         ['class', 'form-select'],
+         ['id', 'value-spec-validators']
+      ]
+      elem_select = html_designer2(elem, 'select', [], attib, [])
+      html_designer2(elem_select, 'option', [], attib, '---')
+      for (let i in data['result']) {
+         p = data['result'][i]
+         attib = [
+            ['value', i],
+         ]
+         html_designer2(elem_select, 'option', [], attib, p)
+      }
+
+   })
+}
 
 function editing_characteristics(obj) {
    // ручной запуск модального окна bootstrap
    myModal.show();
-
+   document.querySelector('#save').setAttribute('modal', 'save-vl')
    old_value_id = obj.value
    get_params = `?purpose=1&value_id=${obj.value}`
    url = "/spec/show-product-features-for-update" + get_params
@@ -101,10 +210,8 @@ function html_designer2(p_obj, p_elem, p_class, p_setAtt, p_text) {
    }
    if (p_setAtt != null) {
       for (let i234 in p_setAtt) {
-         // console.log(p_setAtt)
          elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])
       }
-
    }
 
    for (i in p_class) {
@@ -151,7 +258,6 @@ function feature_123(obj) {
    sending_server(url)
       .then(function() {
          feature_write(data)
-         console.log(data)
       })
 }
 
@@ -167,10 +273,14 @@ function feature_write(data) {
       row_div = html_designer(elem2[0], 'div', ['mb-2', 'row', 'border', 'rounded', 'col-12', 'col-lg-6'])
 
       attib = [
-         ['att_bootstrap', 'modal'],
          ['value', data['result'][elem_i][0]],
+         ['id', 'btn-del'],
       ]
       html_designer2(row_div, 'button', ['btn', 'btn-danger', 'btn-sm', 'col-1', 'm-1', ], attib, svg)
+      attib = [
+         ['id', 'btn-edit'],
+         ['value', data['result'][elem_i][0]],
+      ]
       html_designer2(row_div, 'button', ['btn', 'btn-primary', 'btn-sm', 'col-1', 'm-1'], attib, svg)
       // html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
       name_spec_value = `${elem_i} // ${data['result'][elem_i][1]}`
@@ -178,7 +288,12 @@ function feature_write(data) {
 
 
    }
-   html_designer2(elem2[0], 'button', ['col-12', 'col-lg-6', 'btn', 'btn-outline-success', 'btn-lg', 'mt-6'], attib, 'Добавить характеристику')
+   att_class = ['col-12', 'col-lg-6', 'btn', 'btn-outline-secondary', 'btn-lg', 'mt-6']
+   att_other = [
+      ['add_spec_modal', 'modal'],
+      ['value', data['result'][elem_i][0]],
+   ]
+   html_designer2(elem2[0], 'button', att_class, att_other, '+')
 }
 
 function write_form() {

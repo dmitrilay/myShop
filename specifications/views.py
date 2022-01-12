@@ -408,6 +408,9 @@ class ShowProductFeaturesForUpdate(View):
     @staticmethod
     def get(request):
         read_get = (request.GET.get('purpose'))
+        # print('!!!!!!!!!!!!!!!!!!!!!!!!!')
+        # print(read_get)
+        # print('!!!!!!!!!!!!!!!!!!!!!!!!!')
         if read_get == '1':  # выгрузка всех характеристик по значению
             value_id = (request.GET.get('value_id'))
             pf = ('name_product', 'name_spec', 'name_value')
@@ -432,7 +435,50 @@ class ShowProductFeaturesForUpdate(View):
                 features.save()
 
             return JsonResponse({"result": 1})
+
+        elif read_get == '3':
+            value_old_id = (request.GET.get('value_id'))
+            cat_id = ProductSpec.objects.get(id=value_old_id).category.id
+            p = ('id', 'name')
+            all_spec = Specifications.objects.filter(characteristicvalue__cat=cat_id).distinct().values(*p)
+            p = ('id', 'name')
+            product_spec = Specifications.objects.filter(characteristicvalue__name_product=value_old_id).values(*p)
+
+            all_spec_dict = {}
+            for i in all_spec:
+                all_spec_dict[i['id']] = i['name']
+
+            for i in product_spec:
+                all_spec_dict.pop(i['id'])
+
+            return JsonResponse({"result": all_spec_dict})
+        elif read_get == '4':
+            value_id = (request.GET.get('value_id'))
+            v = ('id', 'name')
+            q = ValuesSpec.objects.filter(characteristicvalue__name_spec=value_id).distinct().values(*v)
+
+            all_spec_dict = {}
+            for i in q:
+                all_spec_dict[i['id']] = i['name']
+
+            return JsonResponse({"result": all_spec_dict})
+        elif read_get == '5':
+            """Добавление характеристики и значения для продукта"""
+            # TODO: необходимо добавить правильную категорию
+            name_characteristic = (request.GET.get('name_characteristic'))
+            name_value = (request.GET.get('name_value'))
+            product = (request.GET.get('product'))
+            q1 = ProductSpec.objects.get(id=product)
+            q2 = ValuesSpec.objects.get(id=name_value)
+            q3 = Specifications.objects.get(id=name_characteristic)
+            q4 = CategoryProducts.objects.get(id='1')
+            # print(q)
+            q = CharacteristicValue(name_product=q1, name_spec=q3, name_value=q2, cat=q4)
+            q.save()
+
+            return JsonResponse({"result": 1})
         else:
+
             id_product = (request.GET.get('product'))
             product = ProductSpec.objects.get(name=id_product)
             pf = ('name_product', 'name_spec', 'name_value')
@@ -470,6 +516,11 @@ class ShowProductFeaturesForUpdate(View):
 
 def debug_qur():
     from django.db import connection
-    print('=========================')
-    print(len(connection.queries))
-    print('=========================')
+    p = '=' * 100
+    print(p)
+    # print('запросов выполнено: ', len(connection.queries))
+    i2 = 0
+    for i in connection.queries:
+        i2 += 1
+        print(f'запрос: №{i2} \r\n\n{i}\r\n\n')
+    print(p)

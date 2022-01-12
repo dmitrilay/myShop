@@ -13,10 +13,10 @@ class CategoryProducts(models.Model):
 
 
 class Specifications(models.Model):
-    name = models.CharField(max_length=100)
-    participation_filtering = models.BooleanField(default=False)
-    priority_spec = models.CharField(max_length=10, default=99)
-    category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100, db_index=True)
+    participation_filtering = models.BooleanField(default=False, db_index=True)
+    priority_spec = models.CharField(max_length=10, default=99, db_index=True)
+    category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, null=True, blank=True, db_index=True)
 
     def __str__(self):
         return self.name
@@ -39,9 +39,9 @@ class ValuesSpec(models.Model):
 
 
 class CharacteristicValue(models.Model):
-    name_product = models.ForeignKey('ProductSpec', on_delete=models.SET_DEFAULT, default=0, null=True)
-    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_DEFAULT, default=0,
-                                  null=True)
+    name_product = models.ForeignKey('ProductSpec', related_name='product_sp', on_delete=models.SET_DEFAULT, default=0,
+                                     null=True)
+    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_DEFAULT, default=0, null=True)
     name_value = models.ForeignKey('ValuesSpec', on_delete=models.SET_DEFAULT, default=0)
     cat = models.ForeignKey('CategoryProducts', on_delete=models.SET_DEFAULT, default=0)
 
