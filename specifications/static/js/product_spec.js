@@ -1,8 +1,11 @@
-var data
-var id_button
+// var data
+// var id_button
+
 var id_product
 var name_product_id
 var old_value_id
+
+var list_spec
 var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
 var myModal_spec_del = new bootstrap.Modal(document.getElementById('exampleModal2'))
 
@@ -17,19 +20,24 @@ document.addEventListener('change', function(e) {
 })
 document.addEventListener('click', function(e) {
    let obj = e.target
+
+   // Возврат к первоначальному состаяни (выбор продукта)
+   if (obj.className == 'btn-close') {
+      clearing_content(obj.parentElement.className)
+   }
+
    // Открываем модальное окно для редактирования значий характеристики
    if (obj.id == 'btn-edit') {
       editing_characteristics(obj)
-   } else if (obj.parentElement.id == 'btn-edit' || obj.parentElement.parentElement.id == 'btn-edit') {
-      editing_characteristics(obj)
+   } else if (obj.parentElement.id == 'btn-edit') {
+      editing_characteristics(obj.parentElement)
    }
+
    // Открываем модальное окно для подтверждения удаления характеристики
    if (obj.id == 'btn-del') {
       remove_characteristic(obj)
    } else if (obj.parentElement.id == 'btn-del') {
       remove_characteristic(obj.parentElement)
-   } else if (obj.parentElement.parentElement.id == 'btn-del') {
-      remove_characteristic(obj.parentElement.parentElement)
    }
 
    // Подтверждения удаления характеристики
@@ -62,6 +70,17 @@ document.addEventListener('input', function(e) {
    }
 });
 
+
+function clearing_content(obj) {
+   document.querySelector('#product-features-update-list').innerHTML = ''
+   document.querySelector('.product').innerHTML = ''
+   document.querySelector('#search-text').value = ''
+
+   document.querySelector('.category-validator-div').style.display = ''
+   document.querySelector('.product-search-ajax').style.display = ''
+   document.querySelector('.product').style.display = ''
+}
+
 function click_remove_characteristic(obj) {
    myModal_spec_del.hide();
    let elem = document.querySelector('#del-value')
@@ -77,6 +96,7 @@ function click_remove_characteristic(obj) {
 
 function remove_characteristic(obj) {
    myModal_spec_del.show();
+   let data = list_spec
    for (i in data['result']) {
       if (data['result'][i][0] == obj.value) {
          let elem = document.querySelector('#del-value')
@@ -152,15 +172,13 @@ function add_characteristics_value(obj) {
 function add_characteristics(obj) {
    document.querySelector('#save').setAttribute('modal', 'save-vl2')
 
-
-   // .getAttribute('modal') = 'save-vl2'
    old_value_id = id_product.value
    get_params = `?purpose=3&value_id=${old_value_id}`
    url = "/spec/show-product-features-for-update" + get_params
 
    sending_server(url).then(function() {
       myModal.show();
-      let elem = document.querySelector('.modal-body')
+      let elem = document.querySelector('#modal-1')
       elem.innerHTML = ''
       attib = [
          ['aria-label', 'Default select example'],
@@ -181,29 +199,36 @@ function add_characteristics(obj) {
 }
 
 function editing_characteristics(obj) {
-   // ручной запуск модального окна bootstrap
-   myModal.show();
+   myModal.show()
+   let elem = document.querySelector('#modal-1')
+   elem.innerHTML = ''
+   html_designer(elem, 'label', [], 'Текущие значение')
+   let elem1 = html_designer(elem, 'div', ['form-control', 'mb-2'], 'Идет загрузка...')
+   elem1.id = 'current-value'
+   html_designer(elem, 'label', [], 'Новое значение')
+   attib = [
+      ['id', 'select-value'],
+      ['aria-label', 'Default select example'],
+   ]
+   let elem2 = html_designer2(elem, 'select', ['form-select', ], attib, '')
    document.querySelector('#save').setAttribute('modal', 'save-vl')
+
    old_value_id = obj.value
    get_params = `?purpose=1&value_id=${obj.value}`
    url = "/spec/show-product-features-for-update" + get_params
 
    sending_server(url).then(function() {
-      let elem = document.querySelector('#current-value')
-      elem.innerText = data['result'][1]
-
-      elem = document.querySelector('#select-value')
-      elem.innerHTML = ''
+      elem1.innerText = data['result'][1]
       attib = [
          ['selected', ''],
       ]
-      html_designer2(elem, 'option', [], attib, '---')
+      html_designer2(elem2, 'option', [], attib, '---')
       for (let i in data['result'][0]) {
          p = data['result'][0][i]
          attib = [
             ['value', p],
          ]
-         html_designer2(elem, 'option', [], attib, p)
+         html_designer2(elem2, 'option', [], attib, p)
       }
    })
 }
@@ -245,32 +270,27 @@ function feature_123(obj) {
    url = "/spec/show-product-features-for-update/" + get_params
    sending_server(url)
       .then(function() {
+         list_spec = data
          feature_write(data)
       })
 }
 
 function feature_write(data) {
-   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-nut" viewBox="0 0 16 16">
-  <path d="m11.42 2 3.428 6-3.428 6H4.58L1.152 8 4.58 2h6.84zM4.58 1a1 1 0 0 0-.868.504l-3.428 6a1 1 0 0 0 0 .992l3.428 6A1 1 0 0 0 4.58 15h6.84a1 1 0 0 0 .868-.504l3.429-6a1 1 0 0 0 0-.992l-3.429-6A1 1 0 0 0 11.42 1H4.58z"/>
-  <path d="M6.848 5.933a2.5 2.5 0 1 0 2.5 4.33 2.5 2.5 0 0 0-2.5-4.33zm-1.78 3.915a3.5 3.5 0 1 1 6.061-3.5 3.5 3.5 0 0 1-6.062 3.5z"/></svg>`
-
    let elem = document.querySelector('#product-features-update-list')
    let elem2 = elem.querySelectorAll('.spec')
 
    for (elem_i in data['result']) {
       row_div = html_designer(elem2[0], 'div', ['mb-2', 'row', 'border', 'rounded', 'col-12', 'col-lg-6'])
-
       attib = [
          ['value', data['result'][elem_i][0]],
          ['id', 'btn-del'],
       ]
-      html_designer2(row_div, 'button', ['btn', 'btn-danger', 'btn-sm', 'col-1', 'm-1', ], attib, svg)
+      html_designer2(row_div, 'button', ['btn', 'btn-danger', 'btn-sm', 'col-1', 'm-1', ], attib, '<i class="fa fa-trash"></i>')
       attib = [
          ['id', 'btn-edit'],
          ['value', data['result'][elem_i][0]],
       ]
-      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'btn-sm', 'col-1', 'm-1'], attib, svg)
-      // html_designer(row_div, 'div', ['col-11', 'col-md-4', 'mb-1'], elem_i)
+      html_designer2(row_div, 'button', ['btn', 'btn-primary', 'btn-sm', 'col-1', 'm-1'], attib, '<i class="fa fa-edit"></i>')
       name_spec_value = `${elem_i} // ${data['result'][elem_i][1]}`
       html_designer(row_div, 'div', ['col-9', 'm-0', 'text-truncate'], name_spec_value)
 
@@ -358,23 +378,19 @@ function alert_123(obj) {
 
    attib = [
       ['id', 'product-title'],
-      ['role', 'alert'],
    ]
    myElement = html_designer2(myElement, 'div', ['alert', 'alert-info', 'alert-dismissible', 'show'], attib, obj.innerText)
 
-   attib = [
-      ['data-bs-dismiss', 'alert'],
-      ['role', 'alert'],
-      ['onclick', 'removeProduct()'],
-   ]
-   html_designer2(myElement, 'button', ['btn-close'], attib, [])
+   html_designer2(myElement, 'button', ['btn-close'], [], [])
    remove_search_text()
 
    document.querySelector('.category-validator-div').style.display = 'none' // скрыть строку поиска
    document.querySelector('.product-search-ajax').style.display = 'none' // скрыть строку поиска
 };
 
-// функции для построения HTML 
+// ============================================
+// функции для построения HTML
+// ============================================
 function html_designer(p_obj, p_elem, p_class, p_text) {
    let elem_div = document.createElement(p_elem)
    if (p_text != null) {
