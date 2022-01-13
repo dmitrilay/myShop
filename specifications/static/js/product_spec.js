@@ -4,6 +4,7 @@ var id_product
 var name_product_id
 var old_value_id
 var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+var myModal_spec_del = new bootstrap.Modal(document.getElementById('exampleModal2'))
 
 document.addEventListener('change', function(e) {
    let obj = e.target
@@ -16,45 +17,44 @@ document.addEventListener('change', function(e) {
 })
 document.addEventListener('click', function(e) {
    let obj = e.target
+   // Открываем модальное окно для редактирования значий характеристики
+   if (obj.id == 'btn-edit') {
+      editing_characteristics(obj)
+   } else if (obj.parentElement.id == 'btn-edit' || obj.parentElement.parentElement.id == 'btn-edit') {
+      editing_characteristics(obj)
+   }
+   // Открываем модальное окно для подтверждения удаления характеристики
+   if (obj.id == 'btn-del') {
+      remove_characteristic(obj)
+   } else if (obj.parentElement.id == 'btn-del') {
+      remove_characteristic(obj.parentElement)
+   } else if (obj.parentElement.parentElement.id == 'btn-del') {
+      remove_characteristic(obj.parentElement.parentElement)
+   }
+
+   // Подтверждения удаления характеристики
+   if (obj.id == 'click-btn-del') {
+      click_remove_characteristic(obj)
+   }
+
+   // ---
    if (obj.className == 'list-group-item list-group-item-action') {
       name_product_id = obj.value
       alert_123(obj)
       feature_123(obj)
    }
-   // if (obj.getAttribute('att_bootstrap') == 'modal') {
-   //    editing_characteristics(obj)
-   // }
-
    // Добавление характеристики к товару
    if (obj.getAttribute('add_spec_modal') == 'modal') {
       add_characteristics(obj)
    }
-
-   // console.log(obj)
-   // Удаление характеристики из товара
-   // if (obj.getAttribute('fill') == 'currentColor') {
-   //    console.log(obj.children)
-   //    // editing_characteristics(obj.parentElement)
-   //    // alert('удаление')
-   // }
-
+   // Сохранения нового значения для продукта
    if (obj.getAttribute('modal') == 'save-vl') {
       save_value(obj)
    } else if (obj.getAttribute('modal') == 'save-vl2') {
       save_new_value_spec()
    }
-
-
-   let btn_del = document.querySelector('#btn-del')
-   if (btn_del.contains(obj)) {
-      alert('удалить2')
-   }
-   let btn_edit = document.querySelector('#btn-edit')
-   if (btn_edit.contains(obj)) {
-      editing_characteristics(obj)
-   }
-
 });
+
 document.addEventListener('input', function(e) {
    let obj = e.target
    if (obj.id == 'search-text') {
@@ -62,10 +62,32 @@ document.addEventListener('input', function(e) {
    }
 });
 
+function click_remove_characteristic(obj) {
+   myModal_spec_del.hide();
+   let elem = document.querySelector('#del-value')
+   let id_characteristic = elem.getAttribute('value')
+   get_params = `?purpose=6&id_characteristic=${id_characteristic}&id_product=${name_product_id}`
+   url = "/spec/show-product-features-for-update" + get_params
+   sending_server(url).then(function() {
+      obj2 = document.querySelector('#product-features-update-list')
+      obj2.innerHTML = ''
+      setTimeout(feature_123, 500, id_product);
+   })
+}
+
+function remove_characteristic(obj) {
+   myModal_spec_del.show();
+   for (i in data['result']) {
+      if (data['result'][i][0] == obj.value) {
+         let elem = document.querySelector('#del-value')
+         elem.innerText = `${i} // ${data['result'][i][1]}`
+         elem.setAttribute('value', data['result'][i][0])
+      }
+   }
+}
+
 function save_new_value_spec(obj) {
    myModal.hide();
-   // obj2 = document.querySelector('#product-features-update-list')
-   // obj2.innerHTML = ''
 
    let name_characteristic = document.querySelector('#value-spec-validators').value
    let name_value = document.querySelector('#value-spec-select-validators').value
@@ -74,21 +96,21 @@ function save_new_value_spec(obj) {
    get_params = `?purpose=5&name_characteristic=${name_characteristic}&name_value=${name_value}&product=${product}`
    url = "/spec/show-product-features-for-update" + get_params
    sending_server(url).then(function() {
-      // setTimeout(feature_123, 1000, id_product);
-      console.log('успех')
+      obj2 = document.querySelector('#product-features-update-list')
+      obj2.innerHTML = ''
+      setTimeout(feature_123, 500, id_product);
    })
 }
 
 function save_value(obj) {
    myModal.hide();
-   obj2 = document.querySelector('#product-features-update-list')
-   obj2.innerHTML = ''
-
    new_value_name = document.querySelector('#select-value')
    get_params = `?purpose=2&value_id=${old_value_id}&new_value_name=${new_value_name.value}`
    url = "/spec/show-product-features-for-update" + get_params
    sending_server(url).then(function() {
-      setTimeout(feature_123, 1000, id_product);
+      obj2 = document.querySelector('#product-features-update-list')
+      obj2.innerHTML = ''
+      setTimeout(feature_123, 500, id_product);
    })
 }
 
@@ -178,46 +200,12 @@ function editing_characteristics(obj) {
       html_designer2(elem, 'option', [], attib, '---')
       for (let i in data['result'][0]) {
          p = data['result'][0][i]
-         // console.log(p)
          attib = [
             ['value', p],
          ]
          html_designer2(elem, 'option', [], attib, p)
       }
-
-
-      // alert(data)
-      // test(data)
    })
-}
-
-function html_designer(p_obj, p_elem, p_class, p_text) {
-   let elem_div = document.createElement(p_elem)
-   if (p_text != null) {
-      elem_div.innerText = p_text
-   }
-
-   for (i in p_class) {
-      elem_div.classList.add(p_class[i])
-   }
-   return p_obj.appendChild(elem_div)
-}
-
-function html_designer2(p_obj, p_elem, p_class, p_setAtt, p_text) {
-   let elem_div = document.createElement(p_elem)
-   if (p_text != null) {
-      elem_div.innerHTML = p_text
-   }
-   if (p_setAtt != null) {
-      for (let i234 in p_setAtt) {
-         elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])
-      }
-   }
-
-   for (i in p_class) {
-      elem_div.classList.add(p_class[i])
-   }
-   return p_obj.appendChild(elem_div)
 }
 
 function html_select_list(p_obj, p_values, p_class, p_text) {
@@ -367,23 +355,51 @@ function sending_server(requestURL) {
 
 function alert_123(obj) {
    let myElement = document.querySelector('.product')
-   let obj_div = document.createElement('div')
-   obj_div.classList.add('alert')
-   obj_div.classList.add('alert-info')
-   obj_div.classList.add('alert-dismissible')
-   obj_div.classList.add('show')
-   obj_div.id = "product-title"
-   obj_div.setAttribute('role', 'alert')
-   obj_div.innerText = obj.innerText
-   myElement = myElement.appendChild(obj_div)
 
-   let obj_elm = document.createElement('button')
-   obj_elm.type = "button"
-   obj_elm.classList.add('btn-close')
-   obj_elm.setAttribute('data-bs-dismiss', 'alert')
-   obj_elm.setAttribute('onclick', 'removeProduct()')
-   myElement.appendChild(obj_elm)
+   attib = [
+      ['id', 'product-title'],
+      ['role', 'alert'],
+   ]
+   myElement = html_designer2(myElement, 'div', ['alert', 'alert-info', 'alert-dismissible', 'show'], attib, obj.innerText)
+
+   attib = [
+      ['data-bs-dismiss', 'alert'],
+      ['role', 'alert'],
+      ['onclick', 'removeProduct()'],
+   ]
+   html_designer2(myElement, 'button', ['btn-close'], attib, [])
    remove_search_text()
+
    document.querySelector('.category-validator-div').style.display = 'none' // скрыть строку поиска
    document.querySelector('.product-search-ajax').style.display = 'none' // скрыть строку поиска
 };
+
+// функции для построения HTML 
+function html_designer(p_obj, p_elem, p_class, p_text) {
+   let elem_div = document.createElement(p_elem)
+   if (p_text != null) {
+      elem_div.innerText = p_text
+   }
+
+   for (i in p_class) {
+      elem_div.classList.add(p_class[i])
+   }
+   return p_obj.appendChild(elem_div)
+}
+
+function html_designer2(p_obj, p_elem, p_class, p_setAtt, p_text) {
+   let elem_div = document.createElement(p_elem)
+   if (p_text != null) {
+      elem_div.innerHTML = p_text
+   }
+   if (p_setAtt != null) {
+      for (let i234 in p_setAtt) {
+         elem_div.setAttribute(p_setAtt[i234][0], p_setAtt[i234][1])
+      }
+   }
+
+   for (i in p_class) {
+      elem_div.classList.add(p_class[i])
+   }
+   return p_obj.appendChild(elem_div)
+}

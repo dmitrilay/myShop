@@ -477,6 +477,13 @@ class ShowProductFeaturesForUpdate(View):
             q.save()
 
             return JsonResponse({"result": 1})
+
+        elif read_get == '6':
+            name_characteristic = (request.GET.get('id_characteristic'))
+            product = (request.GET.get('id_product'))
+            q = CharacteristicValue.objects.filter(id=name_characteristic, name_product=product)
+            q.delete()
+            return JsonResponse({"result": 1})
         else:
 
             id_product = (request.GET.get('product'))
