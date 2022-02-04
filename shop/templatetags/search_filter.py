@@ -45,8 +45,10 @@ def product_spec(context, category):
 
     mid_res += '<hr>'
 
+    number_accordion = 0
     for (feature_name, feature_filter_name), feature_values in feature_and_values.items():
-        feature_name_html = f"""<p>{feature_name}</p>"""
+        # feature_name_html = f"""<p>{feature_name}</p>"""
+        feature_name_html = ''
         feature_values_res = ""
         for f_v in feature_values:
             ch = ''
@@ -60,10 +62,36 @@ def product_spec(context, category):
                 f'<p>{mid_feature_values_res}</p>'
             feature_values_res += mid_feature_values_res
         feature_name_html += feature_values_res
-        mid_res += feature_name_html + '<hr>'
+
+        # mid_res += feature_name_html + '<hr>'
+        number_accordion += 1
+        mid_res += bootstrap_accordion(feature_name_html, number_accordion, feature_name)
 
     res = search_filter_body.format(mid_res)
     return mark_safe(res)
+
+
+def bootstrap_accordion(content, number_accordion, feature_name):
+    show = ''
+    if number_accordion < 3:
+        show = ' show'
+
+    html = f"""      
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading{number_accordion}">
+          <button 
+            class="accordion-button collapsed" 
+            type="button" 
+            data-bs-toggle="collapse"
+            data-bs-target="#panelsStayOpen-collapse{number_accordion}" 
+          >{feature_name}</button>
+        </h2>
+        <div id="panelsStayOpen-collapse{number_accordion}" class="accordion-collapse collapse{show}">
+          <div class="accordion-body">{content}</div>
+        </div>
+      </div>
+      """
+    return html
 
 
 @register.simple_tag(takes_context=True)
@@ -86,7 +114,6 @@ def page_replace(context, page=1):
     context_data = context['request'].GET.copy()
     context_data['page'] = page
     return context_data.urlencode()
-
 
 # @register.simple_tag(takes_context=True)
 # def spec(context, page=1):

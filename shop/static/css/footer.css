@@ -6,21 +6,21 @@
   #accordionFlushExample {display: block;}
   }
 
-a:link {
+footer a:link {
     text-decoration: none; /* Убирает подчеркивание для ссылок */
 }
 
-li {
+footer li {
 	list-style-type: none;
 }
 
-.accordion-button:not(.collapsed)::after {
+footer .accordion-button:not(.collapsed)::after {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
   background-color: #54575a;
   transform: rotate(-180deg);
 }
 
-.accordion-button::after {
+footer .accordion-button::after {
   flex-shrink: 0;
   width: 1.25rem;
   height: 1.25rem;
@@ -35,10 +35,11 @@ li {
 }
 
 /*Footer*/
-.cocial a{
+footer .cocial a{
     font-size:3em;
 	padding:3px;
 }
-.fa-vk,.fa-telegram{
+
+footer .fa-vk,.fa-telegram{
 	color: #00aced
 }
