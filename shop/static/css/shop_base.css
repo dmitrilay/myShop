@@ -1,0 +1,209 @@
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffc107;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul {
+  padding: 0;
+}
+
+.product_detail__breadcrumb {
+  background-color: #f1eee9;
+  position: relative;
+  border-radius: 5px;
+}
+
+.product_detail__breadcrumb ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 15px 15px;
+}
+
+.product_detail__breadcrumb li {
+  padding-right: 5px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.product_detail__breadcrumb .active a {
+  color: #ffc107;
+  opacity: 1;
+  font-weight: 700;
+}
+
+.product_detail__breadcrumb li:not(.active):after {
+  content: " /";
+}
+
+.product_detail__main-active img {
+  max-width: 100%;
+  height: auto;
+}
+
+.pagination li.active a.page-link,
+.pagination li a.page-link:hover {
+  background: #ffc107;
+  border-color: #ffc107;
+  color: #fff;
+}
+
+.pagination li a.page-link {
+  padding: 5px 15px;
+  margin-right: 6px;
+  border: 1px solid #e8e8e8;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 0px 0px -9px #5b5f5f;
+          box-shadow: 0px 0px 0px -9px #5b5f5f;
+  font-size: 24px;
+  color: #6c757d;
+}
+
+.slider {
+  position: relative;
+}
+
+.slider .slick-track {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+.slider .slick-list {
+  overflow: hidden;
+}
+
+.slider .slider__item {
+  text-align: center;
+  margin: 0 5px;
+  height: 80px;
+}
+
+.slider .slider__item img {
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.slider-for .slick-track {
+  margin: 10px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  width: 100%;
+}
+
+.slider-for .slider__item {
+  text-align: center;
+}
+
+.slider-for .slider__item img {
+  max-width: 100%;
+}
+
+.slider-for .slick-list {
+  overflow: hidden;
+}
+
+#accordionFlushExample {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  #t124 {
+    display: none;
+  }
+  #accordionFlushExample {
+    display: block;
+  }
+}
+
+footer .accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  -webkit-transform: rotate(-180deg);
+          transform: rotate(-180deg);
+}
+
+footer .accordion-button::after {
+  content: "";
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: auto;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+footer .cocial a {
+  font-size: 3em;
+  padding: 3px;
+}
+
+footer .fa-vk,
+footer .fa-telegram {
+  color: #00aced;
+}
+
+.filters .accordion-item {
+  border: none;
+}
+
+.filters .accordion-button:not(.collapsed) {
+  color: black;
+  background-color: white;
+}
+
+.filters .accordion-button:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+#btn-filters {
+  display: none;
+}
+
+@media screen and (max-width: 991px) {
+  #t128 {
+    display: none;
+  }
+  #accordionFlushExample {
+    display: block;
+  }
+  #btn-filters {
+    display: block;
+  }
+}
+
+header .navbar-nav li {
+  padding-right: 10px;
+}
+
+header .nav-link {
+  font-size: 1.1em !important;
+}

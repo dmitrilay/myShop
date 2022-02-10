@@ -1,0 +1,20 @@
+{% load search_filter %}
+
+<!--<h5>ФИЛЬТРЫ</h5>-->
+<!--<hr>-->
+<br>
+
+<form id='t128' class="filters" action="" method="GET">
+    <div class="accordion-flush" id="accordionPanelsStayOpenExample">
+        {% product_spec category %}
+    </div>
+
+    <p class="text-center">
+        <button class="btn btn-outline-success" type="submit">Показать</button>
+        <a class="btn btn-outline-danger" href="?{{ page }}">Сбросить</a>
+    </p>
+</form>
+
+
+
+

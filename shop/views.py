@@ -73,7 +73,7 @@ class CategoryDetailView2(ListView):
 
 class ProductDetailView(DetailView):
     model = Product  # Модель шаблона
-    template_name = 'product_2/product.html'  # Путь и имя шаблона
+    template_name = 'shop/product_detail/product.html'  # Путь и имя шаблона
     context_object_name = 'product'  # Какое имя необходимо отображать в шаблоне?
     # slug_field = 'slug' # Как называется slug в шаблоне?
     slug_url_kwarg = 'product_slug'  # Какое имя(slug) искать в url?
@@ -125,5 +125,5 @@ class BuyingUp(TemplateView):
 
 class CategoryListView(ListView):
     model = Category
-    template_name = 'category.html'
+    template_name = 'shop/product_category/category.html'
     context_object_name = 'categories'
