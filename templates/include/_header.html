@@ -1,11 +1,12 @@
 <div class="container">
     <div class="header__wrapper">
-        <div class="header__burger cart-burger">
+        <div class="header__burger btn-burger">
             <span></span>
         </div>
 
         <div class="header__logo">
-            <a class="header__logo-link" href=""><span>комиссионный магазин</span> <span>щедрый</span></a>
+            <a class="header__logo-link" href="{% url 'shop:StartPageViews' %}"><span>комиссионный магазин</span>
+                <span>щедрый</span></a>
         </div>
 
         <div class="header__search search-header">
@@ -17,9 +18,11 @@
 
         <div class="header__menu header__menu-burger">
             <ul class="header__list">
-                <li class="header__item"><a class="header__link" href="">Каталог</a></li>
+                <li class="header__item"><a class="header__link" href="{% url 'shop:category_list' %}">Каталог</a></li>
                 <li class="header__item"><a class="header__link" href="">Покупаем</a></li>
-                <li class="header__item header__item-off"><a class="header__link" href="">Личный кабинет</a></li>
+                <li class="header__item header__item-off">
+                    <a class="header__link" href="{% url 'account:login' %}">Личный кабинет</a>
+                </li>
                 <li class="header__item header__item-off"><a class="header__link" href="">Избранные товары</a></li>
             </ul>
         </div>
@@ -27,7 +30,7 @@
         <div class="header__menu">
             <ul class="header__list">
                 <li class="header__item">
-                    <a class="header__link" href="">
+                    <a class="header__link" href="{% url 'account:login' %}">
                         <span class="header__link-icon icon-user"></span>
                         <span>Личный кабинет</span>
                     </a>
