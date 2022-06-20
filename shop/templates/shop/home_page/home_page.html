@@ -1,15 +1,15 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "shop/base_shop.html" %}
+
 
 {% block content %}
 <!--Карусель-->
 {% include 'shop/home_page/include/carousel.html' %}
 
-<br><br>
+<br /><br />
 <!--Выборка новых товаров-->
 {% include 'shop/home_page/include/carousel_product.html' %}
-<br><br>
+<br /><br />
+
 <!--Банеры-->
 {% include 'shop/home_page/include/banner.html' %}
-
 {% endblock %}

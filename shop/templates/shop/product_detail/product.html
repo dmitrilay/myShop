@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
-
+{% extends "shop/base_shop.html" %}
 
 {% block content %}
 <div class="product_detail">
@@ -25,8 +23,8 @@
 
             <div class="pro-price mb-10">
                 <p class="text-dark h1 font-weight-bold"><strong>
-                    {{ product.price }}<span class="h2 font-weight-bold"><strong>₽</strong></span>
-                </strong></p>
+                        {{ product.price }}<span class="h2 font-weight-bold"><strong>₽</strong></span>
+                    </strong></p>
             </div>
 
             <!-- Добавить в корзину -->
