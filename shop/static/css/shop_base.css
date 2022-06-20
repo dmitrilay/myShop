@@ -67,60 +67,117 @@ ul {
   color: #6c757d;
 }
 
-.slider {
+.slick-slider {
+  margin: 10px 0;
   position: relative;
+  display: block;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -ms-touch-action: pan-y;
+      touch-action: pan-y;
 }
 
-.slider .slick-track {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-}
-
-.slider .slick-list {
+.slick-list {
+  position: relative;
   overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.slick-list:focus {
+  outline: none;
+}
+
+.slick-list.dragging {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.slick-track {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slick-track:before, .slick-track:after {
+  content: "";
+  display: table;
+}
+
+.slick-track:after {
+  clear: both;
+}
+
+.slick-loading .slick-track {
+  visibility: hidden;
+}
+
+.slick-slide {
+  float: left;
+  height: 100%;
+  min-height: 1px;
+  display: none;
+}
+
+[dir="rtl"] .slick-slide {
+  float: right;
+}
+
+.slick-slide img {
+  display: block;
+}
+
+.slick-slide.slick-loading img {
+  display: none;
+}
+
+.slick-slide.dragging img {
+  pointer-events: none;
+}
+
+.slick-initialized .slick-slide {
+  display: block;
+}
+
+.slick-loading .slick-slide {
+  visibility: hidden;
+}
+
+.slider-for .slick-slide {
+  width: 200px;
+}
+
+.slider-for .slick-slide img {
+  width: 100%;
 }
 
 .slider .slider__item {
-  text-align: center;
-  margin: 0 5px;
-  height: 80px;
+  border: 1px solid white;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
-.slider .slider__item img {
-  text-align: center;
-  border: 1px solid black;
-  border-radius: 5px;
-  height: 100%;
+.slider .slider__item.slick-current {
+  border: 1px solid silver;
+}
+
+.slider img {
+  padding: 2px;
   width: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
-}
-
-.slider-for .slick-track {
-  margin: 10px 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  width: 100%;
-}
-
-.slider-for .slider__item {
-  text-align: center;
-}
-
-.slider-for .slider__item img {
-  max-width: 100%;
-}
-
-.slider-for .slick-list {
-  overflow: hidden;
 }
 
 #accordionFlushExample {

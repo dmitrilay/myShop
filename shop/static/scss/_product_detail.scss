@@ -55,46 +55,114 @@
 
 // Слайдер карточки товара (миниатюры)
 
-.slider {
+.slick-slider {
+  margin: 10px 0;
   position: relative;
-  .slick-track {
-    display: flex;
-    align-items: flex-start;
+  display: block;
+  box-sizing: border-box;
+  user-select: none;
+  touch-action: pan-y;
+}
+.slick-list {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
+
+  &:focus {
+    outline: none;
   }
-  .slick-list {
-    overflow: hidden;
+
+  &.dragging {
+    cursor: pointer;
+    cursor: hand;
   }
-  .slider__item {
-    text-align: center;
-    margin: 0 5px;
-    height: 80px;
-    & img {
-      text-align: center;
-      border: 1px solid black;
-      border-radius: 5px;
-      height: 100%;
+}
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.slick-track {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+
+  .slick-loading & {
+    visibility: hidden;
+  }
+}
+.slick-slide {
+  float: left;
+  height: 100%;
+  min-height: 1px;
+  [dir="rtl"] & {
+    float: right;
+  }
+  img {
+    display: block;
+  }
+  &.slick-loading img {
+    display: none;
+  }
+
+  display: none;
+
+  &.dragging img {
+    pointer-events: none;
+  }
+
+  .slick-initialized & {
+    display: block;
+  }
+
+  .slick-loading & {
+    visibility: hidden;
+  }
+}
+
+// Большой слайдер
+
+.slider-for {
+  .slick-slide {
+    width: 200px;
+    img {
       width: 100%;
-      object-fit: contain;
     }
   }
 }
 
-// Слайдер карточки товара (большой)
-
-.slider-for {
-  .slick-track {
-    margin: 10px 0;
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-  }
+// Маленький слайдер
+.slider {
   .slider__item {
-    text-align: center;
-    & img {
-      max-width: 100%;
-    }
+    border: 1px solid white;
+    box-sizing: border-box;
   }
-  .slick-list {
-    overflow: hidden;
+  .slider__item.slick-current {
+    // margin: 0 1px;
+    border: 1px solid silver;
+  }
+
+  img {
+    padding: 2px;
+    width: 100%;
   }
 }
