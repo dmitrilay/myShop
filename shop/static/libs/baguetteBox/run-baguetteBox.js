@@ -1,0 +1,6 @@
+baguetteBox.run(".gallery");
+
+
+
+
+

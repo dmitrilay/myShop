@@ -2,14 +2,9 @@
 
 
 {% block content %}
-<!--Карусель-->
-{% include 'shop/home_page/include/carousel.html' %}
 
-<br /><br />
-<!--Выборка новых товаров-->
-{% include 'shop/home_page/include/carousel_product.html' %}
-<br /><br />
+{% include 'shop/home_page/include/_main-slider.html' %}
+{% include 'shop/home_page/include/_product-slider.html' %}
+{% include 'shop/home_page/include/_banner.html' %}
 
-<!--Банеры-->
-{% include 'shop/home_page/include/banner.html' %}
 {% endblock %}

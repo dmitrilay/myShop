@@ -1,0 +1,36 @@
+<div class="product-slider container">
+    <div class="product-slider__header header-block">
+        <span class="header-block__text">Новое поступление</span>
+    </div>
+    <!--  -->
+    <div class="swiper" id="product__slider">
+        <div class="product-slider__wrapper swiper-wrapper">
+            {% for product in products %}
+            <div class="product-slider__slide swiper-slide">
+                <!--  -->
+                <div class="product-slider__card product-card">
+                    <div class="product-card__img">
+                        <img src="{{product.image.url}}" alt="" />
+                    </div>
+                    <div class="product-card__name">{{product.name}}</div>
+                    <div class="product-card__price-inner">
+                        <div class="product-card__price">{{product.price}}<span class="rub"></span>.</div>
+                        <div class="product-card__inner-icon">
+                            <div class="product-card__compare">
+                                <span class="icon-compare"></span>
+                            </div>
+                            <div class="product-card__favourites">
+                                <span class="icon-favourites"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card__buttom btn-cart">В корзину </div>
+                </div>
+                <!--  -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!--  -->
+</div>

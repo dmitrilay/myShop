@@ -1,38 +1,30 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="ru" class="h-100">
+<html lang="ru">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Комиссионный магазин{% endblock %}</title>
-    <!--css-->
-    {% include 'include/link.html' %}
-
+    {% include 'include/_link.html' %}
 </head>
 
-<body class="d-flex flex-column h-100">
-    <header>
-        <!--Навбар-->
-        {% include 'include/navbar.html' %}
-        <br>
-        <!--Всплывающие сообщение-->
-        {% include 'include/message.html' %}
-    </header>
-
-    <div class="container">
-        <!--Контент-->
-        {% block content %}
-        {% endblock %}
+<body>
+    <div class="wrapper">
+        <header class="header">
+            {% include 'include/_header.html' %}
+            {% comment %} {% include 'include/message.html' %} {% endcomment %}
+        </header>
+        <main class="main">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer class="footer">
+            {% include 'include/_footer.html' %}
+        </footer>
     </div>
-
-    <!--Start Футер-->
-    <footer id="567" class="footer mt-auto py-0 pt-4">
-        {% include 'include/footer.html' %}
-    </footer>
-    <!--script-->
-    {% include 'include/script.html' %}
-    <!--script-->
+    {% include 'include/_scripts.html' %}
     {% block java_script %}
     {% endblock %}
 </body>
