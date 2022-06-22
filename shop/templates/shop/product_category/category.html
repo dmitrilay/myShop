@@ -3,13 +3,28 @@
 {% block title %}Категории{% endblock %}
 
 {% block content %}
-<div class="row col-12">
-    {% for c in categories %}
-    <div class="col-md-5 border border-warning rounded p-3 m-1">
-        <li {% if category.slug == c.slug %} class="selected" {% endif %}>
-            <a class="text-dark fw-bold fs-4" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-        </li>
+<div class="categories-main container">
+    <div class="categories-main__breadcrumbs breadcrumbs">
+        <a href="#" class="breadcrumbs__crumb">Главная</a>
+        <a href="#" class="breadcrumbs__crumb">Категории товаров</a>
     </div>
-    {% endfor %}
+    <div class="categories-main__header header-block">
+        <span class="header-block__text">Категории товаров</span>
+    </div>
+
+    <div class="categories-main__list-cat list-cat">
+        {% for c in categories %}
+        <div class="list-cat__item">
+            <div class="list-cat__item-shell">
+                <a href="{{ c.get_absolute_url }}" class="list-cat__image">
+                    <img src="{{c.image.url}}" alt="" />
+                </a>
+                <a href="{{ c.get_absolute_url }}" class="list-cat__title">
+                    <span>{{ c.name }}</span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
