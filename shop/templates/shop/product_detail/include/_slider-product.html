@@ -1,0 +1,20 @@
+<div class="product__slider slider-product">
+    <div class="swiper" id="swiper-product">
+        <div class="swiper-wrapper">
+            {% for image_item in product.productimage_set.all %}
+            <div class="slider-product__item swiper-slide">
+                <img src="{{ image_item.image.url }}" alt="" />
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="swiper slider-thumbs" id="swiper-thumbs">
+        <div class="swiper-wrapper">
+            {% for image_item in product.productimage_set.all %}
+            <div class="slider-product__item-thumbs swiper-slide">
+                <img src="{{ image_item.image.url }}" alt="">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

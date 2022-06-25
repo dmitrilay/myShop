@@ -1,0 +1,27 @@
+<div class="product__details details-product">
+    <div class="details-product__content">
+        <div class="details-product__header header-block">
+            <span class="header-block__text">{{product.name }}</span>
+        </div>
+        <div class="details-product__availability">В наличии</div>
+        <div class="details-product__icon">
+            <div class="details-product__compare">
+                <span class="icon-compare"></span>
+            </div>
+            <div class="details-product__favourites">
+                <span class="icon-favourites"></span>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+    <div class="details-product__purchase">
+        <div class="details-product__price">{{ product.price }}<span class="rub"></span></div>
+        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="details-product__btn-inner">
+            {% csrf_token %}
+            <div style="display: none">{{ cart_product_form.quantity }}</div>
+            <button type="submit" class="details-product__btn btn-cart">Корзина</button>
+            <div class="details-product__btn btn-black-n">Купить в 1 клик</div>
+        </form>
+    </div>
+    <!--  -->
+</div>

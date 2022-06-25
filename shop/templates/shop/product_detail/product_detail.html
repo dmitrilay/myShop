@@ -1,0 +1,40 @@
+{% extends "shop/base_shop.html" %}
+
+{% load static %}
+
+{% block content %}
+<main class="main">
+    <!--  -->
+    <div class="product container">
+        <!--  -->
+        <div class="product__breadcrumbs breadcrumbs">
+            <a href="/" class="breadcrumbs__crumb">Главная</a>
+            <a href="{% url 'shop:category_list' %}" class="breadcrumbs__crumb">Категории</a>
+            <a href="{{ product.category.get_absolute_url }}" class="breadcrumbs__crumb">{{product.category}}</a>
+            <a href="{{url_cast}}" class="breadcrumbs__crumb">{{brand_cast}}</a>
+        </div>
+        <!--  -->
+        <div class="product__wrapper">
+            {% include 'shop/product_detail/include/_slider-product.html' %}
+            {% include 'shop/product_detail/include/_details-product.html' %}
+        </div>
+        <!--  -->
+        {% include 'shop/product_detail/include/_tabs-product.html' %}
+        <!--  -->
+    </div>
+    <!--  -->
+</main>
+{% endblock content %}
+
+
+{% block java_script %}
+<!-- detail -->
+<script src="{% static '/js/click-add-class.js' %}"></script>
+<script src="{% static '/js/click-remove-attr.js' %}"></script>
+{% comment %} swiper {% endcomment %}
+<script src="{% static '/libs/swiper/swiper-bundle.js' %}"></script>
+<script src="{% static '/libs/swiper/run-swiper-product.js' %}"></script>
+{% comment %} Табы {% endcomment %}
+<script src="{% static '/js/tabs.js' %}"></script>
+<!-- detail end -->
+{% endblock %}
