@@ -1,0 +1,133 @@
+{% extends "shop/base_shop.html" %}
+
+{% load static %}
+{% load search_filter %}
+
+{% block productfilter %}
+{% endblock productfilter %}
+
+
+{% block content %}
+<main class="main">
+    <!--  -->
+    <div class="list-product container">
+        <!--  -->
+        <div class="list-product__breadcrumbs breadcrumbs">
+            <a href="{% url 'shop:category_list' %}" class="breadcrumbs__crumb">Категории</a>
+            <a class="breadcrumbs__crumb">{{ categories }}</a>
+        </div>
+        <!--  -->
+        <div class="list-product__header header-block">
+            <span class="header-block__text">{{ categories }}</span>
+        </div>
+        <!--  -->
+        <div class="list-product__wrapper">
+            <!--  -->
+            {% comment %} {% include 'shop/product_list/include/filters.html' %} {% endcomment %}
+            {% show_filters %}
+            <!--  -->
+            <div class="list-product__background" data-removeattr="active>list-product__filters"
+                data-removeattr2="look>body">
+            </div>
+            <!--  -->
+            <div class="list-product__content">
+                <!--  -->
+                <div class="list-product__menu-sort product-menu-sort">
+                    <div class="product-menu-sort__menu">
+                        <div class="product-menu-sort__text">Сортировать по:</div>
+
+                        <div class="product-menu-sort__select">
+                            <select name="select">
+                                <option value="value1" selected>По умолчанию</option>
+                                <option value="value2">Дешевле</option>
+                                <option value="value3">Дороже</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-menu-sort__listing-option">
+                        <span class="icon-listing-option-1"></span>
+                        <span class="icon-listing-option-2 _active" data-addclass="active>list-product__content"></span>
+                        <a class="product-menu-sort__btn-filter" data-addclass="active>list-product__filters"
+                            data-addclass2="look>body" href="">
+                            Фильтр
+                        </a>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="list-product__list-wrapper">
+                    {% comment %} {% endcomment %}
+                    {% comment %} {% endcomment %}
+                    {% for product in category_products %}
+                    <div class="list-product__item">
+                        <div class="product-card">
+                            <div class="product-card__img">
+                                {% for prw in product.productimage_set.all %}
+                                {% if prw.is_main %}
+                                <a href="{{ product.get_absolute_url }}"><img src="{{prw.image.url}}" alt="" /></a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="product-card__name">
+                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            </div>
+                            <div class="product-card__price-inner">
+                                <div class="product-card__price">{{ product.price }}<span class="rub"></span>.</div>
+                                <div class="product-card__inner-icon">
+                                    <div class="product-card__compare">
+                                        <span class="icon-compare"></span>
+                                    </div>
+                                    <div class="product-card__favourites">
+                                        <span class="icon-favourites"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-card__buttom btn-cart">В корзину</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% include 'shop/product_list/include/_pagination.html' %}
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+    </div>
+    <!--  -->
+</main>
+{% endblock content %}
+
+
+{% block java_script %}
+<script src="{% static 'libs/noUiSlider/nouislider.min.js' %}"></script>
+<script src="{% static 'libs/noUiSlider/run-noUiSlider.js' %}"></script>
+<script src="{% static 'js/click-add-class.js' %}"></script>
+<script src="{% static '/js/click-remove-attr.js' %}"></script>
+{% endblock %}
+
+<div>
+    <!-- <script src="/js/baguetteBox.js"></script> -->
+    <!-- <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш API-ключ&lang=ru_RU" type="text/javascript"></script> -->
+    <!-- <script src="/js/init_maps.js"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <!-- <script src="/js/filter.js"></script>
+        <script src="/js/scroll.js"></script> -->
+    <!-- <script src="/js/parallax.js"></script> -->
+    <!-- <script src="/js/menu.js"></script> -->
+    <!-- <script src="/js/responsiv.js"></script> -->
+
+    <!-- <script src="/js/clean-js/swiper-bundle.js"></script> -->
+    <!-- <script src="/js/run-swiper.js"></script> -->
+
+    <!-- <script src="/js/clean-js/pop-up.js"></script> -->
+    <!-- <script src="/js/run.js"></script> -->
+
+
+    <!-- <script src="/js/clean-js/sidebar-menu.js"></script> -->
+    <!-- <script src="/js/clean-js/search-bar.js"></script> -->
+    <!-- <script src="/js/clean-js/burger.js"></script> -->
+    <!-- <script src="/js/clean-js/click_responsive.js"></script> -->
+
+
+
+</div>

@@ -10,7 +10,7 @@ from django.db.models import Q
 class CategoryDetailView2(ListView):
     model = Product
     context_object_name = 'category_products'
-    template_name = 'shop/product_list/cat_product_list.html'
+    template_name = 'shop/product_list/product_list.html'
     slug_url_kwarg = 'slug'
     paginate_by = 4
 

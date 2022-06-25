@@ -1,10 +1,16 @@
 {% extends "shop/base_shop.html" %}
 
-
+{% load static %}
 {% block content %}
 
 {% include 'shop/home_page/include/_main-slider.html' %}
 {% include 'shop/home_page/include/_product-slider.html' %}
 {% include 'shop/home_page/include/_banner.html' %}
 
+{% endblock %}
+
+{% block java_script %}
+<script src="{% static '/libs/swiper/swiper-bundle.js' %}"></script>
+<script src="{% static '/libs/swiper/run-swiper.js' %}"></script>
+<script src="{% static '/libs/swiper/run-swiper-product.js'%}"></script>
 {% endblock %}

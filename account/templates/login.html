@@ -1,5 +1,6 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% extends "base_account.html" %}
+
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
 
 {% block title %}Авторизация{% endblock %}
 form.as_p bootstrap
@@ -11,7 +12,7 @@ form.as_p bootstrap
 
 <p>
     Пожалуйста, введите свой логин и пароль. Если у вас нет учетной записи,
-    <a href="{% url 'register' %}">зарегистрируйтесь</a>
+    <a href="{% url 'account:register' %}">зарегистрируйтесь</a>
 </p>
 
 <div class="form-group col-md-4 mb-0">
@@ -21,16 +22,16 @@ form.as_p bootstrap
     </div>
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
+    <form action="{% url 'account:login' %}" method="post">
         {% csrf_token %}
-        {{ form.username|as_crispy_field }}
-        {{ form.password|as_crispy_field }}
+        {{ form.username }}
+        {{ form.password }}
 
         <br>
 
         <button type="submit" class="btn btn-outline-warning btn-block">Войти</button>
-        <a href="{% url 'password_reset' %}">Забыли пароль?</a>
-        <input type="hidden" name="next" value="{{next}}"/>
+        <a href="{% url 'account:password_reset' %}">Забыли пароль?</a>
+        <input type="hidden" name="next" value="{{next}}" />
     </form>
 </div>
 {% endblock %}

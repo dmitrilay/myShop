@@ -1,28 +1,36 @@
-{% load search_filter %}
+{% comment %} {{product_features}} {% endcomment %}
 
-
-<button id="btn-filters" class="btn btn-outline-warning col-3 mb-3 mt-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-        aria-controls="offcanvasExample">
-    Фильтры
-</button>
-
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">ФИЛЬТРЫ</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div>
-            <hr>
-            <form action="" method="GET">
-
-                {% product_spec category %}
-                <p class="text-center">
-                    <button class="btn btn-outline-success" type="submit">Показать</button>
-                    <a class="btn btn-outline-danger" href="?{{ page }}">Сбросить</a>
-                </p>
-            </form>
+<div class="list-product__filters">
+    <form class="filters" method="GET">
+        <div class="filters__header">
+            Фильтр товаров
+            <span data-removeattr="active>list-product__filters" data-removeattr2="look>body">x</span>
         </div>
-    </div>
-</div>
+        <div class="filters__inner">
+            {% for item,values in product_features.items %}
+            <!--  -->
+            <div class="filters__item item-filters" data-spollers>
+                <div tabindex="-1" data-spoller class="item-filters__title _active">
+                    <span class="item-filters__text">{{item}}</span>
+                </div>
 
+                <div class="item-filters__accordion">
+                    {% for value in  values %}
+                    <div class="custom-checkbox item-filters__checkbox">
+                        <input class="custom-checkbox__input" {% if value.2 %}checked{% endif %} type="checkbox"
+                            id="{{item}}{{value}}" name="{{item}}" value="{{value.0}}" />
+                        <label class="custom-checkbox__label item-filters__checkbox-label"
+                            for="{{item}}{{value}}">{{value.0}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="filters__buttons buttons-filters">
+            <button type="submit" class="buttons-filters__btn btn-yellow">Подобрать</button>
+            <a href="?{{ page }}" class="buttons-filters__btn btn-grey">Сбросить</a>
+        </div>
+    </form>
+</div>
