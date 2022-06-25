@@ -1,0 +1,73 @@
+{% extends "cart/base_cart.html" %}
+
+{% block content %}
+<main class="main">
+    <!--  -->
+    <div class="cart container">
+        <!--  -->
+        <div class="cart__header header-block">
+            <span class="header-block__text">Корзина</span>
+        </div>
+        <!--  -->
+        <div class="cart__content">
+            <div class="cart__products products-cart">
+                <!--  -->
+                {% for item in cart %}
+                {% with product=item.product %}
+                <div class="products-cart__item">
+                    <div class="products-cart__product">
+                        {% for prw in product.productimage_set.all %}
+                        {% if prw.is_main %}
+                        <div class="products-cart__image">
+                            <img src="{{ prw.image.url }}" alt="" />
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <div class="products-cart__inner">
+                            <div class="products-cart__name">{{ product.name }}</div>
+                            <div class="products-cart__icon-wrapper">
+                                <div class="products-cart__icon-favourites">
+                                    <span class="icon-favourites icon--hover active"></span>
+                                </div>
+                                <div class="products-cart__icon-trash-can">
+                                    <a href="{% url 'cart:cart_remove' product.id%}">
+                                        <span class="icon-trash-can icon--hover"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="products-cart__price">
+                        <div class="products-cart__quantity quantity-pr" data-quantity>
+                            <div class="quantity-pr__minus" data-q="-"><span>-</span></div>
+                            {{ item.update_quantity_form.quantity }}
+                            {% comment %} <input type="number" class="quantity-pr__input" value="1" /> {% endcomment %}
+                            <div class="quantity-pr__plus" data-q="+"><span>+</span></div>
+                        </div>
+                        <div class="products-cart__total-price">{{ item.total_price }} <span class="rub"></span></div>
+                    </div>
+                </div>
+                <!--  -->
+                {% endwith %}
+                {% endfor %}
+                <!--  -->
+            </div>
+            <div class="cart__total-cost total-cost-cart">
+                <div class="total-cost-cart__row">
+                    <div class="total-cost-cart__text">
+                        <span>В корзине 1 товар</span>
+                    </div>
+                    <div class="total-cost-cart__line"></div>
+                    <div class="total-cost-cart__price">{{ cart.get_total_price }} <span class="rub"></span></div>
+                </div>
+                <div class="total-cost-cart__btn">
+                    <a href='{% url 'orders:order_create' %}' class="btn-yellow">Перейти к оформлению</a>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+    <!--  -->
+</main>
+{% endblock %}
