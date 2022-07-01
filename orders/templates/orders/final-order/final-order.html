@@ -1,0 +1,60 @@
+{% extends "orders/base_orders.html" %}
+{% load static %}
+
+{% block content %}
+<div class="final-order container">
+    <!--  -->
+    <div class="final-order__header header-block">
+        <span class="header-block__text">Ваш заказ принят!</span>
+    </div>
+
+
+    {% comment %} {{cart.total_price}} {% endcomment %}
+    <!--  -->
+    <div class="final-order__wrapper">
+        <div class="final-order__details details-order">
+            <div class="details-order__row">
+                <div class="details-order__orders">Номер заказа <span>{{ order.id }}</span></div>
+                <div class="details-order__icon">
+                    <img src="{% static '/img/cart_order/thumb-up.svg' %}" alt="" />
+                </div>
+            </div>
+            <div class="details-order__description">
+                <div class="details-order__title">Детали получения</div>
+                <div class="details-order__shop">
+                    <span>Магазин самовывоза :</span> Комиссионный магазин Щедрый в "ТЦ Магнит+"
+                </div>
+                <div class="details-order__reserve"><span>Срок резерва :</span> 1 день</div>
+            </div>
+        </div>
+        <div class="final-order__composition composition-order">
+            <!--  -->
+            <div class="composition-order__order-title">Состав заказа :</div>
+            <div class="composition-order__order-inner">
+
+                {% for item in cart  %}
+                <div class="composition-order__order-item">
+                    <div class="composition-order__order-image">
+                        <img src="{{item.image.url}}" alt="" />
+                    </div>
+                    <div class="composition-order__order-content">
+                        <div class="composition-order__order-name">{{item.product}}</div>
+                        <div class="composition-order__order-quantity">{{item.quantity}}шт.</div>
+                        <div class="composition-order__order-price">{{item.total_price}}<span class="rub"></span></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="composition-order__order-total">
+                <div class="composition-order__order-total-text">Итого:</div>
+                <div class="composition-order__order-amount">{{sum}}<span class="rub"></span></div>
+            </div>
+            <!--  -->
+        </div>
+    </div>
+
+    <!--  -->
+
+    <!--  -->
+</div>
+{% endblock %}

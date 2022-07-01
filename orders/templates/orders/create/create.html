@@ -1,0 +1,104 @@
+{% extends "orders/base_orders.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="checkout container">
+    <form action="" method="post">
+        {% csrf_token %}
+        <!--  -->
+        <div class="checkout__header header-block">
+            <span class="header-block__text">Оформление заказа</span>
+        </div>
+        <!--  -->
+        <div class="checkout__buyer-data buyer-data">
+            <!--  -->
+            <div class="buyer-data__title">
+                <span>Данные покупателя</span>
+            </div>
+            <!--  -->
+            <div class="buyer-data__inner">
+                <!--  -->
+                <div class="buyer-data__email">
+                    {{form.email}}
+                    {% comment %} <input type="email" placeholder="E-mail" /> {% endcomment %}
+                </div>
+                <!--  -->
+                <div class="buyer-data__phone">
+                    {{ form.phone_number }}
+                    {% comment %} <input type="tel" placeholder="Телефон" data-tel-input /> {% endcomment %}
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+        <div class="checkout__place-receipt place-receipt">
+            <!--  -->
+            <div class="place-receipt__title">
+                <span>Самовывоз</span>
+            </div>
+            <!--  -->
+            <div class="place-receipt__maps-inner">
+                <div class="place-receipt__column">
+                    <div class="place-receipt__name-store">Комиссионный магазин Щедрый в "ТЦ Магнит+"</div>
+                    <div class="place-receipt__address">г.Омск, Молодогвардейская, дом 5</div>
+                    <div class="place-receipt__work-time">Пн-Вс с 11:00 до 20:00</div>
+                    <div class="place-receipt__day">Сегодня</div>
+                </div>
+                <div class="place-receipt__column">
+                    <div class="place-receipt__maps">
+                        <div class="place-receipt__connect-maps" id="map-test">
+                            <!-- <img src="/img/footer/1.jpg" alt=""> -->
+                        </div>
+                        <!-- <img src="/img/checkout/1.png" alt="" /> -->
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+
+        <div class="checkout__your-order your-order">
+            <!--  -->
+            <div class="your-order__title">
+                <span>Ваш заказ</span>
+            </div>
+            <!--  -->
+            <div class="your-order__inner">
+                <div class="your-order__order">
+                    <div class="your-order__order-title">Товары в заказе :</div>
+                    <div class="your-order__order-inner">
+                        {% for item in cart %}
+                        <div class="your-order__order-item">{{ item.product.name }} ({{ item.quantity }} шт.)
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="your-order__payment">
+                    <div class="your-order__payment-title">Оплата :</div>
+
+                    <div class="your-order__payment-inner">
+                        <div class="your-order__payment-item">при получении, <span>наличные</span></div>
+                        <div class="your-order__total">
+                            <div class="your-order__total-text">Итого к оплате :</div>
+                            <div class="your-order__total-price">{{ cart.get_total_price }}<span class="rub"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <button type=submit class="checkout__btn btn-yellow">Сделать заказ</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block java_script %}
+{% comment %} <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш API-ключ&lang=ru_RU" type="text/javascript">
+</script> {% endcomment %}
+{% comment %} <script src="{% static '/js/init_maps.js' %}"></script> {% endcomment %}
+<script src="{% static '/js/input-phone.js' %}"></script>
+{% endblock %}

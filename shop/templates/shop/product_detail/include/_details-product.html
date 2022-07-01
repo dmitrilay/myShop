@@ -18,7 +18,7 @@
         <div class="details-product__price">{{ product.price }}<span class="rub"></span></div>
         <form action="{% url 'cart:cart_add' product.id %}" method="post" class="details-product__btn-inner">
             {% csrf_token %}
-            <div style="display: none">{{ cart_product_form.quantity }}</div>
+            <div style="display:none">{{ cart_product_form.quantity }}</div>
             <button type="submit" class="details-product__btn btn-cart">Корзина</button>
             <div class="details-product__btn btn-black-n">Купить в 1 клик</div>
         </form>

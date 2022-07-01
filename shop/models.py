@@ -72,8 +72,8 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, blank=True,
-                                null=True, default=None, on_delete=models.CASCADE, verbose_name="Продукт")
+    product = models.ForeignKey(Product, blank=True, null=True, default=None,
+                                on_delete=models.CASCADE, verbose_name="Продукт")
     image = models.ImageField(
         upload_to='products_images/', verbose_name="Изображение")
     is_main = models.BooleanField(
