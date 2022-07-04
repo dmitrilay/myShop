@@ -1,3 +1,4 @@
+import time
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
@@ -10,7 +11,7 @@ from django.contrib import messages
 from orders.models import OrderItem
 from orders.models import Order
 
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 
 
 class user_login(LoginView):
@@ -19,6 +20,10 @@ class user_login(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('dashboard')
+
+
+class User_Logout(LogoutView):
+    template_name = 'account/logged_out/logged_out.html'
 
 
 '''
@@ -55,23 +60,26 @@ def register(request):
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
-            new_user = user_form.save(commit=False)  # Создаем нового пользователя, но пока не сохраняем в базу данных.
-            new_user.set_password(user_form.cleaned_data['password'])  # Задаем пользователю зашифрованный пароль.
-            new_user.save()  # Сохраняем пользователя в базе данных.
-            Profile.objects.create(user=new_user)  # Создание профиля пользователя.
-            return render(request, 'account/register_done.html', {'new_user': new_user})
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.username = f'guest{time.time()}'
+            # new_user.username = f'guest{time.time()}'
+            # email
+            new_user.save()
+            Profile.objects.create(user=new_user)
+
+            new_user = authenticate(username=user_form.cleaned_data['email'],
+                                    password=user_form.cleaned_data['password'],
+                                    )
+
+            login(request, new_user)
+
+            # return render(request, 'account/register_done.html', {'new_user': new_user})
+            return render(request, 'account/dashboard/dashboard.html')
     else:
         user_form = UserRegistrationForm()
 
-    if request.method != 'POST':
-        instance = {'username': '89236800232',
-                    'email': 'profile@smail.ru',
-                    'password': '111111',
-                    'password2': '111111',
-                    }
-        user_form = UserRegistrationForm(instance)
-
-    return render(request, 'account/register.html', {'user_form': user_form})
+    return render(request, 'account/register/register.html', {'user_form': user_form})
 
 
 @login_required

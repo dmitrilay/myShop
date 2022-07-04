@@ -30,32 +30,25 @@ class LoginForm(forms.Form):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
 
-    password.widget.attrs.update({'class': 'form-control'})
-    password2.widget.attrs.update({'class': 'form-control'})
+    password.widget.attrs.update({'class': 'input-base', 'placeholder': 'Пароль'})
+    password2.widget.attrs.update({'class': 'input-base', 'placeholder': 'Повторите пароль'})
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'email')
+        fields = ('email',)
 
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'input-base', 'placeholder': 'E-mail'}),
         }
-        labels = {
-            "username": "Номер телефона",
-        }
-        exclude = ['first_name', ]
 
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Пароль не совпадает.')
-        return cd['password2']
+        # return cd['password2']
 
 
 class UserEditForm(forms.ModelForm):

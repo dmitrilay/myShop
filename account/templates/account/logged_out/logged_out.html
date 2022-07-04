@@ -1,0 +1,10 @@
+{% extends "account/base_account.html" %}
+
+{% block content %}
+<div class="logout container">
+  <div class="logout__header-block header-block">
+    <span class="header-block__text">Выход из cистемы</span>
+  </div>
+  <div class="logout__text">Вы успешно вышли из системы. <a href="{% url 'login' %}">Войти снова.</a></div>
+</div>
+{% endblock %}

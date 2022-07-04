@@ -1,0 +1,40 @@
+{% extends "account/base_account.html" %}
+{% load static %}
+
+{% block content %}
+<div class="authorization container">
+    <div class="authorization__wrapper">
+        <div class="authorization__title">
+            <span>Регистрация</span>
+        </div>
+        <div class="authorization__body">
+            <form action="." method="post">
+                {% csrf_token %}
+                {% if user_form.errors %}
+                <h6>{{user_form.errors}}</h6>
+                {% endif %}
+
+
+                <div class="authorization__email">
+                    {{user_form.email}}
+                    {% comment %} <input class="input-base" type="email" placeholder="E-mail" /> {% endcomment %}
+                </div>
+                <div class="authorization__password">
+                    {{user_form.password}}
+                    {% comment %} <input class="input-base" type="password" placeholder="Пароль" /> {% endcomment %}
+                </div>
+
+                <div class="authorization__password">
+                    {{user_form.password2}}
+                    {% comment %} <input class="input-base" type="password" placeholder="Повторите пароль " />
+                    {% endcomment %}
+                </div>
+
+                <div class="authorization__btn">
+                    <button type="submit" class="btn-yellow">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
