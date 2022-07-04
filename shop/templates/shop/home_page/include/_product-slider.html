@@ -10,9 +10,11 @@
                 <!--  -->
                 <div class="product-slider__card product-card">
                     <div class="product-card__img">
-                        <img src="{{product.image.url}}" alt="" />
+                        <a href="{{product.get_absolute_url}}"><img src="{{product.image.url}}" alt="" /></a>
                     </div>
-                    <div class="product-card__name">{{product.name}}</div>
+                    <div class="product-card__name">
+                        <a href="{{product.get_absolute_url}}">{{product.name}}</a>
+                    </div>
                     <div class="product-card__price-inner">
                         <div class="product-card__price">{{product.price}}<span class="rub"></span>.</div>
                         <div class="product-card__inner-icon">
