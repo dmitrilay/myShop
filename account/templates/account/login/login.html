@@ -1,0 +1,40 @@
+{% extends "account/base_account.html" %}
+
+
+{% block content %}
+
+<div class="authorization container">
+    <div class="authorization__wrapper">
+        <div class="authorization__title">
+            <span>Вход в личный кабинет</span>
+        </div>
+        <div class="authorization__body">
+            {% if form.errors %}
+            <p>Ваше имя пользователя или пароль введен неверно.Пожалуйста, попробуйте еще раз.</p>
+            {% endif %}
+
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="authorization__email">
+                    {{ form.username }}
+                    {% comment %} <input class="input-base" type="email" placeholder="E-mail" /> {% endcomment %}
+                </div>
+                <div class="authorization__password">
+                    {{ form.password }}
+                    {% comment %} <input class="input-base" type="password" placeholder="Пароль" /> {% endcomment %}
+                </div>
+
+                <div class="authorization__btn">
+                    <button type='submit' class="btn-yellow">Войти</button>
+                </div>
+            </form>
+
+            <div class="authorization__url-inner">
+                <a href="{% url 'register' %}" class="authorization__item">Регистрация</a>
+                <a href="{% url 'password_reset' %}" class="authorization__item">Забыли пароль?</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

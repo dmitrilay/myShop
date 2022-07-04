@@ -1,7 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
+from django.urls import reverse, reverse_lazy
+from .forms import *
 from django.contrib.auth.decorators import login_required
 from .models import Profile
 from django.contrib import messages
@@ -13,9 +14,11 @@ from django.contrib.auth.views import LoginView
 
 
 class user_login(LoginView):
-    template_name = 'login.html'
+    template_name = 'account/login/login.html'
     form_class = LoginForm
-    # success_url = reverse_lazy('/')
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
 
 
 '''
@@ -43,7 +46,9 @@ def user_login(request):
 
 # @login_required
 def dashboard(request):
-    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+    template = 'account/dashboard/dashboard.html'
+    # context = {'section': 'dashboard'}
+    return render(request, template)
 
 
 def register(request):
@@ -73,18 +78,22 @@ def register(request):
 def edit(request):
     if request.method == 'POST':
         user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        profile_form = UserEditPhoneForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, 'Profile updated successfully')
+
+            return redirect(reverse('dashboard'))
         else:
             messages.error(request, 'Error updating your profile')
     else:
         user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(instance=request.user.profile)
+        profile_form = UserEditPhoneForm(instance=request.user.profile)
 
-    return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
+    template = 'account/changing-data/changing-data.html'
+    context = {'user_form': user_form, 'profile_form': profile_form}
+    return render(request, template, context)
 
 
 def history(request):
@@ -94,6 +103,20 @@ def history(request):
     else:
         pass
 
-    pr2 = OrderItem.objects.filter(order__profile=UserID)
+    pr2 = Order.objects.filter(profile=UserID)
+    template = 'account/history-orders/history-orders.html'
+    context = {'section': pr2}
+    return render(request, template, context)
 
-    return render(request, 'account/history.html', {'section': pr2})
+
+def history_detail(request, pk):
+    if request.user.is_authenticated:
+        UserID = request.user.id
+    else:
+        pass
+
+    pr2 = Order.objects.get(pk=pk)
+
+    template = 'account/order/order.html'
+    context = {'section': pr2}
+    return render(request, template, context)

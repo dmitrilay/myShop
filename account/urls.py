@@ -10,7 +10,7 @@ p8 = 'password_reset/done/'
 p9 = 'reset/<uidb64>/<token>/'
 p10 = 'reset/done/'
 
-app_name = 'account'
+# app_name = 'account'
 
 urlpatterns = [
     # Авторизация
@@ -20,7 +20,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     # рабочий стол
-    path('dashboard', views.dashboard, name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+
     # Смена пароля
     path(p5, auth_views.PasswordChangeView.as_view(), name='password_change'),
     path(p6, auth_views.PasswordChangeDoneView.as_view(),
@@ -38,4 +39,5 @@ urlpatterns = [
     # Изменения профиля
     path('edit/', views.edit, name='edit'),
     path('history/', views.history, name='history'),
+    path('history/<int:pk>', views.history_detail, name='history_detail'),
 ]

@@ -1,0 +1,50 @@
+{% extends "account/base_account.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="back-button container">
+  <a href="{% url 'dashboard' %}"><span class="icon-arrow"></span>назад</a>
+</div>
+
+<div class="authorization container">
+  <div class="authorization__wrapper">
+    <div class="authorization__title">
+      <span>Редактирование личных данных</span>
+    </div>
+
+    <form action="." method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="authorization__body">
+        <div class="authorization__email">
+          {{ user_form.first_name }}
+          {% comment %} <input class="input-base" type="text" placeholder="Имя" /> {% endcomment %}
+        </div>
+        <div class="authorization__password">
+          {{ user_form.last_name }}
+          {% comment %} <input class="input-base" type="text" placeholder="Фамилия" /> {% endcomment %}
+        </div>
+
+        <div class="authorization__password">
+          {{ user_form.email }}
+          {% comment %} <input class="input-base" type="email" placeholder="E-mail" /> {% endcomment %}
+        </div>
+
+        <div class="authorization__password">
+          {{profile_form.phone_number}}
+          {% comment %} <input class="input-base" type="tel" data-tel-input placeholder="Телефон" /> {% endcomment %}
+        </div>
+
+        <div class="authorization__btn">
+          <button type='submit' class="btn-yellow">Сохранить</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block java_script %}
+<script src="{% static '/js/input-phone.js' %}"></script>
+{% endblock %}

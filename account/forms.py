@@ -6,11 +6,20 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class LoginForm(AuthenticationForm, forms.ModelForm):
-    username = forms.CharField(label='Email или номер телефона', )
+    username = forms.CharField()
+    username.widget.attrs.update({'class': 'input-base', 'placeholder': 'E-mail'})
+
+    password = forms.CharField()
+    password.widget.attrs.update({'class': 'input-base', 'placeholder': 'Пароль'})
 
     class Meta:
         model = User
-        fields = ('username', 'password',)
+        fields = ['username', 'password', ]
+
+        # widgets = {
+        #     'username': forms.EmailInput(attrs={'placeholder': 'E-mail'}),
+        #     # 'password': forms.PasswordInput(attrs={'data-tel-input': '', 'placeholder': 'Телефон'}),
+        # }
 
 
 """
@@ -52,20 +61,38 @@ class UserRegistrationForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
-
-
-class ProfileEditForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ('date_of_birth', 'photo')
+        fields = ('first_name', 'last_name', 'email',)
 
         widgets = {
-            # 'date_of_birth': forms.TextInput(),
-            'date_of_birth': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
-        }
+            'first_name': forms.TextInput(attrs={'class': 'input-base', 'placeholder': 'Имя'}),
+            'last_name': forms.TextInput(attrs={'class': 'input-base', 'placeholder': 'Фамилия'}),
+            'email': forms.TextInput(attrs={'class': 'input-base', 'placeholder': 'E-mail'}), }
 
-        labels = {
-            "date_of_birth": "Дата рождения",
-            "photo": "Фото",
-        }
+
+class PhoneInput(forms.TextInput):
+    input_type = 'tel'
+
+
+class UserEditPhoneForm(forms.ModelForm, PhoneInput):
+    class Meta:
+        model = Profile
+        fields = ('phone_number', )
+
+        attrs = {'class': 'input-base', 'placeholder': 'Телефон', 'data-tel-input': ''}
+        widgets = {'phone_number': PhoneInput(attrs)}
+
+
+# class ProfileEditForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('date_of_birth', 'photo')
+
+#         widgets = {
+#             # 'date_of_birth': forms.TextInput(),
+#             'date_of_birth': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+#         }
+
+#         labels = {
+#             "date_of_birth": "Дата рождения",
+#             "photo": "Фото",
+#         }

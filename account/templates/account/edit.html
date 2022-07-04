@@ -1,11 +1,8 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
 
-{% block title %}Редактирование учетной записи{% endblock %}
 
 {% block content %}
 
-<a href="{% url 'dashboard' %}">
+<a href="">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     Назад
 </a>
@@ -15,8 +12,8 @@
 <div class="form-group col-md-4 mb-0">
     <p class="text-muted h3 font-weight-bold">Личные данные</p>
 
-    <form action="." method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    
+        
 
         {% for field in user_form %}
             {{ field|as_crispy_field }}
@@ -30,6 +27,6 @@
         {% endfor %}
         -->
         <p><input class="btn btn-outline-warning btn-lg btn-block" type="submit" value="Сохранить изменения"></p>
-    </form>
+    
 </div>
 {% endblock %}

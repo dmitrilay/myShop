@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %} Подтверждение заказа {% endblock %}
+
+{% block content %}
+<p class="text-muted h3 font-weight-bold">Спасибо за заказ</p>
+
+<br>
+
+<p>
+    Ваш заказ был успешно создан. Ваш заказ
+    <strong>№{{ order.id }}</strong>.
+</p>
+{% endblock %}

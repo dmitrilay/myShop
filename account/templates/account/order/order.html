@@ -1,0 +1,54 @@
+{% extends "account/base_account.html" %}
+{% load static %}
+{% load search_filter %}
+
+{% block content %}
+<div class="orders-history container">
+  <div class="back-button mr30">
+    <a href="{% url 'history' %}"><span class="icon-arrow"></span>назад</a>
+  </div>
+  <!--  -->
+  <div class="orders-history__header header-block mr30">
+    <span class="header-block__text">Заказ № {{ section.id }}</span>
+  </div>
+
+  <div class="orders-history__content item-orders-history">
+    <!--  -->
+    <div class="item-orders-history__order-status mr40">
+      <!-- <span class="page-orders-list__content-close icon-close"></span> -->
+      <span class="item-orders-history__content-checkmark icon-checkmark"></span>
+      <span class="item-orders-history__content-text">Заказ № {{ section.id }} от {{section.created|date:"d.m.Y"}}.
+        Выполнен</span>
+    </div>
+    <!--  -->
+    <div class="item-orders-history__order-title">Состав заказа :</div>
+    <div class="item-orders-history__order-inner">
+
+      {% for item in section.items.all %}
+
+      <div class="item-orders-history__order-item">
+        <div class="item-orders-history__order-image">
+          <a href="{{item.product.get_absolute_url}}">
+            <img src="{% images_tag filter=item.product %}" alt="" />
+          </a>
+        </div>
+        <div class="item-orders-history__order-content">
+          <div class="item-orders-history__order-name">
+            <a href="{{item.product.get_absolute_url}}">{{item.product}}</a>
+          </div>
+          <div class="item-orders-history__order-quantity">{{item.quantity}}шт.</div>
+          <div class="item-orders-history__order-price">{{item.price}}<span class="rub"></span></div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+    <div class="item-orders-history__order-total">
+      <div class="item-orders-history__order-total-text">Итого:</div>
+      <div class="item-orders-history__order-amount">{{ section.sum_order }}<span class="rub"></span></div>
+    </div>
+    <!--  -->
+  </div>
+  <!--  -->
+</div>
+{% endblock %}

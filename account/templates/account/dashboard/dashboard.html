@@ -1,0 +1,157 @@
+{% extends "account/base_account.html" %}
+
+{% block content %}
+
+<div class="personal-account container">
+  <!--  -->
+  <div class="personal-account__header header-block mr30">
+    <span class="header-block__text">Личный кабинет</span>
+  </div>
+
+  <div class="personal-account__greeting">
+    <p>Здравствуйте, <span>Дмитрий</span>, добро пожаловать в ваш личный кабинет.<a href="{% url 'logout' %}"> <span>Выйти</span></a></p>
+  </div>
+
+  <div class="personal-account__content">
+    <!--  -->
+    <div class="personal-account__item">
+      <div class="item-wrapper">
+        <div class="item-wrapper__header">
+          <div class="item-wrapper__header-inner">
+            <span class="item-wrapper__header-icon icon-cart"></span>
+            <span class="item-wrapper__header-title">Заказы</span>
+          </div>
+          <div class="item-wrapper__btn">
+            <a href="{% url 'history' %}" class="btn-yellow">История заказов</a>
+          </div>
+        </div>
+        <!--  -->
+        <div class="item-wrapper__content orders-list">
+          <div class="orders-list__item">
+            <div class="orders-list__content">
+              <div class="orders-list__content-title">
+                <!-- <span class="orders-list__content-close icon-close"></span> -->
+                <span class="orders-list__content-checkmark icon-checkmark"></span>
+                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
+              </div>
+              <div class="orders-list__content-footer">Заказ выполнен</div>
+            </div>
+            <div class="orders-list__price">21000<span class="rub"></span></div>
+          </div>
+          <div class="orders-list__item">
+            <div class="orders-list__content">
+              <div class="orders-list__content-title">
+                <span class="orders-list__content-close icon-close"></span>
+                <!-- <span class="orders-list__content-checkmark icon-checkmark"></span> -->
+                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
+              </div>
+              <div class="orders-list__content-footer">Заказ выполнен</div>
+            </div>
+            <div class="orders-list__price">21000<span class="rub"></span></div>
+          </div>
+          <div class="orders-list__item">
+            <div class="orders-list__content">
+              <div class="orders-list__content-title">
+                <!-- <span class="orders-list__content-close icon-close"></span> -->
+                <span class="orders-list__content-checkmark icon-checkmark"></span>
+                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
+              </div>
+              <div class="orders-list__content-footer">Заказ выполнен</div>
+            </div>
+            <div class="orders-list__price">21000<span class="rub"></span></div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    <!--  -->
+    <div class="personal-account__item">
+      <div class="item-wrapper">
+        <div class="item-wrapper__header">
+          <div class="item-wrapper__header-inner">
+            <span class="item-wrapper__header-icon icon-user"></span>
+            <span class="item-wrapper__header-title">Личные данные</span>
+          </div>
+          <div class="item-wrapper__btn">
+            <a href="{% url 'edit' %}" class="btn-yellow">Редактировать</a>
+          </div>
+        </div>
+        <!--  -->
+        <div class="item-wrapper__content private-data">
+          <div class="private-data__name">
+            <div class="private-data__icon">
+              <span class="icon-identity-card"></span>
+            </div>
+            <div class="private-data__text">
+              <span>Дмитрий Ножкин</span>
+            </div>
+          </div>
+          <div class="private-data__name">
+            <div class="private-data__icon">
+              <span class="icon-mail"></span>
+            </div>
+            <div class="private-data__text">
+              <span>dmitrilay@gmail.com</span>
+            </div>
+          </div>
+          <div class="private-data__name">
+            <div class="private-data__icon">
+              <span class="icon-phone"></span>
+            </div>
+            <div class="private-data__text">
+              <span>+7 905-****576</span>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    <!--  -->
+    <div class="personal-account__item">
+      <div class="item-wrapper">
+        <div class="item-wrapper__header">
+          <div class="item-wrapper__header-inner">
+            <span class="item-wrapper__header-icon icon-favourites"></span>
+            <span class="item-wrapper__header-title">Избранное</span>
+          </div>
+          <div class="item-wrapper__btn">
+            <a href="" class="btn-yellow">Показать все</a>
+          </div>
+        </div>
+        <!--  -->
+        <div class="item-wrapper__content account-favourites">
+          <div class="account-favourites__item">
+            <div class="account-favourites__image">
+              <img src="/img/personal-account/1.webp" alt="" />
+            </div>
+            <div class="account-favourites__product">
+              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
+            </div>
+          </div>
+          <div class="account-favourites__item">
+            <div class="account-favourites__image">
+              <img src="/img/personal-account/1.webp" alt="" />
+            </div>
+            <div class="account-favourites__product">
+              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
+            </div>
+          </div>
+          <div class="account-favourites__item">
+            <div class="account-favourites__image">
+              <img src="/img/personal-account/1.webp" alt="" />
+            </div>
+            <div class="account-favourites__product">
+              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    <!--  -->
+  </div>
+
+  <!--  -->
+</div>
+
+{% endblock %}

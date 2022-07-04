@@ -82,7 +82,7 @@ USE_TZ = True
 
 CART_SESSION_ID = 'cart'
 
-LOGIN_REDIRECT_URL = 'dashboard'
+# LOGIN_REDIRECT_URL = 'dashboard'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 

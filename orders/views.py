@@ -34,8 +34,8 @@ def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
-
-        if cart.get_total_price() == 0:
+        total_price = cart.get_total_price()
+        if total_price == 0:
             return render(request, 'orders/order/empty.html')
 
         if form.is_valid():
@@ -44,17 +44,21 @@ def order_create(request):
                 order.profile = request.user.id
             else:
                 order.profile = 0
-            order.save()
-            # for item in cart:
-            #     OrderItem.objects.create(order=order,
-            #                              product=item['product'],
-            #                              price=item['price'],
-            #                              quantity=item['quantity'])
+            order.sum_order = total_price
+            # order.sum_order = 99999
+            # print(order.sum_order)
 
-            # cart.clear()
+            order.save()
+            for item in cart:
+                OrderItem.objects.create(order=order,
+                                         product=item['product'],
+                                         price=item['price'],
+                                         quantity=item['quantity'])
+
+            cart.clear()
             # запуск асинхронной задачи
             # order_created.delay(order.id)
-            # order_created(order.id)
+            order_created(order.id)
             data, sum = data_final_cart(cart)
             template = 'orders/final-order/final-order.html'
             context = {'order': order, 'cart': data, 'sum': sum}

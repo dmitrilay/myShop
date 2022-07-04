@@ -74,16 +74,12 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, blank=True, null=True, default=None,
                                 on_delete=models.CASCADE, verbose_name="Продукт")
-    image = models.ImageField(
-        upload_to='products_images/', verbose_name="Изображение")
-    is_main = models.BooleanField(
-        default=False, verbose_name="Главное изображение")
-    is_active = models.BooleanField(
-        default=True, verbose_name="Показывать изображение")
+    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+    is_main = models.BooleanField(default=False, verbose_name="Главное изображение")
+    is_active = models.BooleanField(default=True, verbose_name="Показывать изображение")
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    name = models.CharField(max_length=200, db_index=True,
-                            default=1, verbose_name="Имя")
+    name = models.CharField(max_length=200, db_index=True, default=1, verbose_name="Имя")
 
     def __str__(self):
         return "%s" % self.pk
