@@ -19,22 +19,15 @@ urlpatterns = [
     # path('login/', auth_views.LoginView.as_view(), name='login'),
     #     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('logout/', views.User_Logout.as_view(), name='logout'),
-
-    # рабочий стол
     path('dashboard/', views.dashboard, name='dashboard'),
-
-    # Смена пароля
     path(p5, auth_views.PasswordChangeView.as_view(), name='password_change'),
-    path(p6, auth_views.PasswordChangeDoneView.as_view(),
-         name='password_change_done'),
+    path(p6, auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+
     # Востановления пароля
-    path(p7, auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path(p8, auth_views.PasswordResetDoneView.as_view(),
-         name='password_reset_done'),
-    path(p9, auth_views.PasswordResetConfirmView.as_view(),
-         name='password_reset_confirm'),
-    path(p10, auth_views.PasswordResetCompleteView.as_view(),
-         name='password_reset_complete'),
+    path(p7, views.PasswordReset.as_view(), name='password_reset'),
+    path(p8, views.PasswordResetDone.as_view(), name='password_reset_done'),
+    path(p9, views.PasswordResetConfirm.as_view(), name='password_reset_confirm'),
+    path(p10, auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     # Регистрация пользователя
     path('register/', views.register, name='register'),
     # Изменения профиля

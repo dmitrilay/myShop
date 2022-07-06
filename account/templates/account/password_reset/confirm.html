@@ -1,0 +1,36 @@
+{% extends "account/base_account.html" %}
+
+{% block content %}
+
+<div class="authorization container">
+    <div class="authorization__wrapper">
+        <div class="authorization__title">
+            <span>Восстановление пароля</span>
+        </div>
+        <div class="authorization__body">
+            {% if form.errors %}
+            <p>Ваше имя пользователя или пароль введен неверно.Пожалуйста, попробуйте еще раз.</p>
+            {% endif %}
+
+            <form action="." method="post">
+                {% csrf_token %}
+                <div class="authorization__email">
+                    {{ form.new_password1 }}
+                    {% comment %} <input class="input-base" type="email" placeholder="E-mail" /> {% endcomment %}
+                </div>
+                <div class="authorization__password">
+                    {{ form.new_password2 }}
+                    {% comment %} <input class="input-base" type="password" placeholder="Пароль" /> {% endcomment %}
+                </div>
+
+                <div class="authorization__btn">
+                    <button type='submit' class="btn-yellow">Изминить пароль</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

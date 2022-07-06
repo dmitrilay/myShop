@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 
 
 class LoginForm(AuthenticationForm, forms.ModelForm):
@@ -75,17 +75,8 @@ class UserEditPhoneForm(forms.ModelForm, PhoneInput):
         widgets = {'phone_number': PhoneInput(attrs)}
 
 
-# class ProfileEditForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ('date_of_birth', 'photo')
-
-#         widgets = {
-#             # 'date_of_birth': forms.TextInput(),
-#             'date_of_birth': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
-#         }
-
-#         labels = {
-#             "date_of_birth": "Дата рождения",
-#             "photo": "Фото",
-#         }
+class PasswordResetFormCustom(PasswordResetForm):
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={'autocomplete': 'email', 'class': "input-base", 'placeholder': "E-mail"})
+    )
