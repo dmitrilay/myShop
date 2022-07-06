@@ -1,0 +1,16 @@
+{% extends "account/base_account.html" %}
+
+{% block content %}
+<div class="authorization container">
+    <div class="authorization__wrapper">
+        <div class="authorization__title">
+            <span>Пароль изменен</span>
+        </div>
+        <div class="authorization__body">
+            <p>Ваш пароль уже установлен. Теперь вы можете
+                <a href="{% url 'login' %}">войти в систему</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -27,7 +27,7 @@ urlpatterns = [
     path(p7, views.PasswordReset.as_view(), name='password_reset'),
     path(p8, views.PasswordResetDone.as_view(), name='password_reset_done'),
     path(p9, views.PasswordResetConfirm.as_view(), name='password_reset_confirm'),
-    path(p10, auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path(p10, views.PasswordResetComplete.as_view(), name='password_reset_complete'),
     # Регистрация пользователя
     path('register/', views.register, name='register'),
     # Изменения профиля

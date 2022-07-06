@@ -11,7 +11,9 @@ from django.contrib import messages
 from orders.models import OrderItem
 from orders.models import Order
 
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
+from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView,
+                                       PasswordResetDoneView, PasswordResetConfirmView,
+                                       PasswordResetCompleteView)
 
 
 class user_login(LoginView):
@@ -38,9 +40,15 @@ class PasswordResetDone(PasswordResetDoneView):
 
 class PasswordResetConfirm(PasswordResetConfirmView):
     template_name = 'account/password_reset/confirm.html'
+    form_class = SetPasswordFormCustom
 
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    template_name = 'account/password_reset/complete.html'
 
 # @login_required
+
+
 def dashboard(request):
     template = 'account/dashboard/dashboard.html'
     # context = {'section': 'dashboard'}

@@ -12,22 +12,32 @@
             <p>Ваше имя пользователя или пароль введен неверно.Пожалуйста, попробуйте еще раз.</p>
             {% endif %}
 
+            {% if validlink %}
             <form action="." method="post">
                 {% csrf_token %}
                 <div class="authorization__email">
                     {{ form.new_password1 }}
-                    {% comment %} <input class="input-base" type="email" placeholder="E-mail" /> {% endcomment %}
                 </div>
                 <div class="authorization__password">
                     {{ form.new_password2 }}
-                    {% comment %} <input class="input-base" type="password" placeholder="Пароль" /> {% endcomment %}
                 </div>
 
                 <div class="authorization__btn">
                     <button type='submit' class="btn-yellow">Изминить пароль</button>
                 </div>
-            </form>
+                {% comment %} {{ form.new_password1.help_text }} {% endcomment %}
+                <div>
+                    <p>Ваш пароль должен содержать как минимум 8 символов.</p>
+                    <p>Пароль не может состоять только из цифр.</p>
+                </div>
 
+            </form>
+            {% else %}
+            <p>
+                Ссылка на сброс пароля была недействительной, возможно, потому, что она
+                уже был использована. Пожалуйста, запросите новый сброс пароля.
+            </p>
+            {% endif %}
 
         </div>
     </div>

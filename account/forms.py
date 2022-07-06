@@ -2,15 +2,16 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth import password_validation
 
 
 class LoginForm(AuthenticationForm, forms.ModelForm):
     username = forms.CharField()
     username.widget.attrs.update({'class': 'input-base', 'placeholder': 'E-mail'})
 
-    password = forms.CharField()
-    password.widget.attrs.update({'class': 'input-base', 'placeholder': 'Пароль'})
+    password = forms.CharField(strip=False, widget=forms.PasswordInput(
+        attrs={'autocomplete': 'current-password', 'class': 'input-base', 'placeholder': 'Пароль'}), )
 
     class Meta:
         model = User
@@ -80,3 +81,12 @@ class PasswordResetFormCustom(PasswordResetForm):
         max_length=254,
         widget=forms.EmailInput(attrs={'autocomplete': 'email', 'class': "input-base", 'placeholder': "E-mail"})
     )
+
+
+class SetPasswordFormCustom(SetPasswordForm):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'autocomplete': 'new-password', 'class': "input-base", 'placeholder': 'Пароль'}),
+        strip=False, help_text=password_validation.password_validators_help_text_html(),)
+    new_password2 = forms.CharField(strip=False, widget=forms.PasswordInput(
+        attrs={'autocomplete': 'new-password', 'class': "input-base", 'placeholder': 'Повторите пароль'}), )
