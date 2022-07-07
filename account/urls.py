@@ -34,4 +34,6 @@ urlpatterns = [
     path('edit/', views.edit, name='edit'),
     path('history/', views.history, name='history'),
     path('history/<int:pk>', views.history_detail, name='history_detail'),
+    path('favorite/', views.favorite, name='favorite'),
+    path('favorites/', views.favorites, name='favorites'),
 ]

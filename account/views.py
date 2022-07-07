@@ -10,6 +10,7 @@ from django.contrib import messages
 
 from orders.models import OrderItem
 from orders.models import Order
+from shop.models import Product
 
 from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView,
                                        PasswordResetDoneView, PasswordResetConfirmView,
@@ -126,4 +127,27 @@ def history_detail(request, pk):
 
     template = 'account/order/order.html'
     context = {'section': pr2}
+    return render(request, template, context)
+
+
+def favorite(request):
+    form = FavoriteForm(request.POST)
+    id_prod = request.POST.get('id_product')
+    obj = FavoriteProduct.objects.filter(id_product=id_prod)
+    print(obj)
+    if obj:
+        obj[0].delete()
+    else:
+        if form.is_valid():
+            form.save()
+
+    return HttpResponse(status=201)
+
+
+def favorites(request):
+    favorit = FavoriteProduct.objects.filter(profile_favorite=request.user.pk).values('id_product')
+    product = Product.objects.filter(pk__in=favorit).prefetch_related('productimage_set').select_related('category')
+
+    template = 'account/favorites/favorites.html'
+    context = {'product': product}
     return render(request, template, context)

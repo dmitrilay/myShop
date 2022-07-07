@@ -9,7 +9,13 @@
   </div>
 
   <div class="personal-account__greeting">
-    <p>Здравствуйте, <span>Дмитрий</span>, добро пожаловать в ваш личный кабинет.<a href="{% url 'logout' %}"> <span>Выйти</span></a></p>
+    <p>Здравствуйте, <span>
+        {% if request.user.first_name %}
+        {{request.user.first_name}}
+        {% else %}
+        {{request.user}}
+        {% endif %}
+      </span>, добро пожаловать в ваш личный кабинет.<a href="{% url 'logout' %}"> <span>Выйти</span></a></p>
   </div>
 
   <div class="personal-account__content">
@@ -115,7 +121,7 @@
             <span class="item-wrapper__header-title">Избранное</span>
           </div>
           <div class="item-wrapper__btn">
-            <a href="" class="btn-yellow">Показать все</a>
+            <a href="{% url 'favorites' %}" class="btn-yellow">Показать все</a>
           </div>
         </div>
         <!--  -->

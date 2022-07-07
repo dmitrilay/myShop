@@ -1,0 +1,95 @@
+{% extends "account/base_account.html" %}
+
+{% block content %}
+
+<div class="list-favorites container">
+    <!--  -->
+    <div class="list-favorites__breadcrumbs breadcrumbs">
+        <a href="{% url 'shop:StartPageViews' %}" class="breadcrumbs__crumb">Главная</a>
+        <a href="{% url 'dashboard' %}" class="breadcrumbs__crumb">Моя учетная запись</a>
+        <a class="breadcrumbs__crumb">Избранное</a>
+    </div>
+    <!--  -->
+    <div class="list-favorites__header header-block">
+        <span class="header-block__text">Избранное</span>
+    </div>
+    <!--  -->
+    <div class="list-favorites__content">
+        <!--  -->
+        <div class="list-favorites__menu-sort product-menu-sort">
+            <div class="product-menu-sort__menu">
+                <div class="product-menu-sort__text">Сортировать по:</div>
+
+                <div class="product-menu-sort__select">
+                    <select name="select">
+                        <option value="value1" selected>По умолчанию</option>
+                        <option value="value2">Дешевле</option>
+                        <option value="value3">Дороже</option>
+                    </select>
+                </div>
+            </div>
+            <div class="product-menu-sort__listing-option">
+                <span class="icon-listing-option-1"></span>
+                <span class="icon-listing-option-2 _active" data-addclass="active>list-favorites__content"></span>
+            </div>
+        </div>
+        <!--  -->
+        <div class="list-favorites__list-wrapper">
+            <!--  -->
+            {% for item in product %}
+            <div class="list-favorites__item">
+                <div class="product-card">
+                    <div class="product-card__img">
+                        {% for prw in item.productimage_set.all %}
+                        {% if prw.is_main %}
+                        <a href="{{ item.get_absolute_url }}"><img src="{{prw.image.url}}" alt="" /></a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="product-card__name">
+                        <a href="{{ item.get_absolute_url }}">{{item.name}}</a>
+                    </div>
+                    <div class="product-card__price-inner">
+                        <div class="product-card__price">{{item.price}}<span class="rub"></span>.</div>
+                        <div class="product-card__inner-icon">
+                            <div class="product-card__compare">
+                                <span class="icon-compare"></span>
+                            </div>
+                            <div class="product-card__favourites">
+                                <span class="icon-favourites"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card__buttom btn-cart">В корзину</div>
+                </div>
+            </div>
+            {% endfor %}
+            <!--  -->
+        </div>
+        <!--  -->
+        {% comment %} <div class="list-favorites__pagination pagination-product">
+            <div class="pagination-product__arrow-1">
+                <span class="icon-arrow"></span>
+            </div>
+            <!--  -->
+            <div class="pagination-product__wrapper">
+                <div class="pagination-product__item _active">1</div>
+                <div class="pagination-product__item">2</div>
+                <div class="pagination-product__item">3</div>
+                <div class="pagination-product__item">4</div>
+                <div class="pagination-product__item">...</div>
+                <div class="pagination-product__item">10</div>
+            </div>
+            <!--  -->
+            <div class="pagination-product__arrow-2 active">
+                <span class="icon-arrow"></span>
+            </div>
+            <!--  -->
+        </div> {% endcomment %}
+        <!--  -->
+    </div>
+    <!--  -->
+</div>
+
+{% endblock %}

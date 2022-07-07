@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth import password_validation
@@ -90,3 +90,14 @@ class SetPasswordFormCustom(SetPasswordForm):
         strip=False, help_text=password_validation.password_validators_help_text_html(),)
     new_password2 = forms.CharField(strip=False, widget=forms.PasswordInput(
         attrs={'autocomplete': 'new-password', 'class': "input-base", 'placeholder': 'Повторите пароль'}), )
+
+
+class FavoriteForm(forms.ModelForm):
+    class Meta:
+        model = FavoriteProduct
+        fields = ('id_product', 'title_product', 'profile_favorite')
+
+        widgets = {
+            'id_product': forms.TextInput(),
+            'title_product': forms.TextInput(),
+        }

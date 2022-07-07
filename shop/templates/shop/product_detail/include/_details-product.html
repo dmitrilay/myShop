@@ -9,7 +9,13 @@
                 <span class="icon-compare"></span>
             </div>
             <div class="details-product__favourites">
-                <span class="icon-favourites"></span>
+                <form action="{% url 'favorite' %}" method='post' name='reting'>
+                    {% csrf_token %}
+                    <span class="icon-favourites icon--hover {% if favorit %}active{% endif %}"></span>
+                    <input type="hidden" name='id_product' value='{{product.id}}'>
+                    <input type="hidden" name='title_product' value='{{product.name}}'>
+                    <input type="hidden" name='profile_favorite' value='{{request.user.id}}'>
+                </form>
             </div>
         </div>
     </div>

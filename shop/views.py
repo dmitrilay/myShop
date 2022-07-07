@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from account.models import FavoriteProduct
 
 from specifications.models import CharacteristicValue
 from .models import Category, Product
@@ -91,6 +92,12 @@ class ProductDetailView(DetailView):
                 context['brand_cast'] = i.name_value
                 context['url_cast'] = f"/category/{self.kwargs['category_slug']}/?Бренд={i.name_value}"
                 break
+
+        # Избранные товары
+        slug = self.kwargs.get(self.slug_url_kwarg, None)
+        product = Product.objects.filter(slug=slug, available=True)
+        favorit = FavoriteProduct.objects.filter(id_product=product[0].pk)
+        context['favorit'] = favorit
 
         return context
 
