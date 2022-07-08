@@ -10,7 +10,8 @@
             {% for item,values in product_features.items %}
             <!--  -->
             <div class="filters__item item-filters" data-spollers>
-                <div tabindex="-1" data-spoller class="item-filters__title _active">
+                <div tabindex="-1" data-spoller
+                    class="item-filters__title {% if forloop.counter < 3 %} _active {% endif %}">
                     <span class="item-filters__text">{{item}}</span>
                 </div>
 

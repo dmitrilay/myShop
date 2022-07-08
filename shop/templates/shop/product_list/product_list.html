@@ -82,7 +82,8 @@
                                 </div>
                             </div>
 
-                            <div class="product-card__buttom btn-cart">В корзину</div>
+                            <a href="{% url 'cart:cart_add_js' product.id %}" class="product-card__buttom btn-cart">В
+                                корзину</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -103,4 +104,5 @@
 <script src="{% static 'libs/noUiSlider/run-noUiSlider.js' %}"></script>
 <script src="{% static 'js/click-add-class.js' %}"></script>
 <script src="{% static '/js/click-remove-attr.js' %}"></script>
+
 {% endblock %}

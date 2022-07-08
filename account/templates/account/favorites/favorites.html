@@ -61,7 +61,8 @@
                         </div>
                     </div>
 
-                    <div class="product-card__buttom btn-cart">В корзину</div>
+
+                    <a href="{% url 'cart:cart_add_js' item.id %}" class="product-card__buttom btn-cart">В корзину</a>
                 </div>
             </div>
             {% endfor %}

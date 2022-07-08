@@ -27,7 +27,8 @@
                     {% comment %} <a class="header__link" href="{% url 'login' %}">Личный кабинет</a> {% endcomment %}
                     {% endif %}
                 </li>
-                <li class="header__item header__item-off"><a class="header__link" href="{% url 'favorites' %}">Избранные товары</a></li>
+                <li class="header__item header__item-off"><a class="header__link" href="{% url 'favorites' %}">Избранные
+                        товары</a></li>
             </ul>
         </div>
 
@@ -48,16 +49,24 @@
                 </li>
 
                 <li class="header__item">
-                    <a class="header__link" href="{% url 'favorites' %}"><span class="header__link-icon icon-favourites"></span></a>
+                    <a class="header__link" href="{% url 'favorites' %}"><span
+                            class="header__link-icon icon-favourites"></span></a>
                 </li>
 
                 <li class="header__item">
-                    <a class="header__link" href="">
+
+
+                    <a class="header__link" href="{% url 'cart:cart_detail' %}">
                         <div class="header__cart cart-header">
                             <div class="cart-header__icon icon-cart"></div>
-                            <div class="cart-header__counter">1</div>
+                            {% with total_items=cart|length %}
+                            <div {% if total_items == 0 %}style="opacity: 0" {% endif %} class="cart-header__counter">
+                                {{total_items}}
+                            </div>
+                            {% endwith %}
                         </div>
                     </a>
+
                 </li>
             </ul>
         </div>

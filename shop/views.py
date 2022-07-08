@@ -13,7 +13,7 @@ class CategoryDetailView2(ListView):
     context_object_name = 'category_products'
     template_name = 'shop/product_list/product_list.html'
     slug_url_kwarg = 'slug'
-    paginate_by = 4
+    paginate_by = 12
 
     @staticmethod
     def find_get(f, url_kwargs):
@@ -33,6 +33,9 @@ class CategoryDetailView2(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.get(slug=self.kwargs.get(self.slug_url_kwarg, None))
+
+        cart_product_form = CartAddProductForm()
+        context['cart_product_form'] = cart_product_form
         return context
 
     def get_queryset(self, queryset=None):
@@ -122,7 +125,8 @@ class HomeListView(ListView):
             for i2 in i.productimage_set.all():
                 if i2.is_main:
                     image = i2.image
-            context.append({'name': i.name, 'price': i.price, 'image': image, 'get_absolute_url': i.get_absolute_url()})
+            context.append({'id': i.id, 'name': i.name, 'price': i.price,
+                           'image': image, 'get_absolute_url': i.get_absolute_url()})
         return context
 
 
