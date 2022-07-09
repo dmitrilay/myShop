@@ -1,5 +1,5 @@
 import time
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.urls import reverse, reverse_lazy
@@ -151,3 +151,21 @@ def favorites(request):
     template = 'account/favorites/favorites.html'
     context = {'product': product}
     return render(request, template, context)
+
+
+def favoritesBoolAjax(request):
+    if request.user.is_authenticated:
+        pass
+    else:
+        context = {'total': 'noauth'}
+        # return HttpResponse(status=401)
+        return JsonResponse(context)
+
+    # product = get_object_or_404(Product, id=product_id)
+    # cart.add(product=product)
+    favorit = FavoriteProduct.objects.filter(profile_favorite=request.user.pk).values('id_product')
+    # print(*list(favorit))
+    context = {'total': list(favorit)}
+    # print(context)
+    # return HttpResponse(status=201)
+    return JsonResponse(context)
