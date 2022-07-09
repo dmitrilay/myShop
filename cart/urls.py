@@ -8,4 +8,5 @@ urlpatterns = [
     path('add/<int:product_id>/', views.cart_add, name='cart_add'),
     path('add_js/<int:product_id>/', views.cart_add_js, name='cart_add_js'),
     path('remove/<int:product_id>/', views.cart_remove, name='cart_remove'),
+    path('changeItemAjax/', views.ChangeItemAjax, name='ChangeItemAjax'),
 ]

@@ -48,3 +48,23 @@ def product_detail(request, id, slug):
     tempates = 'shop/product/detail.html'
     context = {'product': product, 'cart_product_form': cart_product_form}
     return render(request, tempates, context)
+
+
+def ChangeItemAjax(request):
+    product_id = request.GET.get('product_id')
+    change = request.GET.get('item')
+    cart = Cart(request)
+
+    if change == 'add':
+        cart.changeAdd(product_id)
+    elif change == 'reduce':
+        cart.changeReduce(product_id)
+
+    total_price = cart.get_total_price()
+    total_price_item = cart.get_total_price_item(product_id)
+    cart_item = len(cart)
+
+    context = {'total_price': total_price, 'total_price_item': total_price_item, 'cart_item': cart_item}
+    # print(request.GET.get('product_id'))
+    # return HttpResponse(status=200)
+    return JsonResponse(context)

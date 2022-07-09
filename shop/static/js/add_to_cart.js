@@ -1,3 +1,5 @@
+setTimeout(() => document.querySelectorAll(".product-card__buttom"), 5000);
+
 const buttons_add_cart = document.querySelectorAll(".product-card__buttom");
 const form_cart = document.querySelector(".cart_add_js");
 const button_add_cart = document.querySelector(".details-product__btn");
@@ -72,9 +74,7 @@ function addToCart(self) {
     // const form_buttom = button_add_cart.closest("form");
     // updateCart(form_buttom);
     addToCartFun(button_add_cart);
-    setTimeout(() => {
-      button_add_cart.classList.remove("_hold");
-    }, 1500);
+    setTimeout(() => button_add_cart.classList.remove("_hold"), 1500);
   }
 }
 

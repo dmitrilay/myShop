@@ -59,7 +59,24 @@ class Cart(object):
             for item in self.cart.values()
         )
 
+    def get_total_price_item(self, product_id):
+        for item in self.cart:
+            if item == product_id:
+                price = Decimal(int(self.cart[item]['quantity']) * int(self.cart[item]['price']))
+                return price
+
     def clear(self):  # Очистка корзины.
         del self.session[settings.CART_SESSION_ID]
         self.session.modified = True
         # self.save()
+
+    def changeAdd(self, product_id, quantity=1):
+        """Добавление товара в корзину или обновление его количества."""
+        self.cart[product_id]['quantity'] += quantity
+        self.save()
+
+    def changeReduce(self, product_id, quantity=1):
+        """Добавление товара в корзину или обновление его количества."""
+        if self.cart[product_id]['quantity'] > 1:
+            self.cart[product_id]['quantity'] -= quantity
+            self.save()

@@ -4047,6 +4047,7 @@ button.swiper-pagination-bullet {
   color: #000000;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
+  pointer-events: none;
 }
 .quantity-pr__input:focus-visible {
   outline: none;

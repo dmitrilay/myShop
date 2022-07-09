@@ -1,19 +1,5 @@
 document.addEventListener("DOMContentLoaded", ready);
 
-const rating = document.querySelector("form[name=reting]");
-
-if (rating) {
-  rating.addEventListener("click", function (e) {
-    let data = new FormData(this);
-
-    fetch(`${this.action}`, { method: "POST", body: data })
-      // .then((response) => alert("Рейтинг установлен"))
-      .catch((error) => (alert = "Ошибка"));
-
-    rating.querySelector(".icon-favourites").classList.toggle("active");
-  });
-}
-
 function ready() {
   fetch("/account/favoritesBoolAjax", { method: "GET" })
     .then((response) => {
@@ -34,5 +20,29 @@ function PutFavorites(data) {
         i.classList.add("active");
       }
     }
+  }
+}
+
+// Добавить товар в избранное
+const click_favorite = document.querySelectorAll(".icon-favourites[data-id-product]");
+
+if (click_favorite) {
+  for (item of click_favorite) {
+    item.addEventListener("click", ClickFavorite);
+  }
+}
+
+function ClickFavorite(e) {
+  const favourites = e.target;
+
+  if (!favourites.classList.contains("_hold")) {
+    favourites.classList.add("_hold");
+    url = `/account/favoritesAddAjax/?idProduct=${favourites.dataset.idProduct}`;
+    fetch(url, { method: "GET" })
+      // .then((response) => alert("Рейтинг установлен"))
+      .catch((error) => (alert = "Ошибка"));
+    favourites.classList.toggle("active");
+
+    setTimeout(() => favourites.classList.remove("_hold"), 1000);
   }
 }

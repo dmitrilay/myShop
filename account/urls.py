@@ -37,4 +37,5 @@ urlpatterns = [
     path('favorite/', views.favorite, name='favorite'),
     path('favorites/', views.favorites, name='favorites'),
     path('favoritesBoolAjax/', views.favoritesBoolAjax, name='favoritesBoolAjax'),
+    path('favoritesAddAjax/', views.favoritesAddAjax, name='favoritesAddAjax'),
 ]

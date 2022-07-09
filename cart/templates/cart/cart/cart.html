@@ -27,7 +27,7 @@
                             <div class="products-cart__name">{{ product.name }}</div>
                             <div class="products-cart__icon-wrapper">
                                 <div class="products-cart__icon-favourites">
-                                    <span class="icon-favourites icon--hover active"></span>
+                                    <span class="icon-favourites icon--hover" data-id-product='{{product.id}}'></span>
                                 </div>
                                 <div class="products-cart__icon-trash-can">
                                     <a href="{% url 'cart:cart_remove' product.id%}">
@@ -39,13 +39,16 @@
                     </div>
                     <!--  -->
                     <div class="products-cart__price">
-                        <div class="products-cart__quantity quantity-pr" data-quantity>
+                        <div class="products-cart__quantity quantity-pr" data-quantity='{{product.id}}'>
                             <div class="quantity-pr__minus" data-q="-"><span>-</span></div>
                             {{ item.update_quantity_form.quantity }}
                             {% comment %} <input type="number" class="quantity-pr__input" value="1" /> {% endcomment %}
                             <div class="quantity-pr__plus" data-q="+"><span>+</span></div>
                         </div>
-                        <div class="products-cart__total-price">{{ item.total_price }} <span class="rub"></span></div>
+                        <div class="products-cart__total-price">
+                            <span>{{ item.total_price }}</span>
+                            <span class="rub"></span>
+                        </div>
                     </div>
                 </div>
                 <!--  -->
@@ -59,7 +62,9 @@
                         <span>В корзине 1 товар</span>
                     </div>
                     <div class="total-cost-cart__line"></div>
-                    <div class="total-cost-cart__price">{{ cart.get_total_price }} <span class="rub"></span></div>
+                    <div class="total-cost-cart__price">
+                        <span class="rub">{{ cart.get_total_price }}</span>
+                    </div>
                 </div>
                 <div class="total-cost-cart__btn">
                     <a href='{% url 'orders:order_create' %}' class="btn-yellow">Перейти к оформлению</a>
