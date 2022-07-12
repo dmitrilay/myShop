@@ -1,5 +1,6 @@
 верстка/
 
+/staticfiles
 /account/migrations
 /cart/migrations
 /specifications/migrations
