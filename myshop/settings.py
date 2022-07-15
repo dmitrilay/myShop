@@ -85,8 +85,6 @@ CART_SESSION_ID = 'cart'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -106,11 +104,19 @@ except ImportError:
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'shchedryj@gmail.com'
-EMAIL_HOST_PASSWORD = 'bnbttaerscjfaehi'
-EMAIL_PORT = 587
+# -----------------------------------
+# EMAIL
+# -----------------------------------
+
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = 'admin@ch-shop.ru'
+EMAIL_HOST_PASSWORD = 'ocICul3D9SxrlckUuBOF'
 EMAIL_USE_TLS = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SERVER_EMAIL = 'admin@ch-shop.ru'
+DEFAULT_FROM_EMAIL = 'admin@ch-shop.ru'
 
 # -----------------------------------
 # CELERY

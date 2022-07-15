@@ -2,19 +2,22 @@
 // Main-Slider
 // =======================================================
 const main_product = new Swiper(".slider-main", {
+  autoplay: {
+    delay: 5000,
+  },
   slidesPerView: 1,
   slidesPerView: "auto",
   loop: true,
   spaceBetween: 10,
 
   breakpoints: {
-    '@0.75': {
+    "@0.75": {
       spaceBetween: 10,
     },
-    '@1.00': {
+    "@1.00": {
       spaceBetween: 20,
     },
-    '@1.50': {
+    "@1.50": {
       spaceBetween: 30,
     },
   },
@@ -23,7 +26,11 @@ const main_product = new Swiper(".slider-main", {
 // Main-Slider
 // =======================================================
 const slider_product = new Swiper("#product__slider", {
-  // slidesPerView: "auto",
+  slidesPerView: "auto",
+  autoplay: {
+    delay: 3000,
+  },
+  watchSlidesProgress: true,
   slidesPerView: 4,
   loop: true,
   // spaceBetween: 30,
@@ -53,7 +60,6 @@ const slider_product = new Swiper("#product__slider", {
   //   el: ".swiper-pagination",
   //   clickable: true,
   // },
-
 });
 
 // =======================================================
@@ -80,4 +86,3 @@ const slider_product = new Swiper("#product__slider", {
 //     swiper: thumbsSwiper
 //   },
 // });
-
