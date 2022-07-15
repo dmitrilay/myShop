@@ -1,4 +1,23 @@
-setTimeout(() => document.querySelectorAll(".product-card__buttom"), 5000);
+setTimeout(FixSliderAddCart, 1000, (counter = 1));
+
+function FixSliderAddCart(counter) {
+  // Костыль для slider product, вешаются события на дупликаты слайдера
+  const slider = document.querySelector(".product-slider__wrapper");
+  let buttons_add_cart = "";
+
+  if (slider) {
+    buttons_add_cart = slider.querySelectorAll(".swiper-slide-duplicate");
+  } else if (counter == 2) {
+    return;
+  } else {
+    setTimeout(FixSliderAddCart, 2000, counter + 1);
+  }
+
+  for (i of buttons_add_cart) {
+    btn_add = i.querySelector(".product-card__buttom");
+    btn_add.addEventListener("click", addToCart);
+  }
+}
 
 const buttons_add_cart = document.querySelectorAll(".product-card__buttom");
 const form_cart = document.querySelector(".cart_add_js");

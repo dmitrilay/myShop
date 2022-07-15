@@ -22,13 +22,14 @@
                 <li class="header__item"><a class="header__link" href="">Покупаем</a></li>
                 <li class="header__item header__item-off">
                     {% if request.user.is_authenticated %}
-                    {{ request.user.first_name }}
+                    <a class="header__link" href="{% url 'dashboard' %}">Личный кабинет</a>
                     {% else %}
-                    {% comment %} <a class="header__link" href="{% url 'login' %}">Личный кабинет</a> {% endcomment %}
+                    <a class="header__link" href="{% url 'login' %}">Личный кабинет</a>
                     {% endif %}
                 </li>
-                <li class="header__item header__item-off"><a class="header__link" href="{% url 'favorites' %}">Избранные
-                        товары</a></li>
+                <li class="header__item header__item-off">
+                    <a class="header__link" href="{% url 'favorites' %}">Избранные товары</a>
+                </li>
             </ul>
         </div>
 

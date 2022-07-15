@@ -28,7 +28,7 @@ const main_product = new Swiper(".slider-main", {
 const slider_product = new Swiper("#product__slider", {
   slidesPerView: "auto",
   autoplay: {
-    delay: 3000,
+    delay: 4000,
   },
   watchSlidesProgress: true,
   slidesPerView: 4,
