@@ -148,7 +148,8 @@ def ProductDetailSpecAjax(request):
     if product_name:
         product_name = product_name[0]['name_spec']
 
-    values = ['name_spec__subcategory__name', 'name_spec__name',  'name_spec__subcategory__priority']
+    values = ['name_spec__subcategory__name', 'name_spec__name',
+              'name_value__name',  'name_spec__subcategory__priority']
     obj = CharacteristicValue.objects.filter(name_product__name=product_name).values(*values)
 
     _spec = list(obj)
