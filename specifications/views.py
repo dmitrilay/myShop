@@ -12,7 +12,7 @@ from django.views.generic import TemplateView, DetailView, FormView, ListView
 
 from myshop.settings import BASE_DIR
 from shop.models import Category, Product
-from .forms import NewCategoryFeatureKeyForm, SubcategoriesForm
+from .forms import NewCategoryFeatureKeyForm
 from .models import *
 
 # -------------------------------------------

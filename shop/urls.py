@@ -11,4 +11,6 @@ urlpatterns = [
     path('category/', views.CategoryListView.as_view(), name='category_list'),
     path('<slug:category_slug>/<slug:product_slug>/', ProductDetailView.as_view(), name='product_detail'),
     # path('', views.HomeListView.as_view(), name='StartPageViews'),
+
+    path('product-detail-spec-ajax/', views.ProductDetailSpecAjax, name='product-detail-spec-ajax'),
 ]

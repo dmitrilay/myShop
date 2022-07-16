@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.http import HttpResponse, JsonResponse
 from account.models import FavoriteProduct
 
 from specifications.models import CharacteristicValue
@@ -138,3 +139,39 @@ class CategoryListView(ListView):
     model = Category
     template_name = 'shop/product_category/category.html'
     context_object_name = 'categories'
+
+
+def ProductDetailSpecAjax(request):
+    product_name = request.GET.get('product')
+
+    product_name = Product.objects.filter(name=product_name).values('name_spec')
+    if product_name:
+        product_name = product_name[0]['name_spec']
+
+    values = ['name_spec__subcategory__name', 'name_spec__name',  'name_spec__subcategory__priority']
+    obj = CharacteristicValue.objects.filter(name_product__name=product_name).values(*values)
+
+    _spec = list(obj)
+    for item in _spec:
+        if item['name_spec__subcategory__priority'] == None:
+            item['name_spec__subcategory__priority'] = 1000
+
+    _spec = sorted(_spec, key=lambda student: student['name_spec__subcategory__priority'])
+
+    # print('================================')
+    # print(_spec)
+    # for item in obj:
+    #     print(item)
+
+    # if request.user.is_authenticated:
+    #     id_prof = request.user.id
+    #     id_prod = request.GET.get('idProduct')
+    #     obj = FavoriteProduct.objects.filter(id_product=id_prod, profile_favorite=id_prof)
+    #     if obj:
+    #         obj[0].delete()
+    #     else:
+    #         prof = Profile.objects.get(pk=id_prof)
+    #         FavoriteProduct.objects.create(id_product=id_prod, profile_favorite=prof, title_product='test')
+    # return HttpResponse(status=200)
+    # return JsonResponse(_spec)
+    return JsonResponse({"spec": _spec})
