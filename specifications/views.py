@@ -1,24 +1,88 @@
 import json
+from multiprocessing import context
 import os
 from collections import defaultdict
 from pyexpat.errors import messages
 
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic import TemplateView, DetailView, FormView, ListView
 
 from myshop.settings import BASE_DIR
 from shop.models import Category, Product
-from .forms import NewCategoryFeatureKeyForm
+from .forms import NewCategoryFeatureKeyForm, SubcategoriesForm
 from .models import *
+
+# -------------------------------------------
+# Редактирование подкатегорий
+# -------------------------------------------
+
+
+def forms_subcategories(request):
+    priority_f = request.GET.get('priority_f')
+    subcategories_f = request.GET.get('subcategories_f')
+    spec_id_f = request.GET.get('spec_id_f')
+    category_f = request.GET.get('category_f')
+    del_f = request.GET.get('del_f')
+
+    print(del_f)
+    if del_f:
+        CharacteristicValue.objects.filter(name_spec=spec_id_f).delete()
+        Specifications.objects.filter(pk=spec_id_f).delete()
+
+    if subcategories_f != '---':
+        spec = Specifications.objects.get(pk=spec_id_f)
+        sub_cat = SubcategoriesCharacteristics.objects.get(pk=subcategories_f)
+        if sub_cat:
+            spec.subcategory = sub_cat
+            spec.save()
+
+    return_path = request.META.get('HTTP_REFERER', '/')
+
+    return redirect(return_path, permanent=True)
+
+
+class EditingSubcategory(ListView):
+    template_name = 'specs/editing_subcategory.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        categories = CategoryProducts.objects.all()
+        return categories
+
+
+class EditingSubcategory2(ListView):
+    template_name = 'specs/editing_subcategory2.html'
+    context_object_name = 'Characteristics'
+
+    def get_context_data(self, **kwargs):
+        cat = self.request.GET.get('category-validators')
+        context = super().get_context_data(**kwargs)
+        context['list_subcategories'] = SubcategoriesCharacteristics.objects.filter(category=cat)
+        context['category'] = cat
+        return context
+
+    def get_queryset(self):
+        cat = self.request.GET.get('category-validators')
+        categories = CharacteristicValue.objects.filter(cat=cat).values(
+            'name_spec__name', 'name_spec__id', 'name_spec__subcategory__name', 'name_spec__subcategory__priority').distinct()
+
+        _spec = list(categories)
+        for item in _spec:
+            if item['name_spec__subcategory__priority'] == None:
+                item['name_spec__subcategory__priority'] = 1000
+
+        _spec = sorted(_spec, key=lambda student: student['name_spec__subcategory__priority'])
+        return _spec
 
 
 class AllSpecView(View):
     @staticmethod
     def get(request):
         categories = CategoryProducts.objects.all()
-        print(categories)
+        # print(categories)
         context = {'categories': categories}
         return render(request, 'specs/new_product_feature.html', context)
 

@@ -18,6 +18,7 @@ document.addEventListener('change', function(e) {
    }
 
 })
+
 document.addEventListener('click', function(e) {
    let obj = e.target
 

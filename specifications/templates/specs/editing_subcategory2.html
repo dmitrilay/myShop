@@ -1,0 +1,48 @@
+{% extends 'specs/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% include 'specs/update_product_features/modal.html' %}
+
+
+<div class="category-validator-div">
+    {% for item in Characteristics %}
+    <form action="{% url 'editing-subcategory-form' %}">
+        <input type="text" name='category_f' style='display: none;' value='{{category}}'>
+        <input type="text" name='spec_id_f' style='display: none;' value='{{item.name_spec__id}}'>
+
+
+        {{item.name_spec__subcategory__name}}
+        <select name="subcategories_f" id="category-validators-id">
+            <option selected>---</option>
+            {% for spec in list_subcategories %}
+            <option value="{{ spec.id }}">{{ spec.name }}</option>
+            {% endfor %}
+        </select>
+        <span> |--| </span>
+        {{item.name_spec__name}}<span> |--| </span>
+        {{item.name_spec__subcategory__priority}}
+        <span>удалить</span>
+        <input type="checkbox" name="del_f" value="remove">
+        <input name='priority_f' type="number" style='width: 50px; display: none;'>
+        <button>Сохранить</button>
+    </form>
+
+    {% comment %} <option value="{{ category.id }}">{{ category.name_cat }}</option> {% endcomment %}
+    {% endfor %}
+</div>
+
+
+
+
+{% endblock %}
+{% block productfeaturesupdate %}
+<div id="product-features-update-list" class="col-md-12 product-features-update-list">
+</div>
+<br><br><br><br><br><br>
+{% endblock productfeaturesupdate %}
+
+{% block js %}
+{% comment %} <script src="{% static 'js/editing_subcategory.js' %}"></script> {% endcomment %}
+{% endblock js %}
