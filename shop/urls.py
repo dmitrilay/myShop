@@ -13,4 +13,5 @@ urlpatterns = [
     # path('', views.HomeListView.as_view(), name='StartPageViews'),
 
     path('product-detail-spec-ajax/', views.ProductDetailSpecAjax, name='product-detail-spec-ajax'),
+    path('search-product-ajax/', views.SearchProductAjax, name='search-product-ajax'),
 ]

@@ -160,3 +160,15 @@ def ProductDetailSpecAjax(request):
     _spec = sorted(_spec, key=lambda student: student['name_spec__subcategory__priority'])
 
     return JsonResponse({"spec": _spec})
+
+
+def SearchProductAjax(request):
+    product_name = request.GET.get('search')
+
+    product_list = []
+    if product_name:
+        rez = Product.objects.filter(name__icontains=product_name)[:10]
+        for item in rez:
+            product_list.append({'name': item.name, 'url': item.get_absolute_url()})
+
+    return JsonResponse({"product_list": product_list})

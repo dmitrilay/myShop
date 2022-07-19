@@ -692,9 +692,7 @@ input {
       transform: translate(0, -18px);
   top: auto;
   right: 28px;
-}
-
-/*!
+} /*!
  * baguetteBox.js
  * @author  feimosi
  * @version 1.11.1
@@ -2159,7 +2157,6 @@ button.swiper-pagination-bullet {
     -webkit-box-shadow: 0px 0px 10px 22px rgba(212, 170, 34, 0.2);
             box-shadow: 0px 0px 10px 22px rgba(212, 170, 34, 0.2);
   }
-
   .icon--hover.active:hover::after {
     background-color: rgba(212, 34, 34, 0.2);
     -webkit-box-shadow: 0px 0px 20px 18px rgba(212, 34, 34, 0.2);
@@ -2353,6 +2350,9 @@ button.swiper-pagination-bullet {
   width: 20px;
 }
 
+.search-header {
+  position: relative;
+}
 .search-header__inner {
   position: relative;
   display: -webkit-inline-box;
@@ -2386,6 +2386,35 @@ button.swiper-pagination-bullet {
 }
 .search-header__button span {
   color: #040404;
+}
+.search-header__extradition {
+  display: none;
+  max-width: 380px;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 110%;
+  background-color: #fefefe;
+  -webkit-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border-radius: 0.3125rem;
+  padding: 8px 0;
+}
+.search-header__extradition.active {
+  display: block;
+}
+.search-header__item {
+  width: 100%;
+}
+.search-header__item:hover {
+  background-color: #e8aa31;
+}
+.search-header__link {
+  display: block;
+  color: #040404;
+  padding: 8px 10px;
+  font-size: 16px;
 }
 
 @media (max-width: 999px) {
@@ -2481,6 +2510,9 @@ button.swiper-pagination-bullet {
     -webkit-box-flex: 1;
         -ms-flex: 1 1 100%;
             flex: 1 1 100%;
+  }
+  .header__search .search-header__extradition {
+    max-width: 100%;
   }
   .header__search .search-header__inner {
     max-width: 100%;
@@ -2849,7 +2881,7 @@ button.swiper-pagination-bullet {
       -ms-flex: 0 0 calc(30% - 15px);
           flex: 0 0 calc(30% - 15px);
   margin-right: 15px;
-  /* max-height: 100vh; */
+  max-height: 100vh;
   z-index: 100;
   position: relative;
   scrollbar-width: none;
@@ -3877,7 +3909,6 @@ button.swiper-pagination-bullet {
             flex: 1 1 calc(32% - 10px);
     margin-left: 10px;
   }
-
   .products-cart__price {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -3899,7 +3930,6 @@ button.swiper-pagination-bullet {
     margin-left: 0;
     margin-bottom: 10px;
   }
-
   .total-cost-cart__text {
     text-align: end;
     width: 100%;
@@ -3932,7 +3962,6 @@ button.swiper-pagination-bullet {
             flex: 1 1 100%;
     margin-left: 0;
   }
-
   .total-cost-cart__text {
     text-align: start;
     border-bottom: none;
@@ -3964,7 +3993,6 @@ button.swiper-pagination-bullet {
             flex: 1 1 100%;
     margin-left: 0;
   }
-
   .products-cart {
     padding: 15px;
   }
@@ -3999,7 +4027,6 @@ button.swiper-pagination-bullet {
             order: 2;
     margin-bottom: 0;
   }
-
   .total-cost-cart {
     padding: 15px;
   }
@@ -4047,7 +4074,6 @@ button.swiper-pagination-bullet {
   color: #000000;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
-  pointer-events: none;
 }
 .quantity-pr__input:focus-visible {
   outline: none;
@@ -4272,7 +4298,6 @@ button.swiper-pagination-bullet {
         -ms-flex: 0 0 100% !important;
             flex: 0 0 100% !important;
   }
-
   .your-order__inner {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
@@ -4315,17 +4340,14 @@ button.swiper-pagination-bullet {
         -ms-flex: 0 0 100% !important;
             flex: 0 0 100% !important;
   }
-
   .place-receipt__maps {
     margin: 0 -5px;
     margin-top: 20px;
     padding-bottom: 60%;
   }
-
   .checkout__btn {
     width: 100%;
   }
-
   .your-order__inner {
     padding: 20px 10px;
   }
@@ -4498,7 +4520,6 @@ button.swiper-pagination-bullet {
     margin-left: 0;
     padding: 10px;
   }
-
   .details-order__icon {
     width: 70px;
   }
