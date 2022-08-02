@@ -5,5 +5,6 @@ from . import views
 
 urlpatterns = [
     path('', views.smartlombardAJAX, name='smartlombardAJAX'),
+    path('v2/', views.v2smartlombardAJAX, name='smartlombardAJAX'),
     # path('search-product-ajax/', views.SearchProductAjax, name='search-product-ajax'),
 ]

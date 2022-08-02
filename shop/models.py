@@ -43,7 +43,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    brand = models.ForeignKey('Brand', related_name='brands', on_delete=models.SET_NULL, blank=False, null=True,
+    brand = models.ForeignKey('Brand', related_name='brands', on_delete=models.SET_NULL, blank=True, null=True,
                               verbose_name='бренд')
     condition = models.CharField(
         max_length=100, db_index=True, blank=False, verbose_name='состояние')
@@ -57,6 +57,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    id_crm = models.IntegerField(verbose_name='id продукта в CRM', blank=True, null=True)
 
     class Meta:
         ordering = ('name',)

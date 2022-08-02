@@ -1,5 +1,7 @@
 верстка/
 
+*smartlombard/
+*/migrations/
 /staticfiles
 /account/migrations
 /cart/migrations
