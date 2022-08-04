@@ -1,15 +1,7 @@
 <div class="list-group">
-    <a href="{% url 'new-feature' %}"
-        class="list-group-item list-group-item-action {% if request.path == '/spec/new-feature/' %}active{% endif %}"
-        aria-current="true">Создать новую характеристику
-    </a>
-    <a href="{% url 'new-validator' %}"
-        class="list-group-item list-group-item-action {% if request.path == '/spec/new-validator/' %}active{% endif %}"
-        aria-current="true">Создать значение характеристики
-    </a>
-    <a href="{% url 'new-product-feature' %}"
-        class="list-group-item list-group-item-action {% if request.path == '/spec/new-product-feature/' %}active{% endif %}"
-        aria-current="true">Создать характеристику для товара
+    <a href="{% url 'create-characteristic' %}"
+        class="list-group-item list-group-item-action {% if request.path == '/spec/create-characteristic/' %}active{% endif %}"
+        aria-current="true">Создать характеристики для товара
     </a>
 
     <a href="{% url 'update-product-features' %}"
@@ -18,6 +10,6 @@
     </a>
     <a href="{% url 'editing-subcategory' %}"
         class="list-group-item list-group-item-action {% if request.path == '/spec/editing-subcategory/' %}active{% endif %}"
-        aria-current="true">Редактировать подкатегорию характеристики 
+        aria-current="true">Редактировать подкатегорию характеристики
     </a>
 </div>

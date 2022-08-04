@@ -13,6 +13,25 @@ from shop.models import Category, Product
 from .forms import NewCategoryFeatureKeyForm
 from .models import *
 
+
+# -------------------------------------------
+# Создание значения для характеристики
+# -------------------------------------------
+class CreateNewCharacteristic(View):
+
+    @staticmethod
+    def get(request):
+        categories = Product.objects.filter(name_spec='')
+        context = {'categories': categories}
+        return render(request, 'specs/NewTemplate/CreateNewCharacteristic.html', context)
+
+    @staticmethod
+    def post(request):
+        data = request.body.decode('utf-8')
+        print(data)
+        return JsonResponse({"OK": "OK"})
+
+
 # -------------------------------------------
 # Редактирование подкатегорий
 # -------------------------------------------
@@ -259,27 +278,15 @@ class BaseSpecView(TemplateView):
 # -------------------------------------------
 # Создание новой характеристики
 # -------------------------------------------
-class CreateNewFeature(FormView):
-    template_name = 'specs/new_feature.html'
-    form_class = NewCategoryFeatureKeyForm
-    context_object_name = 'form'
-    success_url = '/spec/'
+# class CreateNewFeature(FormView):
+#     template_name = 'specs/new_feature.html'
+#     form_class = NewCategoryFeatureKeyForm
+#     context_object_name = 'form'
+#     success_url = '/spec/'
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-
-# -------------------------------------------
-# Создание значения для характеристики
-# -------------------------------------------
-class CreateNewFeatureValidator(View):
-
-    @staticmethod
-    def get(request):
-        categories = Category.objects.all()
-        context = {'categories': categories}
-        return render(request, 'specs/new_validator.html', context)
+#     def form_valid(self, form):
+#         form.save()
+#         return super().form_valid(form)
 
 
 # -------------------------------------------

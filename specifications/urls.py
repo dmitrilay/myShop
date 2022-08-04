@@ -6,12 +6,13 @@ urlpatterns = [
     path('', AllSpecView.as_view(), name='product-list-for-features'),
 
 
-    path('new-feature/', CreateNewFeature.as_view(), name='new-feature'),
-    path('new-validator/', CreateNewFeatureValidator.as_view(), name='new-validator'),
+    # path('new-feature/', CreateNewFeature.as_view(), name='new-feature'),
+
+
     path('feature-choice/', FeatureChoiceView.as_view(), name='feature-choice-validators'),
     path('feature-create/', CreateFeatureView.as_view(), name='create-feature'),
 
-    path('new-product-feature/', NewProductFeatureView.as_view(), name='new-product-feature'),
+    # path('new-product-feature/', NewProductFeatureView.as_view(), name='new-product-feature'),
 
     path('search-product/', SearchProductAjaxView.as_view(), name='search-product'),
     path('attach-feature/', AttachNewFeatureToProduct.as_view(), name='attach-feature'),
@@ -31,4 +32,6 @@ urlpatterns = [
     path('editing-subcategory/', views.EditingSubcategory.as_view(), name='editing-subcategory'),
     path('editing-subcategory2/', views.EditingSubcategory2.as_view(), name='editing-subcategory2'),
     path('editing-subcategory-form/', views.forms_subcategories, name='editing-subcategory-form'),
+
+    path('create-characteristic/', CreateNewCharacteristic.as_view(), name='create-characteristic'),
 ]

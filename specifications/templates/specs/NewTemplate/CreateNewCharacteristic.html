@@ -1,0 +1,55 @@
+{% extends 'specs/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+
+<div class="category-validator-div">
+    <label for="category-validators-id">Категория</label>
+    <select class="form-select" required name="category-validators" id="category-validators-id"
+        aria-label="Default select example">
+        <option selected>---</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+
+<div class='label'>
+    <div class="label__spec">
+        <label>Характеристика</label>
+    </div>
+    <div class="label__spec">
+        <label>Значение характеристика</label>
+    </div>
+</div>
+
+
+<div class="wrapper-input">
+    <div class="item-input">
+        <div class='item-input__wraper'>
+            <div class="item-input__spec">
+                <input name='spec' type="text" value='1'>
+            </div>
+            <div class="item-input__spec">
+                <input name='value' type="text" value='1'>
+            </div>
+        </div>
+    </div>
+    <div class='item-input__add-input'>
+        <a href='#'>добавить ещё одно поле</a>
+    </div>
+</div>
+<br>
+{% comment %} <div id='csrf_token'>{% csrf_token %}</div> {% endcomment %}
+<button id='button_save'>Отправить и сохранит</button>
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script src='{% static "/js/CreateNewCharacteristic.js" %}'></script>
+{% endblock js %}
