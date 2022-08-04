@@ -91,9 +91,22 @@ def smartlombardAJAX(request):
 
 @csrf_exempt
 def v2smartlombardAJAX(request):
-    encodedStr = request.body.decode('utf-8')
-    print('=======================')
-    print(encodedStr)
+    data = request.body.decode('utf-8')
+    data = json.loads(data)
+    # print('=======================')
+    # print(encodedStr)
+    bulk_list = []
+    for key, item in data.items():
+        # print(item)
+        bulk_list.append(NewProductCRM(name=item[0],
+                                       storage=item[1],
+                                       price=item[2],
+                                       category=item[3],
+                                       subcategory=item[4],
+                                       article=key,
+                                       ))
+
+    NewProductCRM.objects.bulk_create(bulk_list)
 
     status = {"status": 200}
     return JsonResponse(status, safe=False)

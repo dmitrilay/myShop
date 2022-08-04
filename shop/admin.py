@@ -5,11 +5,6 @@ from .models import Category, Product
 from .models import *
 
 
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 0
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
@@ -19,6 +14,11 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Brand)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', ]
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
 
 
 @admin.register(Product)
@@ -43,3 +43,5 @@ class ProductImageAdmin(admin.ModelAdmin):
             return mark_safe(f"<img src='{object.image.url}' width=60>")
 
     get_html_img.short_description = 'Изображение'
+
+

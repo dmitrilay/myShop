@@ -1,12 +1,10 @@
 import json
-from multiprocessing import context
 import os
 from collections import defaultdict
 from pyexpat.errors import messages
 
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView, ListView
 
@@ -81,15 +79,18 @@ class EditingSubcategory2(ListView):
 class AllSpecView(View):
     @staticmethod
     def get(request):
-        categories = CategoryProducts.objects.all()
-        # print(categories)
-        context = {'categories': categories}
-        return render(request, 'specs/new_product_feature.html', context)
-
+        if request.user.is_superuser:
+            categories = CategoryProducts.objects.all()
+            context = {'categories': categories}
+            return render(request, 'specs/new_product_feature.html', context)
+        else:
+            return redirect('login')
 
 # -------------------------------------------
 # Создание характеристик для ТОВАРА
 # -------------------------------------------
+
+
 class NewProductFeatureView(View):
     """Присвоение характеристики определенному товару"""
 

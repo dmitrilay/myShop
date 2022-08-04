@@ -5,7 +5,7 @@ from .views import *
 urlpatterns = [
     path('', AllSpecView.as_view(), name='product-list-for-features'),
 
-    path('', BaseSpecView.as_view(), name='product-list-for-features'),
+
     path('new-feature/', CreateNewFeature.as_view(), name='new-feature'),
     path('new-validator/', CreateNewFeatureValidator.as_view(), name='new-validator'),
     path('feature-choice/', FeatureChoiceView.as_view(), name='feature-choice-validators'),

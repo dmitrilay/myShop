@@ -24,9 +24,9 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if self.image:
             print(self.image)
-            self.image = 'img_category/test.webp'
+            # self.image = 'img_category/test.webp'
         elif not self.image:
-            print("Пестота")
+            # print("Пестота")
             self.image = 'img_default/no_image.jpg'
         super(Category, self).save(*args, **kwargs)
 
@@ -58,6 +58,7 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     id_crm = models.IntegerField(verbose_name='id продукта в CRM', blank=True, null=True)
+    storage = models.IntegerField(default=1, verbose_name='Остатки')
 
     class Meta:
         ordering = ('name',)

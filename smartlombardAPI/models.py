@@ -75,8 +75,8 @@ class NewProductCRM(models.Model):
     storage = models.IntegerField(verbose_name='Остатки')
 
     class Meta:
-        verbose_name = "Товары из CRM"
-        verbose_name_plural = "Товары из CRM"
+        verbose_name = "Товары(NEW) из CRM"
+        verbose_name_plural = "Товары(NEW) из CRM"
 
     def __str__(self):
         return self.name
@@ -100,3 +100,16 @@ class NewProductCRM(models.Model):
             self._generate_slug()
 
         super().save(*args, **kwargs)
+
+
+class NewProductCrmImage(models.Model):
+    product = models.ForeignKey(NewProductCRM, related_name='productSET', blank=True, null=True, default=None,
+                                on_delete=models.CASCADE, verbose_name="Продукт")
+    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+
+    def __str__(self):
+        return "%s" % self.image
+
+    class Meta:
+        verbose_name = 'Фотографию'
+        verbose_name_plural = 'Фотографии'
