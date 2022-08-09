@@ -14,3 +14,11 @@
 .item-input__wraper {
   display: flex;
 }
+
+.item-input__wraper {
+  margin-bottom: 10px;
+}
+
+.wrapper-input {
+  margin-top: 10px;
+}

@@ -34,7 +34,7 @@ function to_save_data(e) {
     obj = {};
     obj["product_id"] = product_id.value;
     obj["spec"] = list;
-    RequestAjax(obj);
+    product_id.value != "---" ? RequestAjax(obj) : console.log("Не выбран продукт");
   }
 }
 

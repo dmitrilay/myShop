@@ -3,12 +3,15 @@ import datetime
 from encodings import utf_8
 import json
 import os
+from this import d
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import smart_str
 from myshop.settings import BASE_DIR
 import urllib.parse
+
+from shop.models import Product
 from .models import *
 
 
@@ -42,26 +45,37 @@ def smartlombardAJAX(request):
     status = []
 
     # Добавление нового товара
+    article_in_database_main = Product.objects.filter(id_crm__gte=0).values_list('id_crm')
+    article_in_database_main = list(map(lambda _i: _i[0], article_in_database_main))
+
+    article_in_database = ProductCRM.objects.all().values_list('article')
+    article_in_database = list(map(lambda _i: _i[0], article_in_database))
 
     bulk_list = []
     for event in new_product:
         _event = event['data'] if event.get('data') else 0
 
-        # print(event)
-
         if event['type'] == 'add':
-            bulk_list.append(ProductCRM(name=_event['name'],
-                                        article=_event['article'],
-                                        price=_event['price'],
-                                        features=_event['features'],
-                                        category=_event['category'],
-                                        subcategory=_event['subcategory'],
-                                        hidden=_event['hidden'] if _event.get('hidden') else 0,
-                                        sold=_event['sold'] if _event.get('sold') else 0,
-                                        ))
+            write_bulk_permit_1 = True if int(_event['article']) not in article_in_database_main else False
+            write_bulk_permit_2 = True if int(_event['article']) not in article_in_database else False
+
+            if write_bulk_permit_1 and write_bulk_permit_2:
+                bulk_list.append(ProductCRM(name=_event['name'],
+                                            article=_event['article'],
+                                            price=_event['price'],
+                                            features=_event['features'],
+                                            category=_event['category'],
+                                            subcategory=_event['subcategory'],
+                                            hidden=_event['hidden'] if _event.get('hidden') else 0,
+                                            sold=_event['sold'] if _event.get('sold') else 0,
+                                            ))
+
+            # print(_event['article'])
             # write_file(f'{_event}', name='product_add')
             status.append({"status": True, "type": "good-add", "unique": '1', })
         elif event['type'] == 'edit':
+            # for j, a in _event.items():
+            #     print(j, a)
             # write_file(f'{_event}', name='product_edit')
             status.append({"status": True, "type": "good-edit", "unique": '1', })
         elif event['type'] == 'remove':

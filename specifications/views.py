@@ -28,7 +28,41 @@ class CreateNewCharacteristic(View):
     @staticmethod
     def post(request):
         data = request.body.decode('utf-8')
-        print(data)
+        data = json.loads(data)
+
+        product = Product.objects.filter(pk=data['product_id']).values_list('category__name', 'name')
+
+        obj, created = CategoryProducts.objects.get_or_create(name_cat=product[0][0])
+        # print(obj, created)
+
+        name_product, _ = ProductSpec.objects.get_or_create(name=product[0][1], category=obj)
+        list_product_spec = CharacteristicValue.objects.filter(name_product=name_product)
+        # print(list_product_spec)
+
+        bulk_list = []
+        if obj:
+            for key, value in data['spec'].items():
+
+                spec, _ = Specifications.objects.get_or_create(name=key)
+                sp_value, _ = ValuesSpec.objects.get_or_create(name=value)
+
+                _s = CharacteristicValue(name_product=name_product,
+                                         name_spec=spec,
+                                         name_value=sp_value,
+                                         cat=obj
+                                         )
+
+                write_permission = True
+                for item in list_product_spec:
+                    if str(item) == str(_s):
+                        write_permission = False
+                        break
+
+                bulk_list.append(_s) if write_permission else _
+
+            print(bulk_list)
+            CharacteristicValue.objects.bulk_create(bulk_list)
+
         return JsonResponse({"OK": "OK"})
 
 
