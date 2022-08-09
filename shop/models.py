@@ -43,10 +43,15 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    MONTH_CHOICES = (
+        ("new", "Новый"),
+        ("used", "б/у"),
+    )
+
     brand = models.ForeignKey('Brand', related_name='brands', on_delete=models.SET_NULL, blank=True, null=True,
                               verbose_name='бренд')
     condition = models.CharField(
-        max_length=100, db_index=True, blank=False, verbose_name='состояние')
+        choices=MONTH_CHOICES, max_length=100, db_index=True, blank=False, verbose_name='состояние')
     category = models.ForeignKey(
         Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
@@ -54,7 +59,7 @@ class Product(models.Model):
     name_spec = models.CharField(max_length=200, db_index=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0)
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True, verbose_name='доступность')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     id_crm = models.IntegerField(verbose_name='id продукта в CRM', blank=True, null=True)

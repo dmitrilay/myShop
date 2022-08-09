@@ -15,13 +15,13 @@ class ProductCRM(models.Model):
     slug = models.SlugField(default='', blank=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
-    condition = models.CharField(choices=MONTH_CHOICES, max_length=200,
-                                 db_index=True, verbose_name='состояние', blank=True)
+    condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
+                                 db_index=True, verbose_name='состояние')
     article = models.IntegerField(verbose_name='id продукта в CRM')
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='цена')
     features = models.TextField(blank=True, verbose_name='описание товара')
     category = models.CharField(max_length=200, db_index=True, verbose_name='категория')
-    subcategory = models.CharField(max_length=200, db_index=True, verbose_name='подкатегория')
+    subcategory = models.CharField(max_length=200, db_index=True, verbose_name='подкатегория', blank=True)
     hidden = models.BooleanField(default=False, null=True, verbose_name='скрыть товар')
     sold = models.BooleanField(default=False, null=True, verbose_name='товар является проданным')
     created = models.DateTimeField(auto_now_add=True)
@@ -54,6 +54,19 @@ class ProductCRM(models.Model):
             self._generate_slug()
 
         super().save(*args, **kwargs)
+
+
+class OldProductCrmImage(models.Model):
+    product = models.ForeignKey(ProductCRM, related_name='productSET', blank=True, null=True, default=None,
+                                on_delete=models.CASCADE, verbose_name="Продукт")
+    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+
+    def __str__(self):
+        return "%s" % self.image
+
+    class Meta:
+        verbose_name = 'Фотографию'
+        verbose_name_plural = 'Фотографии OldProductCrmImage'
 
 
 class NewProductCRM(models.Model):

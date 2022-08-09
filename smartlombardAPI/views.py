@@ -55,11 +55,12 @@ def smartlombardAJAX(request):
     for event in new_product:
         _event = event['data'] if event.get('data') else 0
 
-        if event['type'] == 'add':
-            write_bulk_permit_1 = True if int(_event['article']) not in article_in_database_main else False
-            write_bulk_permit_2 = True if int(_event['article']) not in article_in_database else False
+        search_product_1 = True if int(_event['article']) in article_in_database_main else False
+        search_product_2 = True if int(_event['article']) in article_in_database else False
 
-            if write_bulk_permit_1 and write_bulk_permit_2:
+        if event['type'] == 'add':
+
+            if search_product_1 == False and search_product_2 == False:
                 bulk_list.append(ProductCRM(name=_event['name'],
                                             article=_event['article'],
                                             price=_event['price'],
@@ -68,19 +69,20 @@ def smartlombardAJAX(request):
                                             subcategory=_event['subcategory'],
                                             hidden=_event['hidden'] if _event.get('hidden') else 0,
                                             sold=_event['sold'] if _event.get('sold') else 0,
+                                            condition='used'
                                             ))
 
-            # print(_event['article'])
-            # write_file(f'{_event}', name='product_add')
             status.append({"status": True, "type": "good-add", "unique": '1', })
         elif event['type'] == 'edit':
-            # for j, a in _event.items():
-            #     print(j, a)
-            # write_file(f'{_event}', name='product_edit')
+            if search_product_2 == True:
+                if _event['sold'] == True:
+                    ProductCRM.objects.filter(article=_event['article']).update(sold=True, hidden=True)
+            if search_product_1 == True:
+                if _event['sold'] == True:
+                    Product.objects.filter(id_crm=_event['article']).update(available=False, storage=0)
+
             status.append({"status": True, "type": "good-edit", "unique": '1', })
         elif event['type'] == 'remove':
-            # _event = event['article']
-            # write_file(f'{event}', name='product_remove')
             status.append({"status": True, "type": "good-remove", "unique": '1', })
 
     ProductCRM.objects.bulk_create(bulk_list)
