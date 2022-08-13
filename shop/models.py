@@ -60,6 +60,7 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0)
     available = models.BooleanField(default=True, verbose_name='доступность')
+    sold = models.BooleanField(default=False, verbose_name='продан')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     id_crm = models.IntegerField(verbose_name='id продукта в CRM', blank=True, null=True)

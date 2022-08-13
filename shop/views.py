@@ -64,14 +64,14 @@ class CategoryDetailView2(ListView):
 
             p1 = (i.name_spec for i in pda)
             pf = ('name_value', 'name_spec', 'name_product')
-            f = CharacteristicValue.objects.filter(name_product__name__in=p1).select_related(*pf)
+            f = CharacteristicValue.objects.filter(name_product__name__in=p1, available=True).select_related(*pf)
             data = self.find_get(f, url_kwargs)
 
             # Запрос для получения товаров
-            queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data]).select_related(
+            queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data], available=True).select_related(
                 'category').prefetch_related('productimage_set')
         else:
-            queryset = Product.objects.filter(category__slug=slug).select_related(
+            queryset = Product.objects.filter(category__slug=slug, available=True).select_related(
                 'category').prefetch_related('productimage_set')
         return queryset
 
@@ -119,7 +119,7 @@ class HomeListView(ListView):
 
     def get_queryset(self):
         queryset = Product.objects.select_related('category')
-        queryset = queryset.prefetch_related('productimage_set').filter(available=True)
+        queryset = queryset.prefetch_related('productimage_set').filter(available=True)[0:12]
         context = []
         image = None
         for i in queryset:

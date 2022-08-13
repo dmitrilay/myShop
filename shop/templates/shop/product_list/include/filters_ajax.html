@@ -1,0 +1,37 @@
+{% comment %} {{product_features}} {% endcomment %}
+
+<div class="list-product__filters">
+    <form class="filters" method="GET">
+        <div class="filters__header">
+            Фильтр товаров
+            <span data-removeattr="active>list-product__filters" data-removeattr2="look>body">x</span>
+        </div>
+        <div class="filters__inner">
+            {% for item,values in product_features.items %}
+            <!--  -->
+            <div class="filters__item item-filters" data-spollers>
+                <div tabindex="-1" data-spoller
+                    class="item-filters__title {% if forloop.counter < 3 %} _active {% endif %}">
+                    <span class="item-filters__text">{{item}}</span>
+                </div>
+
+                <div class="item-filters__accordion">
+                    {% for value in  values %}
+                    <div class="custom-checkbox item-filters__checkbox">
+                        <input class="custom-checkbox__input" {% if value.2 %}checked{% endif %} type="checkbox"
+                            id="{{item}}{{value}}" name="{{item}}" value="{{value.0}}" />
+                        <label class="custom-checkbox__label item-filters__checkbox-label"
+                            for="{{item}}{{value}}">{{value.0}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="filters__buttons buttons-filters">
+            <button type="submit" class="buttons-filters__btn btn-yellow">Подобрать</button>
+            <a href="?{{ page }}" class="buttons-filters__btn btn-grey">Сбросить</a>
+        </div>
+    </form>
+</div>

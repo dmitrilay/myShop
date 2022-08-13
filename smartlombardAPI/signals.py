@@ -36,6 +36,7 @@ def my_callback(sender, **kwargs):
                                         #    price=kwargs['instance'].price,
                                         price='99999',
                                         available=True if kwargs['instance'].hidden == False else False,
+                                        sold=True if kwargs['instance'].sold == True else False,
                                         id_crm=kwargs['instance'].article,
                                         )
             add_photo(kwargs, _r)

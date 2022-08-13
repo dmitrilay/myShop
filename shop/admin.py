@@ -23,8 +23,8 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'available', 'created', 'updated']
-    list_filter = ['category', 'available', 'created', 'updated']
+    list_display = ['name', 'name_spec', 'price', 'available', 'sold', 'created', 'updated']
+    list_filter = ['category', 'available', 'sold', 'created', 'updated']
     list_editable = ['price', 'available']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
@@ -43,5 +43,3 @@ class ProductImageAdmin(admin.ModelAdmin):
             return mark_safe(f"<img src='{object.image.url}' width=60>")
 
     get_html_img.short_description = 'Изображение'
-
-

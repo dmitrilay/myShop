@@ -1,9 +1,8 @@
-from ast import Try
+# from ast import Try
 import datetime
-from encodings import utf_8
+# from encodings import utf_8
 import json
 import os
-from this import d
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -59,7 +58,6 @@ def smartlombardAJAX(request):
         search_product_2 = True if int(_event['article']) in article_in_database else False
 
         if event['type'] == 'add':
-
             if search_product_1 == False and search_product_2 == False:
                 bulk_list.append(ProductCRM(name=_event['name'],
                                             article=_event['article'],
@@ -74,12 +72,20 @@ def smartlombardAJAX(request):
 
             status.append({"status": True, "type": "good-add", "unique": '1', })
         elif event['type'] == 'edit':
+
+            print(event['data'])
+
             if search_product_2 == True:
                 if _event['sold'] == True:
                     ProductCRM.objects.filter(article=_event['article']).update(sold=True, hidden=True)
+                elif _event['sold'] == False:
+                    ProductCRM.objects.filter(article=_event['article']).update(sold=False, hidden=False)
+
             if search_product_1 == True:
                 if _event['sold'] == True:
-                    Product.objects.filter(id_crm=_event['article']).update(available=False, storage=0)
+                    Product.objects.filter(id_crm=_event['article']).update(available=False, sold=True, storage=0)
+                elif _event['sold'] == False:
+                    Product.objects.filter(id_crm=_event['article']).update(available=False, sold=False, storage=1)
 
             status.append({"status": True, "type": "good-edit", "unique": '1', })
         elif event['type'] == 'remove':
