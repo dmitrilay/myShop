@@ -1,3 +1,6 @@
+from itertools import product
+import json
+from multiprocessing.sharedctypes import Value
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from account.models import FavoriteProduct
@@ -5,8 +8,26 @@ from account.models import FavoriteProduct
 from specifications.models import CharacteristicValue
 from .models import Category, Product
 from cart.forms import CartAddProductForm
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView, View
 from django.db.models import Q
+from collections import defaultdict
+
+
+class FilterAjax(View):
+    def get(request, _p):
+        _get = _p.GET.get('cat')
+        _get = _get[0:-1].split('/')[-1]
+
+        product = Product.objects.filter(
+            category__slug=_get, available=True).exclude(
+            name_spec='').values_list('name_spec')
+        product = list(map(lambda _i: _i[0], product))
+
+        _q = CharacteristicValue.objects.filter(name_product__name__in=product, name_spec__participation_filtering=True)
+        _q = _q.values_list('name_spec__name', 'name_value__name', 'name_spec__priority_spec')
+
+        status = {"status": list(_q)}
+        return JsonResponse(status, safe=True)
 
 
 class CategoryDetailView2(ListView):
@@ -42,37 +63,79 @@ class CategoryDetailView2(ListView):
     def get_queryset(self, queryset=None):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
 
-        # Категория товаров
-        url_kwargs = {}
-        q_condition_queries = Q()
-        # Поиск get параметров,фильтрация и запись в масив
-        for item in self.request.GET:
-            if item != 'price_sort' and item != 'page':
-                url_kwargs[item] = self.request.GET.getlist(item)
+        # # Категория товаров
+        # url_kwargs = {}
+        # q_condition_queries = Q()
+        # # Поиск get параметров,фильтрация и запись в масив
+        # for item in self.request.GET:
+        #     if item != 'price_sort' and item != 'page':
+        #         url_kwargs[item] = self.request.GET.getlist(item)
 
-        if len(url_kwargs) != 0:
-            for key, value in url_kwargs.items():
-                if isinstance(value, list):  # Является ли переданный обьект листом
-                    q_condition_queries.add(Q(**{'value__in': value}), Q.OR)
-                else:
-                    q_condition_queries.add(Q(**{'value': value}), Q.OR)
+        # if len(url_kwargs) != 0:
+        #     for key, value in url_kwargs.items():
+        #         print(value)
+        #         if isinstance(value, list):  # Является ли переданный обьект списком
+        #             q_condition_queries.add(Q(**{'value__in': value}), Q.OR)
+        #         else:
+        #             q_condition_queries.add(Q(**{'value': value}), Q.OR)
+        #         print(q_condition_queries)
 
-            pda = cache.get('pda')
-            if not pda:
-                pda = Product.objects.all().only('name_spec')
-                cache.set('pda', pda, 600)
+        #     pda = cache.get('pda')
+        #     if not pda:
+        #         pda = Product.objects.all().only('name_spec')
+        #         cache.set('pda', pda, 600)
 
-            p1 = (i.name_spec for i in pda)
-            pf = ('name_value', 'name_spec', 'name_product')
-            f = CharacteristicValue.objects.filter(name_product__name__in=p1, available=True).select_related(*pf)
-            data = self.find_get(f, url_kwargs)
+        #     p1 = (i.name_spec for i in pda)
+        #     pf = ('name_value', 'name_spec', 'name_product')
+        #     f = CharacteristicValue.objects.filter(name_product__name__in=p1, ).select_related(*pf)
+        #     data = self.find_get(f, url_kwargs)
 
-            # Запрос для получения товаров
-            queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data], available=True).select_related(
-                'category').prefetch_related('productimage_set')
+        #     # Запрос для получения товаров
+        #     queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data], ).select_related(
+        #         'category').prefetch_related('productimage_set')
+        # else:
+
+        #
+
+        dict_get = dict(self.request.GET)
+        if dict_get.get('page'):
+            dict_get.pop('page')
+
+        if dict_get:
+            all_product = Product.objects.exclude(name_spec__in=['', '0']).filter(
+                category__slug=slug, available=True).values_list('name_spec')
+
+            result = []
+            for _i in dict_get.values():
+                result.extend(_i)
+
+            _q1 = Q(name_product__name__in=all_product)
+            _q2 = Q(name_value__name__in=result)
+            _values_list = ('name_product__name', 'name_spec__name', 'name_value__name')
+            _r = CharacteristicValue.objects.filter(_q1, _q2).values_list(*_values_list)
+
+            dict_test = {}
+            for spec, value in dict_get.items():
+                for item in _r:
+                    if spec in item:
+                        if dict_test.get(item[0]):
+                            dict_test[item[0]] += 1
+                        else:
+                            dict_test[item[0]] = 1
+
+            _yes = len(dict_get.keys())
+
+            all_product = list(filter(lambda _i: dict_test[_i] == _yes, dict_test))
+
+            _q = Product.objects.filter(name_spec__in=all_product, available=True)
+            queryset = _q.select_related('category').prefetch_related('productimage_set')
         else:
-            queryset = Product.objects.filter(category__slug=slug, available=True).select_related(
-                'category').prefetch_related('productimage_set')
+            all_product = []
+
+        if not all_product:
+            _q = Product.objects.filter(category__slug=slug, available=True)
+            queryset = _q.select_related('category').prefetch_related('productimage_set')
+
         return queryset
 
 

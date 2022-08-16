@@ -9,58 +9,59 @@ from django.core.cache import cache
 register = template.Library()
 
 
-@register.inclusion_tag('shop/product_list/include/filters.html', takes_context=True)
-def show_filters(context):
-    # feature_and_values = defaultdict(list)
+# Эта часть кода переписана на JS
+# @register.inclusion_tag('shop/product_list/include/filters.html', takes_context=True)
+# def show_filters(context):
+#     # feature_and_values = defaultdict(list)
 
-    pda = cache.get('pda')
-    if not pda:
-        pda = Product.objects.all()
-        cache.set('pda', pda, 600)
+#     pda = cache.get('pda')
+#     if not pda:
+#         pda = Product.objects.all()
+#         cache.set('pda', pda, 600)
 
-    q_condition_queries = Q()
-    for i in pda:
-        q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
+#     q_condition_queries = Q()
+#     for i in pda:
+#         q_condition_queries.add(Q(name_product__name=i.name_spec), Q.OR)
 
-    product_features = cache.get('product_features')
-    if not product_features:
-        pf = CharacteristicValue.objects.filter(q_condition_queries, name_spec__participation_filtering=True)
-        product_features = pf.select_related('name_value', 'name_spec').order_by('name_spec__priority_spec')
-        cache.set('product_features', product_features, 600)
+#     product_features = cache.get('product_features')
+#     if not product_features:
+#         pf = CharacteristicValue.objects.filter(q_condition_queries, name_spec__participation_filtering=True)
+#         product_features = pf.select_related('name_value', 'name_spec').order_by('name_spec__priority_spec')
+#         cache.set('product_features', product_features, 600)
 
-    get_list = context['request'].GET
+#     get_list = context['request'].GET
 
-    feature_and_values = {}
-    for item in product_features:
-        spec, value = item.name_spec.name, item.name_value.name
-        if not feature_and_values.get(spec):
-            feature_and_values[spec] = [value]
-        else:
-            if not value in feature_and_values[spec]:
-                feature_and_values[spec].append(value)
+#     feature_and_values = {}
+#     for item in product_features:
+#         spec, value = item.name_spec.name, item.name_value.name
+#         if not feature_and_values.get(spec):
+#             feature_and_values[spec] = [value]
+#         else:
+#             if not value in feature_and_values[spec]:
+#                 feature_and_values[spec].append(value)
 
-    # Дабовляем get параметры и id для label
-    new_dict = {}
-    i = 1
-    for key, value in feature_and_values.items():
-        for item in value:
-            if not new_dict.get(key):
-                new_dict[key] = [[item, i]]
-            else:
-                new_dict[key].append([item, i])
-            i += 1
+#     # Дабовляем get параметры и id для label
+#     new_dict = {}
+#     i = 1
+#     for key, value in feature_and_values.items():
+#         for item in value:
+#             if not new_dict.get(key):
+#                 new_dict[key] = [[item, i]]
+#             else:
+#                 new_dict[key].append([item, i])
+#             i += 1
 
-    get_list_dict = dict(get_list)
-    for key, value in get_list_dict.items():
-        if key in new_dict:
-            for i in range(len(value)):
-                l = len(new_dict[key])
-                for i2 in range(l):
+#     get_list_dict = dict(get_list)
+#     for key, value in get_list_dict.items():
+#         if key in new_dict:
+#             for i in range(len(value)):
+#                 l = len(new_dict[key])
+#                 for i2 in range(l):
 
-                    if new_dict[key][i2][0] == value[i]:
-                        new_dict[key][i2].append('checked')
+#                     if new_dict[key][i2][0] == value[i]:
+#                         new_dict[key][i2].append('checked')
 
-    return {'product_features': new_dict}
+#     return {'product_features': new_dict}
 
 
 @register.simple_tag(takes_context=True)

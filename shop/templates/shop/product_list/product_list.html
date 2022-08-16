@@ -24,8 +24,8 @@
         <div class="list-product__wrapper">
             <!--  -->
             {% comment %} {% include 'shop/product_list/include/filters.html' %} {% endcomment %}
-            {% show_filters %}
-            {% comment %} {% include 'shop/product_list/include/filters_ajax.html' %} {% endcomment %}
+            {% comment %} {% show_filters %} {% endcomment %}
+            {% include 'shop/product_list/include/filters_ajax.html' %}
             <!--  -->
             <div class="list-product__background" data-removeattr="active>list-product__filters"
                 data-removeattr2="look>body">
@@ -106,5 +106,5 @@
 <script src="{% static 'libs/noUiSlider/run-noUiSlider.js' %}"></script>
 <script src="{% static 'js/click-add-class.js' %}"></script>
 <script src="{% static '/js/click-remove-attr.js' %}"></script>
-
+<script src="{% static '/js/render_filter.js' %}"></script>
 {% endblock %}

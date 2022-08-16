@@ -24,9 +24,14 @@ class CharacteristicValueAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
 
 
+@admin.register(ValuesSpec)
+class ValuesSpecAdmin(admin.ModelAdmin):
+    search_fields = ['name', ]
+
+
 admin.site.register(CategoryProducts)
 
-admin.site.register(ValuesSpec)
+# admin.site.register(ValuesSpec)
 
 admin.site.register(ProductSpec, ProductSpecAdmin)
 

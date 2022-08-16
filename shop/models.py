@@ -56,7 +56,7 @@ class Product(models.Model):
         Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
-    name_spec = models.CharField(max_length=200, db_index=True)
+    name_spec = models.CharField(max_length=200, db_index=True, blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0)
     available = models.BooleanField(default=True, verbose_name='доступность')

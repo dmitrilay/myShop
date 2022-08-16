@@ -14,4 +14,5 @@ urlpatterns = [
 
     path('product-detail-spec-ajax/', views.ProductDetailSpecAjax, name='product-detail-spec-ajax'),
     path('search-product-ajax/', views.SearchProductAjax, name='search-product-ajax'),
+    path('filter-ajax/', views.FilterAjax.as_view(), name='FilterAjax'),
 ]
