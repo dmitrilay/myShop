@@ -10,7 +10,11 @@ from .models import Category, Product
 from cart.forms import CartAddProductForm
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.db.models import Q
-from collections import defaultdict
+
+
+from django.db.models import Max, Min
+
+from django.db import connection
 
 
 class FilterAjax(View):
@@ -18,15 +22,40 @@ class FilterAjax(View):
         _get = _p.GET.get('cat')
         _get = _get[0:-1].split('/')[-1]
 
-        product = Product.objects.filter(
-            category__slug=_get, available=True).exclude(
-            name_spec='').values_list('name_spec')
+        _vl = ('name_spec', 'id',)
+        product = Product.objects.filter(category__slug=_get, available=True).exclude(name_spec='').values_list(*_vl)
+
+        # кеш
+        resultMinMax_cache = cache.get('resultMinMax_cache')
+        if not resultMinMax_cache:
+            resultMinMax_cache = Product.objects.aggregate(Min("price"), Max("price"))
+            cache.set('resultMinMax_cache', resultMinMax_cache, 500)
+        resultMinMax = resultMinMax_cache
+
+        new_set_product = []
+        p_min, p_max = resultMinMax['price__min'], resultMinMax['price__max']
+        new_set_product.append(('price_min_max', f'{p_min}-{p_max}', 0.1))
+        new_set_product.append(('Состояние', 'Новый', 0.2))
+        new_set_product.append(('Состояние', 'Бывший в употреблении', 0.3))
+
+        name_cache = "".join(map(lambda _i: str(_i[1]), product))
         product = list(map(lambda _i: _i[0], product))
 
-        _q = CharacteristicValue.objects.filter(name_product__name__in=product, name_spec__participation_filtering=True)
-        _q = _q.values_list('name_spec__name', 'name_value__name', 'name_spec__priority_spec')
+        # кеш
+        _q_cache = cache.get(name_cache)
+        if not _q_cache:
+            _q_cache = CharacteristicValue.objects.filter(
+                name_product__name__in=product,
+                name_spec__participation_filtering=True)
+            _q_cache = _q_cache.values_list('name_spec__name', 'name_value__name', 'name_spec__priority_spec')
+            cache.set(name_cache, _q_cache, 500)
+        _q = _q_cache
 
-        status = {"status": list(_q)}
+        # _q = CharacteristicValue.objects.filter(name_product__name__in=product, name_spec__participation_filtering=True)
+        # _q = _q.values_list('name_spec__name', 'name_value__name', 'name_spec__priority_spec')
+        _q = list(_q)
+        _q = _q + new_set_product
+        status = {"status": _q}
         return JsonResponse(status, safe=True)
 
 
@@ -54,7 +83,14 @@ class CategoryDetailView2(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.get(slug=self.kwargs.get(self.slug_url_kwarg, None))
+
+        # кеш
+        cat_cache = cache.get(self.kwargs['slug'])
+        if not cat_cache:
+            cat_cache = Category.objects.get(slug=self.kwargs.get(self.slug_url_kwarg, None))
+            cache.set(self.kwargs['slug'], cat_cache, 500)
+
+        context['categories'] = cat_cache
 
         cart_product_form = CartAddProductForm()
         context['cart_product_form'] = cart_product_form
@@ -62,48 +98,39 @@ class CategoryDetailView2(ListView):
 
     def get_queryset(self, queryset=None):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
-
-        # # Категория товаров
-        # url_kwargs = {}
-        # q_condition_queries = Q()
-        # # Поиск get параметров,фильтрация и запись в масив
-        # for item in self.request.GET:
-        #     if item != 'price_sort' and item != 'page':
-        #         url_kwargs[item] = self.request.GET.getlist(item)
-
-        # if len(url_kwargs) != 0:
-        #     for key, value in url_kwargs.items():
-        #         print(value)
-        #         if isinstance(value, list):  # Является ли переданный обьект списком
-        #             q_condition_queries.add(Q(**{'value__in': value}), Q.OR)
-        #         else:
-        #             q_condition_queries.add(Q(**{'value': value}), Q.OR)
-        #         print(q_condition_queries)
-
-        #     pda = cache.get('pda')
-        #     if not pda:
-        #         pda = Product.objects.all().only('name_spec')
-        #         cache.set('pda', pda, 600)
-
-        #     p1 = (i.name_spec for i in pda)
-        #     pf = ('name_value', 'name_spec', 'name_product')
-        #     f = CharacteristicValue.objects.filter(name_product__name__in=p1, ).select_related(*pf)
-        #     data = self.find_get(f, url_kwargs)
-
-        #     # Запрос для получения товаров
-        #     queryset = Product.objects.filter(name_spec__in=[pf_ for pf_ in data], ).select_related(
-        #         'category').prefetch_related('productimage_set')
-        # else:
-
-        #
-
+        price_min, price_max, condition = 0, 0, 0
         dict_get = dict(self.request.GET)
         if dict_get.get('page'):
             dict_get.pop('page')
 
+        if dict_get.get('priceMin'):
+            price_min = dict_get['priceMin'][0]
+            dict_get.pop('priceMin')
+
+        if dict_get.get('priceMax'):
+            price_max = dict_get['priceMax'][0]
+            dict_get.pop('priceMax')
+
+        _condition = []
+        if dict_get.get('Состояние'):
+
+            condition = dict_get['Состояние']
+            if 'Бывший в употреблении' in condition:
+                _condition.append('used')
+            elif 'Новый' in condition:
+                _condition.append('new')
+
+            dict_get.pop('Состояние')
+
         if dict_get:
-            all_product = Product.objects.exclude(name_spec__in=['', '0']).filter(
-                category__slug=slug, available=True).values_list('name_spec')
+            _p_all = Product.objects.exclude(name_spec__in=['', '0']).filter(category__slug=slug, available=True)
+            if price_min and price_max:
+                _p_all = _p_all.filter(price__gte=price_min, price__lte=price_max)
+
+            if _condition:
+                _p_all = _p_all.filter(condition__in=_condition)
+
+            all_product = _p_all.values_list('name_spec')
 
             result = []
             for _i in dict_get.values():
@@ -127,6 +154,10 @@ class CategoryDetailView2(ListView):
 
             all_product = list(filter(lambda _i: dict_test[_i] == _yes, dict_test))
 
+            if not all_product:
+                # По заданным фильтрам ничего не найдено, выходм из функции!
+                return all_product
+
             _q = Product.objects.filter(name_spec__in=all_product, available=True)
             queryset = _q.select_related('category').prefetch_related('productimage_set')
         else:
@@ -134,6 +165,10 @@ class CategoryDetailView2(ListView):
 
         if not all_product:
             _q = Product.objects.filter(category__slug=slug, available=True)
+            if price_min and price_max:
+                _q = _q.filter(price__gte=price_min, price__lte=price_max)
+            if _condition:
+                _q = _q.filter(condition__in=_condition)
             queryset = _q.select_related('category').prefetch_related('productimage_set')
 
         return queryset

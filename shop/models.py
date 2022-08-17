@@ -58,7 +58,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=0)
+    price = models.DecimalField(max_digits=10, decimal_places=0,verbose_name='цена')
     available = models.BooleanField(default=True, verbose_name='доступность')
     sold = models.BooleanField(default=False, verbose_name='продан')
     created = models.DateTimeField(auto_now_add=True)

@@ -14,12 +14,32 @@ function render_filter(self, data) {
     add_html(parent_filter, html_item, data);
     add_in_input();
     start_accordion();
+    sliderUI();
+    parent_filter.style = "";
   }
 }
 
 function add_html(parent_filter, html_item, data) {
+  function slider_price(item) {
+    // Создание слайдера
+    slider = document.querySelector(".item-filters.sl");
+    elem = slider.cloneNode(true);
+    elem.style = "";
+    _input = elem.querySelectorAll(".item-filters__input input");
+    _value = item["price_min_max"][0].split("-");
+    _input[0].value = _value[0];
+    _input[1].value = _value[1];
+    slider.remove();
+    parent_filter.append(elem);
+  }
+
   _id = 1000;
   for (item of data) {
+    if (item["price_min_max"]) {
+      slider_price(item);
+      continue;
+    }
+
     elem = html_item.cloneNode(true);
     elem.querySelector(".item-filters__text").textContent = Object.keys(item);
     elem.style = "";
@@ -88,6 +108,14 @@ function add_in_input() {
   item_filter = document.querySelector(".filters__inner");
 
   for (item in result) {
+    if (item == "priceMin") {
+      document.querySelector(`input[name='${item}']`).dataset["start"] = result[item];
+      continue;
+    } else if (item == "priceMax") {
+      document.querySelector(`input[name='${item}']`).dataset["end"] = result[item];
+      continue;
+    }
+
     all_checkbox = item_filter.querySelector(`input[name="${item}"]`);
     if (all_checkbox) {
       all_checkbox = all_checkbox.closest(".item-filters");

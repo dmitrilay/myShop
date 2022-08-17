@@ -56,8 +56,12 @@
                 </div>
                 <!--  -->
                 <div class="list-product__list-wrapper">
-                    {% comment %} {% endcomment %}
-                    {% comment %} {% endcomment %}
+                    {% if not category_products %}
+                    <div style='padding: 0 10px;'>
+                        Похоже что по вашему запросу ничего не найдено, попробуйте изменить фильтры
+                    </div>
+                    {% endif %}
+
                     {% for product in category_products %}
                     <div class="list-product__item">
                         <div class="product-card">
