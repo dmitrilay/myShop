@@ -39,9 +39,9 @@
 
                         <div class="product-menu-sort__select">
                             <select name="select">
-                                <option value="value1" selected>По умолчанию</option>
-                                <option value="value2">Дешевле</option>
-                                <option value="value3">Дороже</option>
+                                <option value="price_d" selected>По умолчанию</option>
+                                <option value="price_low">Дешевле</option>
+                                <option value="price_high">Дороже</option>
                             </select>
                         </div>
                     </div>
@@ -111,4 +111,6 @@
 <script src="{% static 'js/click-add-class.js' %}"></script>
 <script src="{% static '/js/click-remove-attr.js' %}"></script>
 <script src="{% static '/js/render_filter.js' %}"></script>
+<script src="{% static '/js/sorting_products.js' %}"></script>
+
 {% endblock %}

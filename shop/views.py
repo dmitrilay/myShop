@@ -98,8 +98,9 @@ class CategoryDetailView2(ListView):
 
     def get_queryset(self, queryset=None):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
-        price_min, price_max, condition = 0, 0, 0
+        price_min, price_max, condition, _sort = 0, 0, 0, ''
         dict_get = dict(self.request.GET)
+
         if dict_get.get('page'):
             dict_get.pop('page')
 
@@ -110,6 +111,10 @@ class CategoryDetailView2(ListView):
         if dict_get.get('priceMax'):
             price_max = dict_get['priceMax'][0]
             dict_get.pop('priceMax')
+
+        if dict_get.get('sort'):
+            _sort = dict_get['sort'][0]
+            dict_get.pop('sort')
 
         _condition = []
         if dict_get.get('Состояние'):
@@ -158,7 +163,13 @@ class CategoryDetailView2(ListView):
                 # По заданным фильтрам ничего не найдено, выходм из функции!
                 return all_product
 
+            # Формируем запрос в базу данных
             _q = Product.objects.filter(name_spec__in=all_product, available=True)
+            if _sort == 'price_low':
+                _q = _q.order_by('price')
+            elif _sort == 'price_high':
+                _q = _q.order_by('-price')
+
             queryset = _q.select_related('category').prefetch_related('productimage_set')
         else:
             all_product = []
@@ -169,6 +180,10 @@ class CategoryDetailView2(ListView):
                 _q = _q.filter(price__gte=price_min, price__lte=price_max)
             if _condition:
                 _q = _q.filter(condition__in=_condition)
+            if _sort == 'price_low':
+                _q = _q.order_by('price')
+            elif _sort == 'price_high':
+                _q = _q.order_by('-price')
             queryset = _q.select_related('category').prefetch_related('productimage_set')
 
         return queryset
