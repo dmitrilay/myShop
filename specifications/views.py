@@ -21,7 +21,7 @@ class CreateNewCharacteristic(View):
 
     @staticmethod
     def get(request):
-        categories = Product.objects.filter(name_spec='')
+        categories = Product.objects.filter(name_spec='', available=True)
         context = {'categories': categories}
         return render(request, 'specs/NewTemplate/CreateNewCharacteristic.html', context)
 
