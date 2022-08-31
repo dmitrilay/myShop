@@ -11,7 +11,9 @@ function LoadingCharacteristics() {
     return;
   }
 
-  url = `/product-detail-spec-ajax/?product=${product_name.innerText}`;
+  args = encodeURIComponent(product_name.innerText);
+  url = `/product-detail-spec-ajax/?product=${args}`;
+
   fetch(url, { method: "GET" })
     .then((response) => {
       return response.json();
@@ -24,6 +26,7 @@ function LoadingCharacteristics() {
 
 function Render(data) {
   // Построение страницы
+  if (data["spec"].length == 0) return;
 
   let list_sub_cat = [];
   for (item of data["spec"]) {
