@@ -34,4 +34,6 @@ urlpatterns = [
     path('editing-subcategory-form/', views.forms_subcategories, name='editing-subcategory-form'),
 
     path('create-characteristic/', CreateNewCharacteristic.as_view(), name='create-characteristic'),
+    
+    path('add-characteristic-ajax/', addCharacteristicAjax.as_view(), name='create-characteristic'),
 ]

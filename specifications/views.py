@@ -1,9 +1,8 @@
+from django.utils.decorators import method_decorator
 import json
 import os
 from collections import defaultdict
 from pyexpat.errors import messages
-
-from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView, ListView
@@ -12,6 +11,12 @@ from myshop.settings import BASE_DIR
 from shop.models import Category, Product
 from .forms import NewCategoryFeatureKeyForm
 from .models import *
+from django.views.decorators.csrf import csrf_exempt
+
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
+import urllib.parse
+from .utilities import RecordingUniqueValues
 
 
 # -------------------------------------------
@@ -637,3 +642,53 @@ def debug_qur():
         i2 += 1
         print(f'запрос: №{i2} \r\n\n{i}\r\n\n')
     print(p)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class addCharacteristicAjax(View):
+    @staticmethod
+    def get(request):
+        print('===========================')
+        _q = Product.objects.filter(
+            name_spec='', available=True).exclude(
+            url_spec=None).values_list(
+            'name', 'category__slug', 'url_spec')
+
+        result1 = {}
+        for _i in _q:
+            result1[_i[0]] = {'category': _i[1], 'url': _i[2]}
+
+        print(_q)
+        # result = {'Xiaomi 12 12/256Gb Pro Lite Blue': {
+        #     'category': 'smartfony',
+        #     'url': 'https://www.mvideo.ru/products/smartfon-xiaomi-12-12-256gb-pro-lite-blue-400004642/specification'
+        # }}
+
+        return JsonResponse(result1, safe=True)
+
+    @staticmethod
+    def post(request):
+        print('===========================')
+        token_spec = "fjwoapfjow@204diojwa!24dkapwojfjjf22401jdwa190jd(odwa"
+        if request.headers['X-Tokenauth'] != token_spec:
+            return HttpResponse(status=401)
+
+        data = urllib.parse.unquote_plus(request.body.decode('utf-8')[5:])
+        data = json.loads(data)
+
+        # Поиск характеристик и значений
+        for _product in data:
+            spec_list = []
+            value_list = []
+            for _name, _spec in _product.items():
+
+                for item in _spec:
+                    spec_list.append(str(item[0]))
+                    value_list.append(str(item[1]))
+
+            obj = RecordingUniqueValues(spec_list=spec_list, value_list=value_list, product=_product)
+            obj.spec()
+            obj.value()
+            obj.write()
+
+        return JsonResponse({"result": "ok"})
