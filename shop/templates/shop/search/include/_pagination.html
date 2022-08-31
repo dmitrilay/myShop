@@ -1,0 +1,40 @@
+{% load search_filter %}
+
+{% if is_paginated %}
+
+<div class="list-product__pagination pagination-product">
+    <div class="pagination-product__arrow-1 pagination-product__arrow">
+        {% if page_obj.has_previous %}
+        <a class="active" href="?{% page_replace page_obj.previous_page_number  %}" tabindex="-1"><span
+                class="icon-arrow"></span>
+        </a>
+        {% else %}
+        <a href="#" tabindex="-1">
+            <span class="icon-arrow"></span>
+        </a>
+        {% endif %}
+    </div>
+    <div class="pagination-product__wrapper">
+        {% for n in page_obj.paginator.page_range %}
+        {% if page_obj.number == n %}
+        <a href='?{% page_replace n %}' class="pagination-product__item _active">{{n}}</a>
+
+        {% elif n > page_obj.number|add:-3 and n < page_obj.number|add:3 %}
+        <a class="pagination-product__item" href="?{% page_replace n %}">{{ n }}</a>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="pagination-product__arrow-2 pagination-product__arrow">
+        {% if page_obj.has_next %}
+        <a class='active' href="?{% page_replace page_obj.next_page_number %}" tabindex="-1">
+            <span class="icon-arrow"></span>
+        </a>
+        {% else %}
+        <a href="#" tabindex="-1">
+            <span class="icon-arrow"></span>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endif %}

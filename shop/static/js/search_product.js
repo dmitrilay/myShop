@@ -15,11 +15,11 @@ function StartTimeout() {
 
 function SearchProduct() {
   this_obj = document.querySelector(".search-header__input");
-  if (this_obj.textLength >= 3) {
+  if (this_obj.value.length >= 3) {
     RequestAjax(this_obj.value);
   }
 
-  if (this_obj.textLength == 0) {
+  if (this_obj.value.length == 0) {
     pop_up.classList.remove("active");
     pop_up.innerHTML = "";
   }
@@ -61,4 +61,18 @@ function RenderProductSearch(data) {
   pop_up.innerHTML = html;
 }
 
+function values_search_form() {
+  // Вставка поискового значения из get
+
+  const search_input = document.querySelector(".search-header__input");
+  if (search_input) {
+    let _p = location.search.replace("?", "").split("&");
+    _p.forEach((x) => {
+      let args = x.split("=");
+      if (args[0] == "qu") search_input.value = args[1];
+    });
+  }
+}
+
+values_search_form();
 StartEvent(input);

@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.db.models import Max, Min
 
 from django.db import connection
+from django.views.decorators.csrf import csrf_exempt
 
 
 class FilterAjax(View):
@@ -118,7 +119,6 @@ class CategoryDetailView2(ListView):
 
         _condition = []
         if dict_get.get('Состояние'):
-
             condition = dict_get['Состояние']
             if 'Бывший в употреблении' in condition:
                 _condition.append('used')
@@ -254,10 +254,12 @@ class CategoryListView(ListView):
     context_object_name = 'categories'
 
 
+@csrf_exempt
 def ProductDetailSpecAjax(request):
     product_name = request.GET.get('product')
 
     product_name = Product.objects.filter(name=product_name).values('name_spec')
+
     if product_name:
         product_name = product_name[0]['name_spec']
 
@@ -280,8 +282,56 @@ def SearchProductAjax(request):
 
     product_list = []
     if product_name:
-        rez = Product.objects.filter(name__icontains=product_name)[:10]
+        rez = Product.objects.filter(name__icontains=product_name, available=True)[:10]
         for item in rez:
             product_list.append({'name': item.name, 'url': item.get_absolute_url()})
 
     return JsonResponse({"product_list": product_list})
+
+
+class SearchListView(ListView):
+    model = Product
+    template_name = 'shop/search/product_list.html'
+    context_object_name = 'category_products'
+    paginate_by = 12
+
+    def get_queryset(self):
+        product_name = self.request.GET.get('qu')
+        _condition = []
+        price_min, price_max, condition, _sort = 0, 0, 0, ''
+        dict_get = dict(self.request.GET)
+
+        # ====================================
+
+        if dict_get.get('priceMin'):
+            price_min = dict_get['priceMin'][0]
+
+        if dict_get.get('priceMax'):
+            price_max = dict_get['priceMax'][0]
+
+        if dict_get.get('sort'):
+            _sort = dict_get['sort'][0]
+
+        if dict_get.get('Состояние'):
+            condition = dict_get['Состояние']
+            if 'Бывший в употреблении' in condition:
+                _condition.append('used')
+            elif 'Новый' in condition:
+                _condition.append('new')
+
+        # ===============================================
+        # Формируем запрос
+        # ===============================================
+
+        _q = Product.objects.filter(name__icontains=product_name, available=True)
+        if price_min and price_max:
+            _q = _q.filter(price__gte=price_min, price__lte=price_max)
+        if _condition:
+            _q = _q.filter(condition__in=_condition)
+        if _sort == 'price_low':
+            _q = _q.order_by('price')
+        elif _sort == 'price_high':
+            _q = _q.order_by('-price')
+        queryset = _q.select_related('category').prefetch_related('productimage_set')
+
+        return queryset

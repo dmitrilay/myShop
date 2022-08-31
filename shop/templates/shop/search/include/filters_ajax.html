@@ -1,0 +1,53 @@
+{% comment %} {{product_features}} {% endcomment %}
+
+<div class="list-product__filters">
+    <form class="filters" method="GET">
+        <div class="filters__header">
+            Фильтр товаров
+            <span data-removeattr="active>list-product__filters" data-removeattr2="look>body">x</span>
+        </div>
+        <div class="filters__inner" style="display: none;">
+            <!--  -->
+            <div class="filters__item item-filters" data-spollers style="display: none;">
+                {% comment %} _active {% endcomment %}
+                <div tabindex="-1" data-spoller class="item-filters__title">
+                    <span class="item-filters__text">Производитель</span>
+                </div>
+
+                <div class="item-filters__accordion">
+                    <div class="custom-checkbox item-filters__checkbox">
+                        <input class="custom-checkbox__input" type="checkbox" id="1" name="interest" value="12" />
+                        <label class="custom-checkbox__label item-filters__checkbox-label" for="1">Сlear-fit</label>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <div class="filters__item item-filters sl" data-spollers style="display: none;">
+                <div tabindex="-1" data-spoller class="item-filters__title _active">Цена (руб.)</div>
+                <!--  -->
+                <div class="item-filters__feature bodyUI">
+                    <div class="item-filters__input-row">
+                        <div class="item-filters__input">
+                            <div class="item-filters__label">от</div>
+                            <input class="input-0" type="text" name="priceMin" data-start/>
+                        </div>
+
+                        <div class="item-filters__input">
+                            <div class="item-filters__label">до</div>
+                            <input class="input-1" type="text" name="priceMax" data-end/>
+                        </div>
+                    </div>
+                    <div class="slider-handles"></div>
+                </div>
+                <!--  -->
+            </div>
+            <!--  -->
+
+        </div>
+
+        <div class="filters__buttons buttons-filters">
+            <button type="submit" class="buttons-filters__btn btn-yellow">Подобрать</button>
+            <a href="?{{ page }}" class="buttons-filters__btn btn-grey">Сбросить</a>
+        </div>
+    </form>
+</div>
