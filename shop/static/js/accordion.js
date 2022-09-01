@@ -199,4 +199,4 @@ function start_accordion() {
   };
 }
 
-// start_accordion();
+start_accordion();

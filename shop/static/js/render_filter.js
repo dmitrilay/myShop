@@ -43,6 +43,7 @@ function add_html(parent_filter, html_item, data) {
     elem = html_item.cloneNode(true);
     elem.querySelector(".item-filters__text").textContent = Object.keys(item);
     elem.style = "";
+    elem.setAttribute("data-spollers", "");
 
     wrapper_value = elem.querySelector(".item-filters__accordion");
 
