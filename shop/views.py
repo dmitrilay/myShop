@@ -122,7 +122,7 @@ class CategoryDetailView2(ListView):
             condition = dict_get['Состояние']
             if 'Бывший в употреблении' in condition:
                 _condition.append('used')
-            elif 'Новый' in condition:
+            if 'Новый' in condition:
                 _condition.append('new')
 
             dict_get.pop('Состояние')
@@ -316,7 +316,7 @@ class SearchListView(ListView):
             condition = dict_get['Состояние']
             if 'Бывший в употреблении' in condition:
                 _condition.append('used')
-            elif 'Новый' in condition:
+            if 'Новый' in condition:
                 _condition.append('new')
 
         # ===============================================
