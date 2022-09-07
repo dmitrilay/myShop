@@ -33,6 +33,11 @@
         </div>
         <!--  -->
         <div class="item-wrapper__content orders-list">
+          {% if not history_orders %}
+          <div style='padding: 0 10px;'>
+            Вы ещё ничего не заказывали.
+          </div>
+          {% endif %}
 
           {% for orders in history_orders %}
           <div class="orders-list__item">
@@ -82,7 +87,7 @@
               <span class="icon-identity-card"></span>
             </div>
             <div class="private-data__text">
-              <span>Дмитрий Ножкин</span>
+              <span>{{user_profile.user__first_name}} {{user_profile.user__last_name}}</span>
             </div>
           </div>
           <div class="private-data__name">
@@ -90,7 +95,7 @@
               <span class="icon-mail"></span>
             </div>
             <div class="private-data__text">
-              <span>dmitrilay@gmail.com</span>
+              <span>{{user_profile.user__email}}</span>
             </div>
           </div>
           <div class="private-data__name">
@@ -98,14 +103,30 @@
               <span class="icon-phone"></span>
             </div>
             <div class="private-data__text">
-              <span>+7 905-****576</span>
+              <span>{{user_profile.phone_number}}</span>
             </div>
           </div>
         </div>
         <!--  -->
       </div>
     </div>
+
     <!--  -->
+    <div class="personal-account__item">
+      <div class="item-wrapper">
+        <div class="item-wrapper__header">
+          <div class="item-wrapper__header-inner">
+            <span class="item-wrapper__header-icon icon-user"></span>
+            <span class="item-wrapper__header-title">Сменить пароль</span>
+          </div>
+          <div class="item-wrapper__btn">
+            <a href="{% url 'password_change' %}" class="btn-yellow">Редактировать</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  -->
+
     <div class="personal-account__item">
       <div class="item-wrapper">
         <div class="item-wrapper__header">
@@ -119,6 +140,11 @@
         </div>
         <!--  -->
         <div class="item-wrapper__content account-favourites">
+          {% if not product %}
+          <div style='padding: 0 10px;'>
+            Вы ещё не добавляли товары в избранное.
+          </div>
+          {% endif %}
 
           {% for item in product %}
           <div class="account-favourites__item">
@@ -140,6 +166,7 @@
       </div>
     </div>
     <!--  -->
+
   </div>
 
   <!--  -->

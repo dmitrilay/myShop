@@ -20,7 +20,9 @@ urlpatterns = [
     #     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('logout/', views.User_Logout.as_view(), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path(p5, auth_views.PasswordChangeView.as_view(), name='password_change'),
+    
+    path(p5, views.ChangePasswordCustom.as_view(), name='password_change'),
+    
     path(p6, auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 
     # Востановления пароля

@@ -14,7 +14,14 @@ from shop.models import Product
 
 from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView,
                                        PasswordResetDoneView, PasswordResetConfirmView,
-                                       PasswordResetCompleteView)
+                                       PasswordResetCompleteView, PasswordChangeView)
+
+
+class ChangePasswordCustom(PasswordChangeView):
+    # html_email_template_name = 'account/email/password_reset.html'
+    template_name = 'account/change-password/change-password.html'
+    form_class = PasswordChangeFormCustom
+    pass
 
 
 class user_login(LoginView):
@@ -60,7 +67,15 @@ def dashboard(request):
     favorit = FavoriteProduct.objects.filter(profile_favorite=request.user.pk).values('id_product')
     product = Product.objects.filter(pk__in=favorit).prefetch_related('productimage_set').select_related('category')[:3]
 
-    context = {'history_orders': history_orders, 'product': product}
+    user_profile = Profile.objects.filter(user=UserID).values(
+        'user__first_name', 'user__last_name', 'user__email', 'phone_number')
+
+    up = list(user_profile)[0]
+
+    up['phone_number'] = up['phone_number'] if up['phone_number'] != None else 'Номер телефона не заполнен'
+    up['user__first_name'] = up['user__first_name'] if up['user__first_name'] != '' else 'Гость'
+
+    context = {'history_orders': history_orders, 'product': product, 'user_profile': up}
 
     return render(request, template, context)
 
