@@ -33,39 +33,32 @@
         </div>
         <!--  -->
         <div class="item-wrapper__content orders-list">
+
+          {% for orders in history_orders %}
           <div class="orders-list__item">
             <div class="orders-list__content">
               <div class="orders-list__content-title">
-                <!-- <span class="orders-list__content-close icon-close"></span> -->
-                <span class="orders-list__content-checkmark icon-checkmark"></span>
-                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
-              </div>
-              <div class="orders-list__content-footer">Заказ выполнен</div>
-            </div>
-            <div class="orders-list__price">21000<span class="rub"></span></div>
-          </div>
-          <div class="orders-list__item">
-            <div class="orders-list__content">
-              <div class="orders-list__content-title">
+
+                {% if orders.getting_status == 'Заказ отменен' %}
                 <span class="orders-list__content-close icon-close"></span>
-                <!-- <span class="orders-list__content-checkmark icon-checkmark"></span> -->
-                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
-              </div>
-              <div class="orders-list__content-footer">Заказ выполнен</div>
-            </div>
-            <div class="orders-list__price">21000<span class="rub"></span></div>
-          </div>
-          <div class="orders-list__item">
-            <div class="orders-list__content">
-              <div class="orders-list__content-title">
-                <!-- <span class="orders-list__content-close icon-close"></span> -->
+                {% elif orders.getting_status == 'Заказ выполнен' %}
                 <span class="orders-list__content-checkmark icon-checkmark"></span>
-                <span class="orders-list__content-text">№ <a href="">815636547</a> от 02.06.2022</span>
+                {%else%}
+                <span class="orders-list__content-checkmark icon-cart"></span>
+                {% endif %}
+
+                <span class="orders-list__content-text">
+                  <a href="{% url 'history_detail' orders.id %}">
+                    № {{orders.id}} от {{orders.created|date:"d.m.Y"}}
+                  </a>
+                </span>
               </div>
-              <div class="orders-list__content-footer">Заказ выполнен</div>
+              <div class="orders-list__content-footer">{{orders.getting_status}}</div>
             </div>
-            <div class="orders-list__price">21000<span class="rub"></span></div>
+            <div class="orders-list__price">{{ orders.sum_order }}<span class="rub"></span></div>
           </div>
+          {% endfor %}
+
         </div>
         <!--  -->
       </div>
@@ -126,30 +119,22 @@
         </div>
         <!--  -->
         <div class="item-wrapper__content account-favourites">
+
+          {% for item in product %}
           <div class="account-favourites__item">
             <div class="account-favourites__image">
-              <img src="/img/personal-account/1.webp" alt="" />
+              {% for prw in item.productimage_set.all %}
+              {% if prw.is_main %}
+              <a href="{{ item.get_absolute_url }}"><img src="{{prw.image.url}}" alt="" /></a>
+              {% endif %}
+              {% endfor %}
             </div>
             <div class="account-favourites__product">
-              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
+              <a href="{{ item.get_absolute_url }}">{{item.name}}</a>
             </div>
           </div>
-          <div class="account-favourites__item">
-            <div class="account-favourites__image">
-              <img src="/img/personal-account/1.webp" alt="" />
-            </div>
-            <div class="account-favourites__product">
-              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
-            </div>
-          </div>
-          <div class="account-favourites__item">
-            <div class="account-favourites__image">
-              <img src="/img/personal-account/1.webp" alt="" />
-            </div>
-            <div class="account-favourites__product">
-              <a href="">Смартфон Xiaomi 11T 128 ГБ серый</a>
-            </div>
-          </div>
+          {% endfor %}
+
         </div>
         <!--  -->
       </div>

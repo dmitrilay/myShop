@@ -52,8 +52,17 @@ class PasswordResetComplete(PasswordResetCompleteView):
 
 def dashboard(request):
     template = 'account/dashboard/dashboard.html'
-    # context = {'section': 'dashboard'}
-    return render(request, template)
+
+    UserID = request.user.id
+
+    history_orders = Order.objects.filter(profile=UserID)[:4]
+
+    favorit = FavoriteProduct.objects.filter(profile_favorite=request.user.pk).values('id_product')
+    product = Product.objects.filter(pk__in=favorit).prefetch_related('productimage_set').select_related('category')[:3]
+
+    context = {'history_orders': history_orders, 'product': product}
+
+    return render(request, template, context)
 
 
 def register(request):

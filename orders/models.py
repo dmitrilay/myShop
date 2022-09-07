@@ -4,14 +4,25 @@ from account.models import Profile
 
 
 class Order(models.Model):
+    STATUSES = (
+        ("1", "Заказ обрабатывается"),
+        ("2", "Готов к выдачи"),
+        ("3", "Заказ отменен"),
+        ("4", "Заказ выполнен"),
+    )
+
+    def getting_status(self):
+        _d = dict(self.STATUSES)
+        return _d[self.status] if _d.get(self.status) else 'Нет информации'
+
+    status = models.CharField(choices=STATUSES, max_length=20,
+                              verbose_name='Статус заказа', default=STATUSES[0][0])
+
     first_name = models.CharField(max_length=50, default='Guest', blank=True)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20)
-    postal_code = models.CharField(max_length=20, default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    paid = models.BooleanField(default=False)
-    # profile = models.ForeignKey(Profile, related_name='user_item', on_delete=models.CASCADE, blank=True)
     profile = models.CharField(max_length=50, blank=True)
     sum_order = models.IntegerField(default=0, verbose_name='Сумма заказа')
 

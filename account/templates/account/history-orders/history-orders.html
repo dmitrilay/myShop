@@ -17,13 +17,20 @@
     <div class="page-orders-list__item">
       <div class="page-orders-list__content">
         <div class="page-orders-list__content-title">
-          <!-- <span class="page-orders-list__content-close icon-close"></span> -->
+
+          {% if item.getting_status == 'Заказ отменен' %}
+          <span class="page-orders-list__content-close icon-close"></span>
+          {% elif item.getting_status == 'Заказ выполнен' %}
           <span class="page-orders-list__content-checkmark icon-checkmark"></span>
+          {%else%}
+          <span class="page-orders-list__content-checkmark icon-cart"></span>
+          {% endif %}
+
           <span class="page-orders-list__content-text">
             <a href="{% url 'history_detail' item.id %}">№ {{ item.id }} от {{item.created|date:"d.m.Y"}}</a>
           </span>
         </div>
-        <div class="page-orders-list__content-footer">Заказ выполнен</div>
+        <div class="page-orders-list__content-footer">{{item.getting_status}}</div>
       </div>
       <div class="page-orders-list__price">{{ item.sum_order }}<span class="rub"></span></div>
     </div>

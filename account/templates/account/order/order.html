@@ -15,10 +15,18 @@
   <div class="orders-history__content item-orders-history">
     <!--  -->
     <div class="item-orders-history__order-status mr40">
-      <!-- <span class="page-orders-list__content-close icon-close"></span> -->
+
+      {% if section.getting_status == 'Заказ отменен' %}
+      <span class="item-orders-history__content-close icon-close"></span>
+      {% elif section.getting_status == 'Заказ выполнен' %}
       <span class="item-orders-history__content-checkmark icon-checkmark"></span>
-      <span class="item-orders-history__content-text">Заказ № {{ section.id }} от {{section.created|date:"d.m.Y"}}.
-        Выполнен</span>
+      {%else%}
+      <span class="item-orders-history__content-checkmark icon-cart"></span>
+      {% endif %}
+
+      <span class="item-orders-history__content-text">
+        Заказ № {{ section.id }} от {{section.created|date:"d.m.Y"}}.
+        {{section.getting_status}}</span>
     </div>
     <!--  -->
     <div class="item-orders-history__order-title">Состав заказа :</div>
