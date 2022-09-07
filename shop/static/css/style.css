@@ -2643,7 +2643,7 @@ button.swiper-pagination-bullet {
 .list-product__background {
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.7);
@@ -2676,7 +2676,7 @@ button.swiper-pagination-bullet {
     top: 0;
     left: 0;
     margin-right: 0;
-    position: absolute;
+    position: fixed;
     -webkit-transform: translateX(-100%);
         -ms-transform: translateX(-100%);
             transform: translateX(-100%);
@@ -4767,6 +4767,10 @@ button.swiper-pagination-bullet {
 .item-orders-history__content-checkmark {
   margin-right: 10px;
   color: #2fb457;
+}
+.item-orders-history__content-close {
+  margin-right: 10px;
+  color: #ed1c24;
 }
 .item-orders-history__content-text {
   font-size: 1rem;

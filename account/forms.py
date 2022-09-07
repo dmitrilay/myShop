@@ -7,7 +7,7 @@ from django.contrib.auth import password_validation
 
 
 class LoginForm(AuthenticationForm, forms.ModelForm):
-    username = forms.CharField()
+    username = forms.EmailField()
     username.widget.attrs.update({'class': 'input-base', 'placeholder': 'E-mail'})
 
     password = forms.CharField(strip=False, widget=forms.PasswordInput(
