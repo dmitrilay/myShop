@@ -5,6 +5,13 @@ from .models import Category, Product
 from .models import *
 
 
+@admin.register(Slider)
+class SliderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', ]
+    readonly_fields = ['imageOLD']
+    list_display_links = ['id', 'name']
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
@@ -19,6 +26,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0
+    exclude = ['imageOLD', 'name']
 
 
 @admin.register(Product)
@@ -35,8 +43,10 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'get_html_img']
     list_display_links = ['id', 'product']
-    fields = ['product', 'image', 'name', 'is_main', 'is_active', 'created', 'updated']
-    readonly_fields = ('is_main', 'is_active', 'created', 'updated')
+    fields = ['product', 'image', 'imageOLD', 'name', 'is_main', 'is_active', 'created', 'updated']
+    readonly_fields = ('is_main', 'is_active', 'created', 'updated', 'imageOLD')
+
+    list_per_page = 10
 
     def get_html_img(self, object):
         if object.image:
