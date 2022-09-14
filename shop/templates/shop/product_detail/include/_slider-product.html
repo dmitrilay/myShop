@@ -3,7 +3,14 @@
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item swiper-slide">
-                <img src="{{ image_item.image.url }}" alt="" />
+                <picture>
+                    <source type="image/webp" srcset="{{image_item.image.url}}">
+                    {% if image_item.imageOLD %}
+                    <img src="{{ image_item.imageOLD.url }}">
+                    {% else %}
+                    <img src="">
+                    {% endif %}
+                </picture>
             </div>
             {% endfor %}
         </div>
@@ -12,7 +19,14 @@
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item-thumbs swiper-slide">
-                <img src="{{ image_item.image.url }}" alt="">
+                <picture>
+                    <source type="image/webp" srcset="{{image_item.image.url}}">
+                    {% if image_item.imageOLD %}
+                    <img src="{{ image_item.imageOLD.url }}">
+                    {% else %}
+                    <img src="">
+                    {% endif %}
+                </picture>
             </div>
             {% endfor %}
         </div>

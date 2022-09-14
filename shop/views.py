@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from account.models import FavoriteProduct
 
 from specifications.models import CharacteristicValue
-from .models import Category, Product
+from .models import Category, Product, Slider
 from cart.forms import CartAddProductForm
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.db.models import Q
@@ -230,7 +230,23 @@ class HomeListView(ListView):
     template_name = 'shop/home_page/home_page.html'
     context_object_name = 'products'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        q_slider = Slider.objects.all()
+        context['slider_photo'] = q_slider
+
+        # print(q_slider)
+
+        # Избранные товары
+        # slug = self.kwargs.get(self.slug_url_kwarg, None)
+        # product = Product.objects.filter(slug=slug, available=True)
+        # favorit = FavoriteProduct.objects.filter(id_product=product[0].pk)
+
+        return context
+
     def get_queryset(self):
+
         queryset = Product.objects.select_related('category')
         queryset = queryset.prefetch_related('productimage_set').filter(available=True)[0:12]
         context = []
@@ -239,8 +255,10 @@ class HomeListView(ListView):
             for i2 in i.productimage_set.all():
                 if i2.is_main:
                     image = i2.image
+                    imageOLD = i2.imageOLD
+
             context.append({'id': i.id, 'name': i.name, 'price': i.price,
-                           'image': image, 'get_absolute_url': i.get_absolute_url()})
+                           'image': image, 'imageOLD': imageOLD, 'get_absolute_url': i.get_absolute_url()})
         return context
 
 

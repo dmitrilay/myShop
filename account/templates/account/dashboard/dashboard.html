@@ -151,7 +151,16 @@
             <div class="account-favourites__image">
               {% for prw in item.productimage_set.all %}
               {% if prw.is_main %}
-              <a href="{{ item.get_absolute_url }}"><img src="{{prw.image.url}}" alt="" /></a>
+              <a href="{{ item.get_absolute_url }}">
+                <picture>
+                  <source type="image/webp" srcset="{{prw.image.url}}">
+                  {% if prw.imageOLD %}
+                  <img src="{{ prw.imageOLD.url }}">
+                  {% else %}
+                  <img src="">
+                  {% endif %}
+                </picture>
+              </a>
               {% endif %}
               {% endfor %}
             </div>

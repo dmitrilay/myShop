@@ -9,7 +9,6 @@
     </div>
 
 
-    {% comment %} {{cart.total_price}} {% endcomment %}
     <!--  -->
     <div class="final-order__wrapper">
         <div class="final-order__details details-order">
@@ -35,7 +34,14 @@
                 {% for item in cart  %}
                 <div class="composition-order__order-item">
                     <div class="composition-order__order-image">
-                        <img src="{{item.image.url}}" alt="" />
+                        <picture>
+                            <source type="image/webp" srcset="{{item.image.url}}">
+                            {% if item.imageOLD %}
+                            <img src="{{ item.imageOLD.url }}">
+                            {% else %}
+                            <img src="">
+                            {% endif %}
+                        </picture>
                     </div>
                     <div class="composition-order__order-content">
                         <div class="composition-order__order-name">{{item.product}}</div>

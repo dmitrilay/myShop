@@ -3,15 +3,16 @@
 <div class="main__slider container">
     <div class="slider-main swiper">
         <div class="swiper-wrapper">
+            {% for item in slider_photo %}
             <div class="slider-main__slide swiper-slide">
-                <img src="{% static '/img/main-slider/slade_1.jpg' %}" alt="" />
+                <a href="{{item.link_transition}}">
+                    <picture>
+                        <source type="image/webp" srcset="{{item.image.url}}">
+                        <img src="{{item.imageOLD.url}}" alt="" />
+                    </picture>
+                </a>
             </div>
-            <div class="slider-main__slide swiper-slide">
-                <img src="{% static '/img/main-slider/slade_2.jpg' %}" alt="" />
-            </div>
-            <div class="slider-main__slide swiper-slide">
-                <img src="{% static '/img/main-slider/slade_3.jpg' %}" alt="" />
-            </div>
+            {% endfor %}
         </div>
     </div>
 </div>

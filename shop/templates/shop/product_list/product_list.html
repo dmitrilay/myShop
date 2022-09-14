@@ -68,7 +68,16 @@
                             <div class="product-card__img">
                                 {% for prw in product.productimage_set.all %}
                                 {% if prw.is_main %}
-                                <a href="{{ product.get_absolute_url }}"><img src="{{prw.image.url}}" alt="" /></a>
+                                <a href="{{ product.get_absolute_url }}">
+                                    <picture>
+                                        <source type="image/webp" srcset="{{prw.image.url}}">
+                                        {% if prw.imageOLD %}
+                                        <img src="{{ prw.imageOLD.url }}">
+                                        {% else %}
+                                        <img src="">
+                                        {% endif %}
+                                    </picture>
+                                </a>
                                 {% endif %}
                                 {% endfor %}
                             </div>

@@ -10,7 +10,18 @@
                 <!--  -->
                 <div class="product-slider__card product-card">
                     <div class="product-card__img">
-                        <a href="{{product.get_absolute_url}}"><img src="{{product.image.url}}" alt="" /></a>
+                        <a href="{{product.get_absolute_url}}">
+
+                            <picture>
+                                <source type="image/webp" srcset="{{product.image.url}}">
+                                {% if product.imageOLD %}
+                                <img src="{{ product.imageOLD.url }}">
+                                {% else %}
+                                <img src="">
+                                {% endif %}
+                            </picture>
+
+                        </a>
                     </div>
                     <div class="product-card__name">
                         <a href="{{product.get_absolute_url}}">{{product.name}}</a>
