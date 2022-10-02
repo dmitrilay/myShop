@@ -115,7 +115,7 @@ class Product(models.Model):
     sold = models.BooleanField(default=False, verbose_name='продан')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    id_crm = models.IntegerField(verbose_name='id продукта в CRM', blank=True, null=True)
+    id_crm = models.CharField(max_length=10, verbose_name='id продукта в CRM', blank=True, null=True)
     storage = models.IntegerField(default=1, verbose_name='Остатки')
 
     class Meta:

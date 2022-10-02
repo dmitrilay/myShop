@@ -17,7 +17,7 @@ class ProductCRM(models.Model):
                                  verbose_name='название для поиска характеристик')
     condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
                                  db_index=True, verbose_name='состояние')
-    article = models.IntegerField(verbose_name='id продукта в CRM')
+    article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='цена')
     features = models.TextField(blank=True, verbose_name='описание товара')
     category = models.CharField(max_length=200, db_index=True, verbose_name='категория')
@@ -70,13 +70,18 @@ class OldProductCrmImage(models.Model):
 
 
 class NewProductCRM(models.Model):
+    MONTH_CHOICES = (
+        ("new", "Новый"),
+        ("used", "б/у"),
+    )
+
     name = models.CharField(max_length=200, db_index=True, verbose_name='название')
     slug = models.SlugField(default='', blank=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
-    condition = models.CharField(default='new', max_length=200,
-                                 db_index=True, verbose_name='состояние', blank=True)
-    article = models.IntegerField(verbose_name='id продукта в CRM')
+    condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
+                                 db_index=True, verbose_name='состояние')
+    article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='цена')
     features = models.TextField(blank=True, verbose_name='описание товара')
     category = models.CharField(max_length=200, db_index=True, verbose_name='категория')
