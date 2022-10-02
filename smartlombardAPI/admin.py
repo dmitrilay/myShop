@@ -27,13 +27,20 @@ class ProductCRMImageInline(admin.TabularInline):
     extra = 0
 
 
+@admin.action(description='Удаление публикаций прошедших модерацию')
+def make_published(modeladmin, request, queryset):
+    """Удаление данных которые уже прошли модерацию"""
+    queryset.filter(available=True).delete()
+
+
 @admin.register(NewProductCRM)
 class NewProductCRMAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price']
+    list_display = ['name', 'available', 'storage', 'category', 'price']
     list_filter = ['available', 'category']
     exclude = ['slug', 'condition']
     readonly_fields = ['article']
     inlines = [ProductCRMImageInline]
+    actions = [make_published]
 
 
 admin.site.register(NewProductCrmImage)
