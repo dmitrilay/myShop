@@ -1,6 +1,5 @@
-# from ast import Try
 import datetime
-# from encodings import utf_8
+from itertools import product
 import json
 import os
 from django.http import JsonResponse
@@ -12,6 +11,8 @@ import urllib.parse
 
 from shop.models import Product
 from .models import *
+
+from django.db import connection
 
 
 @csrf_exempt
@@ -114,22 +115,61 @@ def smartlombardAJAX(request):
 @csrf_exempt
 def v2smartlombardAJAX(request):
     data = request.body.decode('utf-8')
+    data = data[5:]
+    data = urllib.parse.unquote_plus(data)
     data = json.loads(data)
-    # print('=======================')
-    # print(encodedStr)
-    bulk_list = []
+
+    bulk_create_list = []
+    bulk_update_list = []
+    result = [f'n{x}' for x in data]
+
+    """Проверяем товары в основном списке, если они там есть - обновляем остатки"""
+    product = Product.objects.filter(id_crm__in=result).values_list('id_crm', 'storage')
+    product = {str(x[0]): x[1] for x in product}
+    list_del = []
     for key, item in data.items():
-        # print(item)
-        bulk_list.append(NewProductCRM(name=item[0],
-                                       storage=item[1],
-                                       price=item[2],
-                                       category=item[3],
-                                       subcategory=item[4],
-                                       article=key,
-                                       ))
+        key = f'n{key}'
+        if product.get(key):
+            storage = product[key] + item[1]
+            _r = Product.objects.get(id_crm=key)
+            _r.storage = storage
+            bulk_update_list.append(_r)
+            list_del.append(key[1:])
 
-    NewProductCRM.objects.bulk_create(bulk_list)
+    Product.objects.bulk_update(bulk_update_list, ["storage", ])
+    # удаляем элемент из словоря
+    _ = [data.pop(i) for i in list_del]
 
+    """Добовляем товар для модерации, отрицательные остатки не допустимы!"""
+    new_product_crm = NewProductCRM.objects.filter(article__in=result).values_list('article', 'storage')
+    new_product_crm = {str(x[0]): x[1] for x in new_product_crm}
+
+    for key, item in data.items():
+        q_article = f'n{key}'
+        q_name, q_storage, q_price, q_category, q_subcategory = item[0], item[1], item[2], item[3], item[4]
+
+        if new_product_crm.get(q_article) != None:
+            storage = new_product_crm[q_article] + q_storage
+            storage = 0 if storage < 0 else storage
+
+            _r = NewProductCRM.objects.get(article=q_article)
+            _r.storage = storage
+            bulk_update_list.append(_r)
+
+        elif q_storage > 0:
+            # Проверяем на отрицательные остатки
+            bulk_create_list.append(NewProductCRM(name=q_name,
+                                                  storage=q_storage,
+                                                  price=q_price,
+                                                  category=q_category,
+                                                  subcategory=q_subcategory,
+                                                  article=q_article,
+                                                  ))
+
+    NewProductCRM.objects.bulk_create(bulk_create_list)
+    NewProductCRM.objects.bulk_update(bulk_update_list, ["storage", ])
+
+    # print('Кол-во запросов', len(connection.queries))
     status = {"status": 200}
     return JsonResponse(status, safe=False)
 
