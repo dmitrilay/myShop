@@ -18,6 +18,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import urllib.parse
 from .utilities import RecordingUniqueValues
 
+from smartlombardAPI.models import NewProductCRM, ProductCRM
+
 
 # -------------------------------------------
 # Создание значения для характеристики
@@ -648,7 +650,6 @@ def debug_qur():
 class addCharacteristicAjax(View):
     @staticmethod
     def get(request):
-        print('===========================')
         _q = Product.objects.filter(
             name_spec='', available=True).exclude(
             url_spec=None).values_list(
@@ -658,7 +659,6 @@ class addCharacteristicAjax(View):
         for _i in _q:
             result1[_i[0]] = {'category': _i[1], 'url': _i[2]}
 
-        print(_q)
         # result = {'Xiaomi 12 12/256Gb Pro Lite Blue': {
         #     'category': 'smartfony',
         #     'url': 'https://www.mvideo.ru/products/smartfon-xiaomi-12-12-256gb-pro-lite-blue-400004642/specification'

@@ -15,6 +15,7 @@ class ProductCRM(models.Model):
     slug = models.SlugField(default='', blank=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
+    url_spec = models.URLField(blank=True, null=True, verbose_name='URL на карточку товара')
     condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
                                  db_index=True, verbose_name='состояние')
     article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
@@ -79,6 +80,7 @@ class NewProductCRM(models.Model):
     slug = models.SlugField(default='', blank=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
+    url_spec = models.URLField(blank=True, null=True, verbose_name='URL на карточку товара')
     condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
                                  db_index=True, verbose_name='состояние')
     article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
