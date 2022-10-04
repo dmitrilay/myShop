@@ -48,19 +48,6 @@ class Slider(models.Model):
         return self.name
 
 
-class Brand(models.Model):
-    name = models.CharField(
-        max_length=200, db_index=True, verbose_name='бренд')
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'Бренд'
-        verbose_name_plural = 'Бренды'
-
-    def __str__(self):
-        return self.name
-
-
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -99,12 +86,10 @@ class Product(models.Model):
         ("used", "б/у"),
     )
 
-    brand = models.ForeignKey('Brand', related_name='brands', on_delete=models.SET_NULL, blank=True, null=True,
-                              verbose_name='бренд')
     condition = models.CharField(
         choices=MONTH_CHOICES, max_length=100, db_index=True, blank=False, verbose_name='состояние')
-    category = models.ForeignKey(
-        Category, related_name='products', on_delete=models.CASCADE)
+
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True)
@@ -159,6 +144,7 @@ class ProductImage(models.Model):
         elif not self.image:
             self.image = 'img_default/no_image.webp'
             self.imageOLD = 'img_default/no_image.jpg'
+            self.is_main = True
 
         super(ProductImage, self).save(*args, **kwargs)
 

@@ -18,11 +18,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-@admin.register(Brand)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', ]
-
-
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0

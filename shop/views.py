@@ -257,8 +257,15 @@ class HomeListView(ListView):
                     image = i2.image
                     imageOLD = i2.imageOLD
 
-            context.append({'id': i.id, 'name': i.name, 'price': i.price,
-                           'image': image, 'imageOLD': imageOLD, 'get_absolute_url': i.get_absolute_url()})
+            context.append({'id': i.id,
+                            'name': i.name,
+                            'price': i.price,
+                           'image': image,
+                            'imageOLD': imageOLD,
+                            'get_absolute_url': i.get_absolute_url()
+                            }
+                           )
+            print(image, i.id)
         return context
 
 
@@ -272,7 +279,7 @@ class CategoryListView(ListView):
     context_object_name = 'categories'
 
 
-@csrf_exempt
+@ csrf_exempt
 def ProductDetailSpecAjax(request):
     product_name = request.GET.get('product')
 
