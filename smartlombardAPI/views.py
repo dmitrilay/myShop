@@ -125,18 +125,20 @@ def v2smartlombardAJAX(request):
 
     """Проверяем товары в основном списке, если они там есть - обновляем остатки"""
     product = Product.objects.filter(id_crm__in=result).values_list('id_crm', 'storage')
+
     product = {str(x[0]): x[1] for x in product}
     list_del = []
     for key, item in data.items():
         key = f'n{key}'
-        if product.get(key):
-            storage = product[key] + item[1]
+        if product.get(key) != None:
+            storage = product[key] + item[1] if product[key] + item[1] > 0 else 0
             _r = Product.objects.get(id_crm=key)
             _r.storage = storage
+            _r.available = True if product[key] + item[1] > 0 else False
             bulk_update_list.append(_r)
             list_del.append(key[1:])
 
-    Product.objects.bulk_update(bulk_update_list, ["storage", ])
+    Product.objects.bulk_update(bulk_update_list, ["storage", 'available'])
     # удаляем элемент из словоря
     _ = [data.pop(i) for i in list_del]
 
