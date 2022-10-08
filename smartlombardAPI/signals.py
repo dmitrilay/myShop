@@ -68,7 +68,7 @@ def my_callback2(sender, **kwargs):
             else:
                 cat = cat[0]
 
-            Product.objects.create(condition=kwargs['instance'].condition,
+            Product.objects.create(condition='new',
                                    category=cat,
                                    name=kwargs['instance'].name,
                                    url_spec=kwargs['instance'].url_spec,
@@ -90,8 +90,12 @@ def saving_photos(**kwargs):
     if len(obj) > 0:
         obj = obj[0]
         img = kwargs['instance'].image
+
+        all_photo = kwargs['instance'].product.productSET.all()
+        is_main = True if str(all_photo[0]) == str(img) else False
+
         img1, img2 = image_preparation(obj.category.slug, obj.slug, img)
-        ProductImage.objects.create(product=obj, image=img1, imageOLD=img2, is_main=True,)
+        ProductImage.objects.create(product=obj, image=img1, imageOLD=img2, is_main=is_main,)
         Removing_photo_gags(obj)
 
 
