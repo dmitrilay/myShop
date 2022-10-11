@@ -1,3 +1,5 @@
+**/env
+
 верстка/
 
 *smartlombard/
@@ -10,6 +12,11 @@
 /orders/migrations
 /django_cache
 /data
+
+
+
+smartlombard/
+source/
 
 # общие
 *.ba

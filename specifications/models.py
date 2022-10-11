@@ -13,9 +13,9 @@ class CategoryProducts(models.Model):
 
 
 class Specifications(models.Model):
-    name = models.CharField(max_length=100, db_index=True)
-    participation_filtering = models.BooleanField(default=False, db_index=True)
-    priority_spec = models.CharField(max_length=10, default=99, db_index=True, verbose_name='приоритет')
+    name = models.CharField(max_length=100, db_index=True, verbose_name='Имя характеристики')
+    participation_filtering = models.BooleanField(default=False, db_index=True, verbose_name='Фильтрация')
+    priority_spec = models.IntegerField(default=99, db_index=True, verbose_name='приоритет')
     category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, null=True,
                                  blank=True, db_index=True, verbose_name='категория')
     subcategory = models.ForeignKey('SubcategoriesCharacteristics', on_delete=models.SET_NULL,
@@ -69,6 +69,7 @@ class ProductSpec(models.Model):
 
 
 class SubcategoriesCharacteristics(models.Model):
+    """Категории"""
     name = models.CharField(max_length=100, verbose_name='подкатегория')
     priority = models.SmallIntegerField(default=99, verbose_name='приоритет сортировки')
     category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL,
@@ -78,5 +79,5 @@ class SubcategoriesCharacteristics(models.Model):
         return f'{self.name} ({self.category})'
 
     class Meta:
-        verbose_name = "Подкатегория"
-        verbose_name_plural = "Подкатегории"
+        verbose_name = "Подкатегория характеристик"
+        verbose_name_plural = "Подкатегории характеристик"

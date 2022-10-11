@@ -10,17 +10,23 @@ class ProductSpecAdmin(admin.ModelAdmin):
 
 @admin.register(Specifications)
 class SpecificationsAdmin(admin.ModelAdmin):
+    """Имя характеристики"""
+    list_display = ['name', 'participation_filtering', 'priority_spec', 'category', 'subcategory']
+    list_editable = ['participation_filtering', 'priority_spec', 'category', 'subcategory']
     search_fields = ['name']
 
 
 @admin.register(SubcategoriesCharacteristics)
 class SubcategoriesCharacteristicsAdmin(admin.ModelAdmin):
+    """Категории характеристик"""
     list_display = ['name', 'priority']
     search_fields = ['name']
 
 
 @admin.register(CharacteristicValue)
 class CharacteristicValueAdmin(admin.ModelAdmin):
+    "Характеристика + значение"
+    list_display = ['name_product']
     search_fields = ['name', ]
 
 
@@ -30,9 +36,4 @@ class ValuesSpecAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CategoryProducts)
-
-# admin.site.register(ValuesSpec)
-
 admin.site.register(ProductSpec, ProductSpecAdmin)
-
-# admin.site.register(SubcategoriesCharacteristics)
