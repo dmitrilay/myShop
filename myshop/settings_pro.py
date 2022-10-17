@@ -23,3 +23,7 @@ DATABASES = {
 #STATIC_DIR = os.path.join(BASE_DIR, 'static')
 #STATICFILES_DIRS = [STATIC_DIR]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# Токен для автоматизации характеристик
+TOKEN_SPEC = "fjwoapfjow@204diojwa!24dkapwojfjjf22401jdwa190jd(odwa"
