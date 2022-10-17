@@ -1,5 +1,8 @@
 **/env
 
+settings_pro.py
+settings_prod.py
+
 верстка/
 
 *smartlombard/
@@ -23,7 +26,7 @@ source/
 *.sqlite3
 .idea/
 
-settings_prod.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
