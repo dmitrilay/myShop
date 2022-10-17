@@ -11,9 +11,10 @@ class ProductSpecAdmin(admin.ModelAdmin):
 @admin.register(Specifications)
 class SpecificationsAdmin(admin.ModelAdmin):
     """Имя характеристики"""
-    list_display = ['name', 'participation_filtering', 'priority_spec', 'category', 'subcategory']
-    list_editable = ['participation_filtering', 'priority_spec', 'category', 'subcategory']
+    list_display = ['name', 'subcategory', 'participation_filtering', 'priority_spec', 'category', ]
+    list_editable = ['subcategory', 'participation_filtering', 'priority_spec', ]
     search_fields = ['name']
+    list_filter = ['category']
 
 
 @admin.register(SubcategoriesCharacteristics)

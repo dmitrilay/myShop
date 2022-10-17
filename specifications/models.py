@@ -30,8 +30,8 @@ class Specifications(models.Model):
 
 
 class ValuesSpec(models.Model):
+    "Значения характеристики"
     name = models.CharField(max_length=100)
-    spec = models.ForeignKey('Specifications', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -43,10 +43,10 @@ class ValuesSpec(models.Model):
 
 class CharacteristicValue(models.Model):
     name_product = models.ForeignKey('ProductSpec', related_name='product_sp',
-                                     on_delete=models.SET_DEFAULT, default=0, null=True)
-    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_DEFAULT, default=0, null=True)
-    name_value = models.ForeignKey('ValuesSpec', on_delete=models.SET_DEFAULT, default=0)
-    cat = models.ForeignKey('CategoryProducts', on_delete=models.SET_DEFAULT, default=0)
+                                     on_delete=models.CASCADE, blank=True, null=True)
+    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_NULL, blank=True, null=True)
+    name_value = models.ForeignKey('ValuesSpec', on_delete=models.SET_NULL, blank=True, null=True)
+    cat = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f'{self.name_spec} | {self.name_value}'
@@ -72,11 +72,9 @@ class SubcategoriesCharacteristics(models.Model):
     """Категории"""
     name = models.CharField(max_length=100, verbose_name='подкатегория')
     priority = models.SmallIntegerField(default=99, verbose_name='приоритет сортировки')
-    category = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL,
-                                 blank=True, null=True, verbose_name='категория')
 
     def __str__(self):
-        return f'{self.name} ({self.category})'
+        return self.name
 
     class Meta:
         verbose_name = "Подкатегория характеристик"
