@@ -1,6 +1,6 @@
 from django.core.mail import send_mail
 from .models import Order
-from myshop.celery import app
+# from myshop.celery import app
 
 import threading
 
