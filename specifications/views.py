@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView, ListView
 
-from myshop.settings import BASE_DIR
+from myshop.settings import BASE_DIR, TOKEN_SPEC, DEBUG
 from shop.models import Category, Product
 from .forms import NewCategoryFeatureKeyForm
 from .models import *
@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 import urllib.parse
-from .utilities import RecordingUniqueValues
+from .utilities.Recording_сharacteristics import RecordingUniqueValues
 
 from smartlombardAPI.models import NewProductCRM, ProductCRM
 
@@ -650,27 +650,20 @@ def debug_qur():
 class addCharacteristicAjax(View):
     @staticmethod
     def get(request):
-        _q = Product.objects.filter(
-            name_spec='', available=True).exclude(
-            url_spec=None).values_list(
-            'name', 'category__slug', 'url_spec')
-
-        result1 = {}
-        for _i in _q:
-            result1[_i[0]] = {'category': _i[1], 'url': _i[2]}
+        _q = Product.objects.filter(name_spec='', available=True).exclude(url_spec=None)
+        _q = _q.values_list('name', 'category__slug', 'url_spec')
+        result = {_i[0]: {'category': _i[1], 'url': _i[2]} for _i in _q}
 
         # result = {'Xiaomi 12 12/256Gb Pro Lite Blue': {
         #     'category': 'smartfony',
         #     'url': 'https://www.mvideo.ru/products/smartfon-xiaomi-12-12-256gb-pro-lite-blue-400004642/specification'
         # }}
 
-        return JsonResponse(result1, safe=True)
+        return JsonResponse(result, safe=True)
 
     @staticmethod
     def post(request):
-        print('===========================')
-        token_spec = "fjwoapfjow@204diojwa!24dkapwojfjjf22401jdwa190jd(odwa"
-        if request.headers['X-Tokenauth'] != token_spec:
+        if DEBUG == False and request.headers['X-Tokenauth'] != TOKEN_SPEC:
             return HttpResponse(status=401)
 
         data = urllib.parse.unquote_plus(request.body.decode('utf-8')[5:])
@@ -686,7 +679,8 @@ class addCharacteristicAjax(View):
                     spec_list.append(str(item[0]))
                     value_list.append(str(item[1]))
 
-            obj = RecordingUniqueValues(spec_list=spec_list, value_list=value_list, product=_product)
+            obj = RecordingUniqueValues(spec_list=spec_list, value_list=value_list,
+                                        product=_product, product_name=_name)
             obj.spec()
             obj.value()
             obj.write()
