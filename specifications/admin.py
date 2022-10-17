@@ -14,7 +14,7 @@ class SpecificationsAdmin(admin.ModelAdmin):
     list_display = ['name', 'subcategory', 'participation_filtering', 'priority_spec', 'category', ]
     list_editable = ['subcategory', 'participation_filtering', 'priority_spec', ]
     search_fields = ['name']
-    list_filter = ['category']
+    list_filter = ['category', 'participation_filtering']
 
 
 @admin.register(SubcategoriesCharacteristics)
