@@ -17,6 +17,8 @@ from django.db.models import Max, Min
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
 
+from django.db.models import Count
+
 
 class FilterAjax(View):
     def get(request, _p):
@@ -54,6 +56,7 @@ class FilterAjax(View):
 
         # _q = CharacteristicValue.objects.filter(name_product__name__in=product, name_spec__participation_filtering=True)
         # _q = _q.values_list('name_spec__name', 'name_value__name', 'name_spec__priority_spec')
+
         _q = list(_q)
         _q = _q + new_set_product
         status = {"status": _q}
@@ -67,7 +70,7 @@ class CategoryDetailView2(ListView):
     slug_url_kwarg = 'slug'
     paginate_by = 12
 
-    @staticmethod
+    @ staticmethod
     def find_get(f, url_kwargs):
         """Поиск товара по get запросу"""
         dict_spec_test = {}
@@ -277,6 +280,9 @@ class CategoryListView(ListView):
     model = Category
     template_name = 'shop/product_category/category.html'
     context_object_name = 'categories'
+
+    def get_queryset(self):
+        return Category.objects.annotate(cnt=Count('products')).filter(cnt__gt=0, products__available=True)
 
 
 @ csrf_exempt
