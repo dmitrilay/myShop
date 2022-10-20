@@ -50,7 +50,7 @@ class RecordingUniqueValues():
         _spec_product, object_exists = ProductSpec.objects.get_or_create(name=name, category=_spec_category)
 
         if object_exists == True:
-            _sp = Specifications.objects.filter(name__in=self.spec_list)
+            _sp = Specifications.objects.filter(name__in=self.spec_list, category__name_cat=_spec_category)
             _vl = ValuesSpec.objects.filter(name__in=self.value_list)
 
             bulk_list = []
