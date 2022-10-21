@@ -310,10 +310,13 @@ def ProductDetailSpecAjax(request):
 
 def SearchProductAjax(request):
     product_name = request.GET.get('search')
-
     product_list = []
     if product_name:
-        rez = Product.objects.filter(name__icontains=product_name, available=True)[:10]
+        product_name_lower = product_name.lower()
+        product_name_title = product_name_lower.title()
+        q1 = Q(name__icontains=product_name_lower)
+        q2 = Q(name__icontains=product_name_title)
+        rez = Product.objects.filter(q1 | q2, available=True)[:10]
         for item in rez:
             product_list.append({'name': item.name, 'url': item.get_absolute_url()})
 
@@ -327,7 +330,9 @@ class SearchListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
+
         product_name = self.request.GET.get('qu')
+
         _condition = []
         price_min, price_max, condition, _sort = 0, 0, 0, ''
         dict_get = dict(self.request.GET)
@@ -353,8 +358,15 @@ class SearchListView(ListView):
         # ===============================================
         # Формируем запрос
         # ===============================================
+        product_name_lower = product_name.lower()
+        product_name_title = product_name_lower.title()
+        q1 = Q(name__icontains=product_name_lower)
+        q2 = Q(name__icontains=product_name_title)
 
-        _q = Product.objects.filter(name__icontains=product_name, available=True)
+        q3 = Q(category__name__icontains=product_name_lower)
+        q4 = Q(category__name__icontains=product_name_title)
+        _q = Product.objects.filter(q1 | q2 | q3 | q4, available=True)
+
         if price_min and price_max:
             _q = _q.filter(price__gte=price_min, price__lte=price_max)
         if _condition:
