@@ -63,13 +63,14 @@ function RenderProductSearch(data) {
 
 function values_search_form() {
   // Вставка поискового значения из get
-
   const search_input = document.querySelector(".search-header__input");
   if (search_input) {
     let _p = location.search.replace("?", "").split("&");
     _p.forEach((x) => {
-      let args = x.split("=");
-      if (args[0] == "qu") search_input.value = args[1];
+      let [qu, arg] = x.split("=");
+      arg = decodeURI(arg);
+      if (arg) arg = arg.replace("+", " ");
+      if (qu == "qu") search_input.value = arg;
     });
   }
 }
