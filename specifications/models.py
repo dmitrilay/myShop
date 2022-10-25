@@ -44,12 +44,9 @@ class ValuesSpec(models.Model):
 class CharacteristicValue(models.Model):
     name_product = models.ForeignKey('ProductSpec', related_name='product_sp',
                                      on_delete=models.CASCADE, blank=True, null=True)
-    name_spec = models.ForeignKey('Specifications', on_delete=models.SET_NULL, blank=True, null=True)
-    name_value = models.ForeignKey('ValuesSpec', on_delete=models.SET_NULL, blank=True, null=True)
+    name_spec = models.ForeignKey('Specifications', on_delete=models.CASCADE, blank=True, null=True)
+    name_value = models.ForeignKey('ValuesSpec', on_delete=models.CASCADE, blank=True, null=True)
     cat = models.ForeignKey('CategoryProducts', on_delete=models.SET_NULL, blank=True, null=True)
-
-    def __str__(self):
-        return f'{self.name_spec} | {self.name_value}'
 
     class Meta:
         verbose_name = "Стек характеристик"

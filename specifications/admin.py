@@ -27,8 +27,9 @@ class SubcategoriesCharacteristicsAdmin(admin.ModelAdmin):
 @admin.register(CharacteristicValue)
 class CharacteristicValueAdmin(admin.ModelAdmin):
     "Характеристика + значение"
-    list_display = ['name_product']
-    search_fields = ['name', ]
+    list_display = ['name_product', 'name_spec', 'name_value']
+    list_display_links = ['name_product']
+    search_fields = ['name_product__name', ]
 
 
 @admin.register(ValuesSpec)
