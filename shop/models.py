@@ -37,6 +37,7 @@ class Slider(models.Model):
 
     class Meta:
         verbose_name = 'Фотографии для слайдера'
+        verbose_name_plural = '4. Фотографии слайдера'
 
     def __str__(self):
         return self.name
@@ -60,7 +61,7 @@ class Category(models.Model):
     class Meta:
         ordering = ('name',)
         verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name_plural = '2. Категории'
 
     def __str__(self):
         return self.name
@@ -104,7 +105,7 @@ class Product(models.Model):
         ordering = ('name',)
         index_together = (('id', 'slug'),)
         verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
+        verbose_name_plural = '1. Товары'
 
     def __str__(self):
         return self.name
@@ -162,4 +163,4 @@ class ProductImage(models.Model):
 
     class Meta:
         verbose_name = 'Фотографию'
-        verbose_name_plural = 'Фотографии'
+        verbose_name_plural = '3. Фотографии товаров'

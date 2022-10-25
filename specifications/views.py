@@ -38,13 +38,9 @@ class CreateNewCharacteristic(View):
         data = json.loads(data)
 
         product = Product.objects.filter(pk=data['product_id']).values_list('category__name', 'name')
-
         obj, created = CategoryProducts.objects.get_or_create(name_cat=product[0][0])
-        # print(obj, created)
-
         name_product, _ = ProductSpec.objects.get_or_create(name=product[0][1], category=obj)
         list_product_spec = CharacteristicValue.objects.filter(name_product=name_product)
-        # print(list_product_spec)
 
         bulk_list = []
         if obj:
@@ -648,9 +644,10 @@ def debug_qur():
 
 @method_decorator(csrf_exempt, name='dispatch')
 class addCharacteristicAjax(View):
+    """Создание новых характеристик из запроса"""
     @staticmethod
     def get(request):
-        _q = Product.objects.filter(name_spec='', available=True).exclude(url_spec=None)
+        _q = Product.objects.filter(name_spec='', available=True).exclude(url_spec=None)[:5]
         _q = _q.values_list('name', 'category__slug', 'url_spec')
         result = {_i[0]: {'category': _i[1], 'url': _i[2]} for _i in _q}
 

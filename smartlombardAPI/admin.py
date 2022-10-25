@@ -43,5 +43,5 @@ class NewProductCRMAdmin(admin.ModelAdmin):
     actions = [make_published]
 
 
-admin.site.register(NewProductCrmImage)
-admin.site.register(OldProductCrmImage)
+# admin.site.register(NewProductCrmImage)
+# admin.site.register(OldProductCrmImage)

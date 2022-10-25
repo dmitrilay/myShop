@@ -35,7 +35,7 @@ class ProductCRM(models.Model):
 
     class Meta:
         verbose_name = "Товары из CRM"
-        verbose_name_plural = "Товары из CRM"
+        verbose_name_plural = "2. Б/У товары из CRM"
 
     def __str__(self):
         return self.name
@@ -104,7 +104,7 @@ class NewProductCRM(models.Model):
 
     class Meta:
         verbose_name = "Товары(NEW) из CRM"
-        verbose_name_plural = "Товары(NEW) из CRM"
+        verbose_name_plural = "1. Новые товары из CRM"
 
     def __str__(self):
         return self.name

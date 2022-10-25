@@ -26,7 +26,7 @@ class Specifications(models.Model):
 
     class Meta:
         verbose_name = "Имя характеристики"
-        verbose_name_plural = 'Имя характеристики'
+        verbose_name_plural = '1. Настройка характеристик'
 
 
 class ValuesSpec(models.Model):
