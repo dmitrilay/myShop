@@ -1,17 +1,11 @@
 from django.db import models
 from django.urls import reverse
-
-
 import os
 import uuid
-
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
-# from .fields import WEBPField
-
 from PIL import Image
-import io
+from django.core.validators import FileExtensionValidator
 
 
 def image_folder(instance, filename):
@@ -94,6 +88,9 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True)
     name_spec = models.CharField(max_length=200, db_index=True, blank=True)
     url_spec = models.URLField(blank=True, null=True, verbose_name='URL на карточку товара')
+    uploading_csv_file = models.FileField(upload_to='uploads/', blank=True, null=True,
+                                          verbose_name='Вложение с характеристиками (CSV)',
+                                          validators=[FileExtensionValidator(['csv'])])
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='цена')
     available = models.BooleanField(default=True, verbose_name='доступность')

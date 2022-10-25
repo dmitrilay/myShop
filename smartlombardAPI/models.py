@@ -3,6 +3,7 @@ from django.db import models
 import itertools
 # from django.utils.text import slugify
 from pytils.translit import slugify
+from django.core.validators import FileExtensionValidator
 
 
 class ProductCRM(models.Model):
@@ -16,6 +17,9 @@ class ProductCRM(models.Model):
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
     url_spec = models.URLField(blank=True, null=True, verbose_name='URL на карточку товара')
+    uploading_csv_file = models.FileField(upload_to='uploads/', blank=True, null=True,
+                                          verbose_name='Вложение с характеристиками (CSV)',
+                                          validators=[FileExtensionValidator(['csv'])])
     condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
                                  db_index=True, verbose_name='состояние')
     article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
@@ -81,13 +85,17 @@ class NewProductCRM(models.Model):
     name_spec = models.CharField(max_length=200, db_index=True, blank=True,
                                  verbose_name='название для поиска характеристик')
     url_spec = models.URLField(blank=True, null=True, verbose_name='URL на карточку товара')
+    uploading_csv_file = models.FileField(upload_to='uploads/', blank=True, null=True,
+                                          verbose_name='Вложение с характеристиками (CSV)',
+                                          validators=[FileExtensionValidator(['csv'])])
     condition = models.CharField(choices=MONTH_CHOICES, default=MONTH_CHOICES[1], max_length=200,
                                  db_index=True, verbose_name='состояние')
     article = models.CharField(max_length=20, verbose_name='id продукта в CRM')
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='цена')
     features = models.TextField(blank=True, verbose_name='описание товара')
     category = models.CharField(max_length=200, db_index=True, verbose_name='категория')
-    subcategory = models.CharField(max_length=200, db_index=True, verbose_name='подкатегория', blank=True, null=True)
+    subcategory = models.CharField(max_length=200, db_index=True,
+                                   verbose_name='подкатегория', blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

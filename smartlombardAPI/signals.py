@@ -1,16 +1,15 @@
-from django.core.signals import request_finished
 from django.dispatch import receiver
-
 from django.db.models.signals import post_save, pre_save
-
-
 from .models import ProductCRM, NewProductCRM, NewProductCrmImage
 from shop.models import Product, Category, ProductImage
 from pytils.translit import slugify
+from django.core.signals import request_finished
 
 import os
 import uuid
 from PIL import Image
+
+from specifications.utilities.Recording_сharacteristics import RecordingUniqueValues
 
 
 @receiver(post_save, sender=ProductCRM)
@@ -83,6 +82,28 @@ def my_callback2(sender, **kwargs):
             img_set = kwargs['instance'].productSET.all()
             for i in img_set:
                 saving_photos(instance=i)
+
+    if kwargs['instance'].uploading_csv_file and kwargs['instance'].available:
+        # print(dir(kwargs['instance'].specifications2.open()))
+        byte_content = kwargs['instance'].uploading_csv_file.open().read()
+        content = byte_content.decode()
+        write_specs(content, kwargs['instance'])
+        kwargs['instance'].uploading_csv_file.delete()
+
+
+def write_specs(content, props):
+    content = content.replace('\ufeff', '')
+    content = content.split('\r\n')
+    list_spec = [[x.split(';')[0], x.split(';')[1]] for x in content if x]
+    d = dict(list_spec)
+    _keys, _values = list(d.keys()), list(d.values())
+    product_and_spec = {props.name: list_spec, }
+    _ = {'spec_list': _keys, 'value_list': _values, 'product': product_and_spec, 'product_name': props.name}
+    obj = RecordingUniqueValues(**_)
+
+    obj.spec()
+    obj.value()
+    obj.write()
 
 
 def saving_photos(**kwargs):
