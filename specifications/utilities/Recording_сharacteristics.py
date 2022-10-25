@@ -45,7 +45,8 @@ class RecordingUniqueValues():
     def value(self):
         """Формируем список значений для записи в базу"""
         _sp = ValuesSpec.objects.filter(name__in=self.value_list).values_list('name')
-        _sp = map(lambda x: x[0], _sp)
+        _sp = [x[0] for x in _sp]
+
         not_list = list(set(self.value_list) - set(_sp))
         bulk_list = [ValuesSpec(name=item) for item in not_list]
         ValuesSpec.objects.bulk_create(bulk_list)
@@ -103,11 +104,13 @@ class RecordingUniqueValues():
 
     @staticmethod
     def cyrillic_lowercase(obj):
-        """Всю кириллицу конвертируем в нижний регистр, кроме первой буквы"""
+        """Всю кириллицу конвертируем в нижний регистр, кроме первой буквы. А так же приводим к строке"""
         def convert(text):
-            if re.search(r'[a-я]', text):
+            if re.search(r'[a-я]', str(text)):
                 text_lower = text.lower()
                 text = text_lower[:1].upper() + text_lower[1:]
+            else:
+                text = str(text)
             return text
 
         product = obj.popitem()
