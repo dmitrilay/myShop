@@ -1,10 +1,19 @@
-from ast import While
 import re
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save
-from .models import Product
+from django.db.models.signals import post_save, pre_save, post_delete
+from .models import Product, ProductImage
 from django.core.signals import request_finished
 from specifications.utilities.Recording_сharacteristics import RecordingUniqueValues
+
+
+@receiver(post_delete, sender=ProductImage)
+def photo_post_delete_handler(sender, **kwargs):
+    """Очиста фотографий после удаления в admin panel"""
+    photo = kwargs['instance'].image.name
+    if 'no_image.webp' not in str(photo):
+        photo1 = kwargs['instance'].image
+        photo2 = kwargs['instance'].imageOLD
+        [x.delete() for x in [photo2, photo1]]
 
 
 @receiver(post_save, sender=Product)
