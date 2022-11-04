@@ -62,15 +62,12 @@ class AddingEditingProduct():
             write_permission_main, write_permission_crm = self.product_search_in_list(e['article'])
 
             if write_permission_main == True and write_permission_crm == True:
-                if e.get("sold", 'f') == None:
-                    print(e["sold"])
                 bulk_list.append(ProductCRM(name=e['name'],
                                             article=f"{self.index_letter}{e['article']}",
                                             price=e['price'],
                                             features=e['features'],
                                             category=e['category'],
-                                            subcategory=e['subcategory'],
-                                            # sold=e['sold'] if e['sold'] else 0,
+                                            subcategory=(e['subcategory'] if e.get('subcategory') else ''),
                                             condition='used',
                                             storage=1
                                             ))
@@ -84,13 +81,14 @@ class AddingEditingProduct():
         for e in new_product:
             main_list_product, crm_list_product = self.product_search_in_list(e['article'])
 
-            args = {'sold': True, 'storage': 0} if e['sold'] else {'sold': False, 'storage': 1}
-            article = f"{self.index_letter}{e['article']}"
-            if not crm_list_product == True:
-                ProductCRM.objects.filter(article=article).update(**args)
+            if e.get('sold'):
+                args = {'sold': True, 'storage': 0} if e['sold'] else {'sold': False, 'storage': 1}
+                article = f"{self.index_letter}{e['article']}"
+                if not crm_list_product == True:
+                    ProductCRM.objects.filter(article=article).update(**args)
 
-            if not main_list_product == True:
-                Product.objects.filter(id_crm=article).update(available=False, **args)
+                if not main_list_product == True:
+                    Product.objects.filter(id_crm=article).update(available=False, **args)
 
             self.add_status("good-edit")
 
@@ -117,7 +115,7 @@ def decomposition_data(products):
         if product['type'] == 'add':
             add_type.append(product['data'])
         elif product['type'] == 'edit':
-            edit_type.append(product['data'])
+            edit_type.append(product)
         elif product['type'] == 'remove':
             remove_type.append(product)
 
