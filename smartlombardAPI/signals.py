@@ -1,49 +1,22 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
-from .models import ProductCRM, NewProductCRM, NewProductCrmImage
-from shop.models import Product, Category, ProductImage
-from pytils.translit import slugify
+from .models import ProductCRM, NewProductCRM, NewProductCrmImage, OldProductCrmImage
 from django.core.signals import request_finished
-
-import os
-import uuid
-from PIL import Image
-
-from specifications.utilities.Recording_сharacteristics import RecordingUniqueValues
+from .modules.copy_data_to_product_crm import *
+from .modules.uploading_csv_file import *
 
 
 @receiver(post_save, sender=ProductCRM)
 def my_callback(sender, **kwargs):
+    pass
 
-    if kwargs.get('instance'):
 
-        permission_validation = kwargs['instance'].available
-        permission_write = Product.objects.filter(id_crm=kwargs['instance'].article).exists()
-
-        if permission_validation == True and permission_write == False:
-            cat = Category.objects.filter(name=kwargs['instance'].category)
-
-            if cat.__len__() == 0:
-                cat_value = kwargs['instance'].category
-                cat = Category.objects.create(name=cat_value, slug=slugify(cat_value))
-                print(cat)
-            else:
-                cat = cat[0]
-
-            _r = Product.objects.create(condition=kwargs['instance'].condition,
-                                        category=cat,
-                                        name=kwargs['instance'].name,
-                                        slug=kwargs['instance'].slug,
-                                        name_spec=kwargs['instance'].name_spec,
-                                        url_spec=kwargs['instance'].url_spec,
-                                        description=kwargs['instance'].features,
-                                        #    price=kwargs['instance'].price,
-                                        price='99999',
-                                        available=True if kwargs['instance'].hidden == False else False,
-                                        sold=True if kwargs['instance'].sold == True else False,
-                                        id_crm=kwargs['instance'].article,
-                                        )
-            add_photo(kwargs, _r)
+@receiver(post_save, sender=ProductCRM)
+def callback_product_crm(sender, instance, **kwargs):
+    if instance:
+        copy_data_to_product_crm_fun(instance)
+    if instance.uploading_csv_file and instance.available:
+        uploading_csv_file(instance)
 
 
 @receiver(post_save, sender=NewProductCrmImage)
@@ -51,114 +24,14 @@ def callback_saving_photos(sender, **kwargs):
     saving_photos(**kwargs)
 
 
+@receiver(post_save, sender=OldProductCrmImage)
+def callback_saving_photos2(sender, **kwargs):
+    saving_photos(**kwargs)
+
+
 @receiver(post_save, sender=NewProductCRM)
-def my_callback2(sender, **kwargs):
-    if kwargs.get('instance'):
-
-        permission_validation = kwargs['instance'].available
-        permission_write = Product.objects.filter(id_crm=kwargs['instance'].article).exists()
-
-        if permission_validation == True and permission_write == False:
-            cat = Category.objects.filter(name=kwargs['instance'].category)
-
-            if cat.__len__() == 0:
-                cat_value = kwargs['instance'].category
-                cat = Category.objects.create(name=cat_value, slug=slugify(cat_value))
-            else:
-                cat = cat[0]
-
-            Product.objects.create(condition='new',
-                                   category=cat,
-                                   name=kwargs['instance'].name,
-                                   url_spec=kwargs['instance'].url_spec,
-                                   slug=kwargs['instance'].slug,
-                                   name_spec=kwargs['instance'].name_spec,
-                                   description=kwargs['instance'].features,
-                                   price=kwargs['instance'].price,
-                                   id_crm=kwargs['instance'].article,
-                                   storage=kwargs['instance'].storage
-                                   )
-
-            img_set = kwargs['instance'].productSET.all()
-            for i in img_set:
-                saving_photos(instance=i)
-
-    if kwargs['instance'].uploading_csv_file and kwargs['instance'].available:
-        # print(dir(kwargs['instance'].specifications2.open()))
-        byte_content = kwargs['instance'].uploading_csv_file.open().read()
-        content = byte_content.decode()
-        write_specs(content, kwargs['instance'])
-        kwargs['instance'].uploading_csv_file.delete()
-
-
-def write_specs(content, props):
-    content = content.replace('\ufeff', '')
-    content = content.split('\r\n')
-    list_spec = [[x.split(';')[0], x.split(';')[1]] for x in content if x]
-    d = dict(list_spec)
-    _keys, _values = list(d.keys()), list(d.values())
-    product_and_spec = {props.name: list_spec, }
-    _ = {'spec_list': _keys, 'value_list': _values, 'product': product_and_spec, 'product_name': props.name}
-    obj = RecordingUniqueValues(**_)
-
-    obj.spec()
-    obj.value()
-    obj.write()
-
-
-def saving_photos(**kwargs):
-    obj = Product.objects.filter(name=kwargs['instance'].product)
-    if len(obj) > 0:
-        obj = obj[0]
-        img = kwargs['instance'].image
-
-        all_photo = kwargs['instance'].product.productSET.all()
-        is_main = True if str(all_photo[0]) == str(img) else False
-
-        img1, img2 = image_preparation(obj.category.slug, obj.slug, img)
-        ProductImage.objects.create(product=obj, image=img1, imageOLD=img2, is_main=is_main,)
-        Removing_photo_gags(obj)
-
-
-def Removing_photo_gags(obj):
-    """Удаление временной фотографии"""
-    _r = ProductImage.objects.filter(product=obj)
-    for item in _r:
-        if item.imageOLD == 'img_default/no_image.jpg' and len(_r) > 1:
-            item.delete()
-
-
-def image_preparation(cat, name, image):
-    """Конвертируем изображения в jpg и webp"""
-    _PATH = f'media/product_photos/{cat}/{name}'
-    if not os.path.exists(_PATH):
-        os.makedirs(_PATH)
-
-    name_uuid = uuid.uuid4().hex
-    _PATH = f'product_photos/{cat}/{name}/{name_uuid}'
-
-    image1 = Image.open(image)
-    image1.save(f'media/{_PATH}.webp', 'WEBP')
-
-    image2 = Image.open(image)
-    image2.save(f'media/{_PATH}.jpeg', 'jpeg', quality=80)
-
-    return [f'{_PATH}.webp', f'{_PATH}.jpeg']
-
-
-def add_photo(kwargs, _r):
-    data = kwargs['instance'].productSET.all()
-    bulk_list = []
-    for index, item in enumerate(data):
-        bulk_list.append(ProductImage(product=_r, image=item.image,
-                                      is_main=True if index == 0 else False,
-                                      ))
-
-    if not bulk_list:
-        ProductImage.objects.get_or_create(product=_r,
-                                           image='img_default/no_image.jpg',
-                                           is_main=True,
-                                           is_active=True,
-                                           name='no_fofo')
-    else:
-        ProductImage.objects.bulk_create(bulk_list)
+def my_callback2(sender, instance, **kwargs):
+    if instance:
+        copy_data_to_product_crm_fun(instance)
+    if instance.uploading_csv_file and instance.available:
+        uploading_csv_file(instance)
