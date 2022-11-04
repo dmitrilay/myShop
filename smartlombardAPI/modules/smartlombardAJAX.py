@@ -93,6 +93,15 @@ class AddingEditingProduct():
             self.add_status("good-edit")
 
     def remove_product(self):
+        for e in self.remove_type:
+            main_list_product, crm_list_product = self.product_search_in_list(e['article'])
+            article = f"{self.index_letter}{e['article']}"
+
+            if not crm_list_product == True:
+                ProductCRM.objects.filter(article=article).delete()
+
+            if not main_list_product == True:
+                Product.objects.filter(id_crm=article).update(available=False)
         self.add_status("good-remove")
 
     def get_product(self):

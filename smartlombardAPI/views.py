@@ -20,6 +20,7 @@ def smartlombardAJAX(request):
     p = AddingEditingProduct(status, add_type, edit_type, remove_type)
     p.add_product()
     p.edit_product()
+    p.remove_product()
     create_new_shop(status, merchants)
 
     return JsonResponse(status, safe=False)
