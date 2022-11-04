@@ -1,9 +1,23 @@
+from django.utils.translation import ugettext_lazy as _
 import re
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save, post_delete
-from .models import Product, ProductImage
+from .models import Product, ProductImage, Category
 from django.core.signals import request_finished
 from specifications.utilities.Recording_сharacteristics import RecordingUniqueValues
+
+
+@receiver(pre_save, sender=Category)
+def photo_post_delete_handler_category(sender, instance, **kwargs):
+    """Удаление фото после очистки поля в admin panel"""
+    if not instance.pk:
+        return False
+    old_file = Category.objects.get(pk=instance.pk).image
+    new_file = instance.image
+
+    if new_file != old_file and old_file:
+        if 'no_image.jpg' not in str(old_file):
+            old_file.delete(save=False)
 
 
 @receiver(post_delete, sender=ProductImage)
@@ -11,9 +25,8 @@ def photo_post_delete_handler(sender, **kwargs):
     """Очиста фотографий после удаления в admin panel"""
     photo = kwargs['instance'].image.name
     if 'no_image.webp' not in str(photo):
-        photo1 = kwargs['instance'].image
-        photo2 = kwargs['instance'].imageOLD
-        [x.delete() for x in [photo2, photo1]]
+        photosObj = [x for x in [kwargs['instance'].imageOLD, kwargs['instance'].image]]
+        [x.delete() for x in photosObj]
 
 
 @receiver(post_save, sender=Product)
@@ -28,6 +41,7 @@ def my_callback(sender, **kwargs):
 
 
 def write_specs(content, props):
+    """Запись характеристик из css файла"""
     list_spec = [[x.split(';')[0], x.split(';')[1]] for x in content if x]
     d = dict(list_spec)
     _keys, _values = list(d.keys()), list(d.values())
