@@ -27,11 +27,11 @@ class ProductCRM(models.Model):
     features = models.TextField(blank=True, verbose_name='описание товара')
     category = models.CharField(max_length=200, db_index=True, verbose_name='категория')
     subcategory = models.CharField(max_length=200, db_index=True, verbose_name='подкатегория', blank=True)
-    hidden = models.BooleanField(default=False, null=True, verbose_name='скрыть товар')
     sold = models.BooleanField(default=False, null=True, verbose_name='товар является проданным')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     available = models.BooleanField(default=False, verbose_name='Подтвердить модерацию')
+    storage = models.IntegerField(verbose_name='Остатки')
 
     class Meta:
         verbose_name = "Товары из CRM"
@@ -64,7 +64,7 @@ class ProductCRM(models.Model):
 class OldProductCrmImage(models.Model):
     product = models.ForeignKey(ProductCRM, related_name='productSET', blank=True, null=True, default=None,
                                 on_delete=models.CASCADE, verbose_name="Продукт")
-    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+    image = models.ImageField(upload_to='garbage/', verbose_name="Изображение")
 
     def __str__(self):
         return "%s" % self.image
@@ -133,7 +133,7 @@ class NewProductCRM(models.Model):
 class NewProductCrmImage(models.Model):
     product = models.ForeignKey(NewProductCRM, related_name='productSET', blank=True, null=True, default=None,
                                 on_delete=models.CASCADE, verbose_name="Продукт")
-    image = models.ImageField(upload_to='products_images/', verbose_name="Изображение")
+    image = models.ImageField(upload_to='garbage/', verbose_name="Изображение")
 
     def __str__(self):
         return "%s" % self.image

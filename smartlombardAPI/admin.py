@@ -9,17 +9,17 @@ class OldProductCRMImageInline(admin.TabularInline):
 
 @admin.register(ProductCRM)
 class ProductCRMAdmin(admin.ModelAdmin):
-    list_display = ['name', 'sold']
-    list_filter = ['available', 'category', 'sold']
-    readonly_fields = ['article']
-    exclude = ['slug']
+    list_display = ('name', 'sold', 'storage')
+    list_filter = ('available', 'category', 'sold')
+    readonly_fields = ("storage", 'article')
+    exclude = ('slug', "sold")
     inlines = [OldProductCRMImageInline]
 
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        extra_context['show_save_and_continue'] = False
-        # extra_context['show_save'] = False
-        return super(ProductCRMAdmin, self).changeform_view(request, object_id, extra_context=extra_context)
+    # def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+    #     extra_context = extra_context or {}
+    #     extra_context['show_save_and_continue'] = False
+    #     # extra_context['show_save'] = False
+    #     return super(ProductCRMAdmin, self).changeform_view(request, object_id, extra_context=extra_context)
 
 
 class ProductCRMImageInline(admin.TabularInline):
@@ -35,9 +35,9 @@ def make_published(modeladmin, request, queryset):
 
 @admin.register(NewProductCRM)
 class NewProductCRMAdmin(admin.ModelAdmin):
-    list_display = ['name', 'available', 'storage', 'category', 'price']
+    list_display = ('name', 'available', 'storage', 'category', 'price')
     list_filter = ['available', 'category']
-    exclude = ['slug', 'condition']
+    exclude = ('slug',)
     readonly_fields = ['article']
     inlines = [ProductCRMImageInline]
     actions = [make_published]
