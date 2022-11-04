@@ -44,17 +44,21 @@ class Slider(models.Model):
 
 
 class Category(models.Model):
+    def name_file(instance, filename):
+        type_file = filename.split('.')[-1]
+        return f'img_category/{instance.name}/{uuid.uuid4().hex}.{type_file}'
+
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
-    image = models.ImageField(upload_to='img_category',
+    image = models.ImageField(upload_to=name_file,
                               verbose_name="Изображение", blank=True)
 
+    def delete(self, using=None, keep_parents=False):
+        self.image.delete()
+        super().delete()
+
     def save(self, *args, **kwargs):
-        if self.image:
-            print(self.image)
-            # self.image = 'img_category/test.webp'
-        elif not self.image:
-            # print("Пестота")
+        if not self.image:
             self.image = 'img_default/no_image.jpg'
         super(Category, self).save(*args, **kwargs)
 
@@ -149,8 +153,8 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, blank=True, null=True, default=None,
                                 on_delete=models.CASCADE, verbose_name="Продукт")
 
-    image = models.ImageField(upload_to='del/', verbose_name="Изображение")
-    imageOLD = models.ImageField(upload_to='del/', verbose_name='JPG', blank=True)
+    image = models.ImageField(upload_to='garbage/', verbose_name="Изображение")
+    imageOLD = models.ImageField(upload_to='garbage/', verbose_name='JPG', blank=True)
 
     is_main = models.BooleanField(default=False, verbose_name="Главное изображение")
     is_active = models.BooleanField(default=True, verbose_name="Показывать изображение")
