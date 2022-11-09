@@ -1,22 +1,16 @@
-from itertools import product
 import json
 from multiprocessing.sharedctypes import Value
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from account.models import FavoriteProduct
-
 from specifications.models import CharacteristicValue
 from .models import Category, Product, Slider
 from cart.forms import CartAddProductForm
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.db.models import Q
-
-
 from django.db.models import Max, Min
-
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
-
 from django.db.models import Count
 
 
