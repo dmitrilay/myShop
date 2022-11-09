@@ -11,6 +11,7 @@ def my_callback(sender, **kwargs):
     pass
 
 
+@receiver(post_save, sender=NewProductCRM)
 @receiver(post_save, sender=ProductCRM)
 def callback_product_crm(sender, instance, **kwargs):
     if instance:
@@ -20,18 +21,6 @@ def callback_product_crm(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=NewProductCrmImage)
-def callback_saving_photos(sender, **kwargs):
-    saving_photos(**kwargs)
-
-
 @receiver(post_save, sender=OldProductCrmImage)
-def callback_saving_photos2(sender, **kwargs):
-    saving_photos(**kwargs)
-
-
-@receiver(post_save, sender=NewProductCRM)
-def my_callback2(sender, instance, **kwargs):
-    if instance:
-        copy_data_to_product_crm_fun(instance)
-    if instance.uploading_csv_file and instance.available:
-        uploading_csv_file(instance)
+def callback_saving_photos2(sender, instance, **kwargs):
+    saving_photos(instance)

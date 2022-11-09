@@ -20,8 +20,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 0
-    exclude = ['imageOLD', 'name']
+    extra = 1
+    exclude = ('imageOLD', 'name', 'compression')
 
 
 @admin.register(Product)
@@ -36,12 +36,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['id', 'product', 'get_html_img']
-    list_display_links = ['id', 'product']
-    fields = ['product', 'image', 'imageOLD', 'name', 'is_main', 'is_active', 'created', 'updated']
-    readonly_fields = ('is_main', 'is_active', 'created', 'updated', 'imageOLD')
+    list_display = ('id', 'name', 'compression', 'product', 'get_html_img')
+    list_display_links = ('id', 'name', 'product')
+    fields = ('product', 'image', 'imageOLD', 'name', 'is_main', 'compression')
+    readonly_fields = ('is_main',  'imageOLD', 'compression')
 
-    list_per_page = 10
+    list_per_page = 100
 
     def get_html_img(self, object):
         if object.image:
