@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'shop',
     'crispy_forms',
     'smartlombardAPI',
+    "shop_api.apps.ShopApiConfig",
 ]
 
 MIDDLEWARE = [
