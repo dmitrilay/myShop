@@ -75,11 +75,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    def save(self, *args, **kwargs):
-        super(Product, self).save(*args, **kwargs)
-        if not self.productimage_set.all():
-            ProductImage.objects.create(product=self, name=self.name)
-
     MONTH_CHOICES = (
         ("new", "Новый"),
         ("used", "б/у"),
@@ -119,48 +114,19 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__original_image = self.image
+    def name_file(instance, filename):
+        category = instance.product.category.slug
+        name_product = instance.product.slug
+        _path = f'product_photos/{category}/{name_product}/{filename}'
+        return _path
 
-    def save(self, *args, **kwargs):
-        if self.image != self.__original_image:
-            cat = self.product.category.slug
-            name = self.product.slug
-
-            _PATH = f'media/product_photos/{cat}/{name}'
-            if not os.path.exists(_PATH):
-                os.makedirs(_PATH)
-
-            name_uuid = uuid.uuid4().hex
-            _PATH = f'product_photos/{cat}/{name}/{name_uuid}'
-
-            image1 = Image.open(self.image)
-            image1.save(f'media/{_PATH}.webp', 'WEBP')
-
-            image2 = Image.open(self.image)
-            image2.save(f'media/{_PATH}.jpeg', 'jpeg', quality=80)
-
-            self.image = f'{_PATH}.webp'
-            self.imageOLD = f'{_PATH}.jpeg'
-        elif not self.image:
-            self.image = 'img_default/no_image.webp'
-            self.imageOLD = 'img_default/no_image.jpg'
-            self.is_main = True
-
-        super(ProductImage, self).save(*args, **kwargs)
-
-    product = models.ForeignKey(Product, blank=True, null=True, default=None,
-                                on_delete=models.CASCADE, verbose_name="Продукт")
-
-    image = models.ImageField(upload_to='garbage/', verbose_name="Изображение")
-    imageOLD = models.ImageField(upload_to='garbage/', verbose_name='JPG', blank=True)
-
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Продукт")
+    image = models.ImageField(upload_to=name_file, verbose_name="Изображение", null=True)
+    imageOLD = models.ImageField(upload_to=name_file, verbose_name='Изображение jpg', blank=True, null=True)
     is_main = models.BooleanField(default=False, verbose_name="Главное изображение")
-    is_active = models.BooleanField(default=True, verbose_name="Показывать изображение")
-    created = models.DateTimeField(auto_now_add=True, auto_now=False)
-    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    name = models.CharField(max_length=200, db_index=True, default=1, verbose_name="Имя")
+    name = models.CharField(max_length=200, db_index=True, default=uuid.uuid4(), verbose_name="Имя")
+    compression = models.BooleanField(default=False, verbose_name="Сжатие фотографии")
+    # unique=True
 
     def __str__(self):
         return "%s" % self.pk
