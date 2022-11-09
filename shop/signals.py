@@ -21,12 +21,11 @@ def photo_post_delete_handler_category(sender, instance, **kwargs):
 
 
 @receiver(post_delete, sender=ProductImage)
-def photo_post_delete_handler(sender, **kwargs):
+def photo_post_delete_handler(sender, instance, **kwargs):
     """Очиста фотографий после удаления в admin panel"""
-    photo = kwargs['instance'].image.name
-    if 'no_image.webp' not in str(photo):
-        photosObj = [x for x in [kwargs['instance'].imageOLD, kwargs['instance'].image]]
-        [x.delete() for x in photosObj]
+    if instance.image.name:
+        [x.delete() for x in [instance.imageOLD, instance.image]]
+        instance.delete()
 
 
 @receiver(post_save, sender=Product)
