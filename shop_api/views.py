@@ -23,12 +23,18 @@ class photo_replacement_api_viev(View):
             obj.save()
 
         status = {"status": 200}
-        return JsonResponse(status, safe=False)
+        return JsonResponse(status, safe=True)
 
     @staticmethod
     def get(request):
-        obj = ProductImage.objects.filter(compression=False)[:1]
+        if request.GET.get("getcount"):
+            obj = ProductImage.objects.filter(compression=False).values('id')
+            obj = {"list_image_id": list(obj)}
+            res = JsonResponse(obj, safe=False)
+        if request.GET.get("get_photo_id"):
+            id_photo = request.GET.get("get_photo_id")
+            obj = ProductImage.objects.get(id=id_photo)
+            file_name, file_image, id = obj.name, obj.image, obj.id
+            res = FileResponse(open(file_image.path, 'rb'), filename=f"{id}_{file_name}")
 
-        file_name, file_image, id = obj[0].name, obj[0].image, obj[0].id
-
-        return FileResponse(open(file_image.path, 'rb'), filename=f"{id}_{file_name}")
+        return res
