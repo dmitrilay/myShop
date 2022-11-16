@@ -16,7 +16,7 @@ def copy_data_to_product_crm_fun(instance):
         else:
             cat = cat[0]
 
-        Product.objects.create(condition='new',
+        Product.objects.create(condition=instance.condition,
                                category=cat,
                                name=instance.name,
                                url_spec=instance.url_spec,
