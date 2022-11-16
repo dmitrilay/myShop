@@ -101,7 +101,7 @@ class Product(models.Model):
     storage = models.IntegerField(default=1, verbose_name='Остатки')
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-id',)
         index_together = (('id', 'slug'),)
         verbose_name = 'Товар'
         verbose_name_plural = '1. Товары'
