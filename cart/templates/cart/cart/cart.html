@@ -1,5 +1,5 @@
 {% extends "cart/base_cart.html" %}
-
+{% load photo %}
 {% block content %}
 <main class="main">
     <!--  -->
@@ -19,16 +19,13 @@
                         {% for prw in product.productimage_set.all %}
                         {% if prw.is_main %}
                         <div class="products-cart__image">
-                            <picture>
-                                <source type="image/webp" srcset="{{prw.image.url}}">
-                                {% if prw.imageOLD %}
-                                <img src="{{ prw.imageOLD.url }}">
-                                {% else %}
-                                <img src="">
-                                {% endif %}
-                            </picture>
+                            {% picture_tag prw.image.url prw.imageOLD.url %}
                         </div>
                         {% endif %}
+                        {% empty %}
+                        <div class="products-cart__image">
+                            {% picture_tag prw.image.url prw.imageOLD.url %}
+                        </div>
                         {% endfor %}
                         <div class="products-cart__inner">
                             <div class="products-cart__name">{{ product.name }}</div>

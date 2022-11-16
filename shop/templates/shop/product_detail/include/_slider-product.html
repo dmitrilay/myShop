@@ -1,16 +1,14 @@
+{% load photo %}
 <div class="product__slider slider-product">
     <div class="swiper" id="swiper-product">
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item swiper-slide">
-                <picture>
-                    <source type="image/webp" srcset="{{image_item.image.url}}">
-                    {% if image_item.imageOLD %}
-                    <img src="{{ image_item.imageOLD.url }}">
-                    {% else %}
-                    <img src="">
-                    {% endif %}
-                </picture>
+                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+            </div>
+            {% empty %}
+            <div class="slider-product__item swiper-slide">
+                {% picture_tag image_item.image.url image_item.imageOLD.url %}
             </div>
             {% endfor %}
         </div>
@@ -19,14 +17,11 @@
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item-thumbs swiper-slide">
-                <picture>
-                    <source type="image/webp" srcset="{{image_item.image.url}}">
-                    {% if image_item.imageOLD %}
-                    <img src="{{ image_item.imageOLD.url }}">
-                    {% else %}
-                    <img src="">
-                    {% endif %}
-                </picture>
+                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+            </div>
+            {% empty %}
+            <div class="slider-product__item-thumbs swiper-slide">
+                {% picture_tag image_item.image.url image_item.imageOLD.url %}
             </div>
             {% endfor %}
         </div>

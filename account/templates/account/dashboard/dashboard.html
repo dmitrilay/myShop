@@ -1,5 +1,5 @@
 {% extends "account/base_account.html" %}
-
+{% load photo %}
 {% block content %}
 
 <div class="personal-account container">
@@ -152,16 +152,13 @@
               {% for prw in item.productimage_set.all %}
               {% if prw.is_main %}
               <a href="{{ item.get_absolute_url }}">
-                <picture>
-                  <source type="image/webp" srcset="{{prw.image.url}}">
-                  {% if prw.imageOLD %}
-                  <img src="{{ prw.imageOLD.url }}">
-                  {% else %}
-                  <img src="">
-                  {% endif %}
-                </picture>
+                {% picture_tag prw.image.url prw.imageOLD.url %}
               </a>
               {% endif %}
+              {% empty %}
+              <a href="{{ item.get_absolute_url }}">
+                {% picture_tag prw.image.url prw.imageOLD.url %}
+              </a>
               {% endfor %}
             </div>
             <div class="account-favourites__product">

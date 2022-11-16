@@ -21,13 +21,14 @@ def data_final_cart(obj):
     product = ProductImage.objects.filter(product__name__in=for_request)
     for item in product:
         if item.is_main:
-            # print()
             new_array_image.append({'image': item.image})
+        else:
+            new_array_image.append({'image': None})
 
     for i, item in enumerate(new_array_cart):
         new_array_cart[i].update(new_array_image[i])
 
-    return(new_array_cart, sum)
+    return (new_array_cart, sum)
 
 
 def order_create(request):

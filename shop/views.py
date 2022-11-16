@@ -12,6 +12,7 @@ from django.db.models import Max, Min
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
+from .modules.sterilization_of_products import *
 
 
 class FilterAjax(View):
@@ -182,6 +183,7 @@ class CategoryDetailView2(ListView):
             elif _sort == 'price_high':
                 _q = _q.order_by('-price')
             queryset = _q.select_related('category').prefetch_related('productimage_set')
+            queryset = sterilization_of_products(queryset)
 
         return queryset
 
@@ -219,6 +221,7 @@ class ProductDetailView(DetailView):
         slug = self.kwargs.get(self.slug_url_kwarg, None)
         queryset = Product.objects.filter(slug=slug, available=True)
         queryset = queryset.select_related('category').prefetch_related('productimage_set')
+        # queryset = sterilization_of_products(queryset)
         return queryset
 
 
@@ -229,41 +232,14 @@ class HomeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         q_slider = Slider.objects.all()
         context['slider_photo'] = q_slider
-
-        # print(q_slider)
-
-        # Избранные товары
-        # slug = self.kwargs.get(self.slug_url_kwarg, None)
-        # product = Product.objects.filter(slug=slug, available=True)
-        # favorit = FavoriteProduct.objects.filter(id_product=product[0].pk)
-
         return context
 
     def get_queryset(self):
-
-        queryset = Product.objects.select_related('category')
-        queryset = queryset.prefetch_related('productimage_set').filter(available=True)[0:12]
-        context = []
-        image = None
-        for i in queryset:
-            for i2 in i.productimage_set.all():
-                if i2.is_main:
-                    image = i2.image
-                    imageOLD = i2.imageOLD
-
-            context.append({'id': i.id,
-                            'name': i.name,
-                            'price': i.price,
-                           'image': image,
-                            'imageOLD': imageOLD,
-                            'get_absolute_url': i.get_absolute_url()
-                            }
-                           )
-            print(image, i.id)
-        return context
+        queryset = Product.objects.select_related('category').prefetch_related('productimage_set')
+        queryset = queryset.filter(available=True)[0:20]
+        return sterilization_of_products(queryset)
 
 
 class BuyingUp(TemplateView):

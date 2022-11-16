@@ -16,6 +16,8 @@ from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView,
                                        PasswordResetDoneView, PasswordResetConfirmView,
                                        PasswordResetCompleteView, PasswordChangeView)
 
+from shop.modules.sterilization_of_products import *
+
 
 class ChangePasswordCustom(PasswordChangeView):
     # html_email_template_name = 'account/email/password_reset.html'
@@ -173,6 +175,7 @@ def favorites(request):
     product = Product.objects.filter(pk__in=favorit).prefetch_related('productimage_set').select_related('category')
 
     template = 'account/favorites/favorites.html'
+    product = sterilization_of_products(product)
     context = {'product': product}
     return render(request, template, context)
 

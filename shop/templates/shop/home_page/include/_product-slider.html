@@ -1,3 +1,5 @@
+{% load photo %}
+
 <div class="product-slider container">
     <div class="product-slider__header header-block">
         <span class="header-block__text">Новое поступление</span>
@@ -12,14 +14,7 @@
                     <div class="product-card__img">
                         <a href="{{product.get_absolute_url}}">
 
-                            <picture>
-                                <source type="image/webp" srcset="{{product.image.url}}">
-                                {% if product.imageOLD %}
-                                <img src="{{ product.imageOLD.url }}">
-                                {% else %}
-                                <img src="">
-                                {% endif %}
-                            </picture>
+                            {% picture_tag product.image.url product.imageOLD.url %}
 
                         </a>
                     </div>

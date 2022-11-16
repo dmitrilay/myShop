@@ -1,6 +1,7 @@
 {% extends "shop/base_shop.html" %}
 
 {% load static %}
+{% load photo %}
 {% load search_filter %}
 
 {% block productfilter %}
@@ -67,20 +68,9 @@
                     <div class="list-product__item">
                         <div class="product-card">
                             <div class="product-card__img">
-                                {% for prw in product.productimage_set.all %}
-                                {% if prw.is_main %}
                                 <a href="{{ product.get_absolute_url }}">
-                                    <picture>
-                                        <source type="image/webp" srcset="{{prw.image.url}}">
-                                        {% if prw.imageOLD %}
-                                        <img src="{{ prw.imageOLD.url }}">
-                                        {% else %}
-                                        <img src="">
-                                        {% endif %}
-                                    </picture>
+                                    {% picture_tag product.image.url product.imageOLD.url %}
                                 </a>
-                                {% endif %}
-                                {% endfor %}
                             </div>
                             <div class="product-card__name">
                                 <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>

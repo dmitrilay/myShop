@@ -1,5 +1,6 @@
 {% extends "orders/base_orders.html" %}
 {% load static %}
+{% load photo %}
 
 {% block content %}
 <div class="final-order container">
@@ -34,14 +35,7 @@
                 {% for item in cart  %}
                 <div class="composition-order__order-item">
                     <div class="composition-order__order-image">
-                        <picture>
-                            <source type="image/webp" srcset="{{item.image.url}}">
-                            {% if item.imageOLD %}
-                            <img src="{{ item.imageOLD.url }}">
-                            {% else %}
-                            <img src="">
-                            {% endif %}
-                        </picture>
+                        {% picture_tag item.image.url item.imageOLD.url %}
                     </div>
                     <div class="composition-order__order-content">
                         <div class="composition-order__order-name">{{item.product}}</div>
