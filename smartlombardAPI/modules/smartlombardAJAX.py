@@ -80,10 +80,10 @@ class AddingEditingProduct():
         new_product = self.edit_type
         for e in new_product:
             main_list_product, crm_list_product = self.product_search_in_list(e['article'])
-
-            if e.get('sold'):
+            article, e = e['article'], e['data']
+            if 'sold' in e:
                 args = {'sold': True, 'storage': 0} if e['sold'] else {'sold': False, 'storage': 1}
-                article = f"{self.index_letter}{e['article']}"
+                article = f"{self.index_letter}{article}"
                 if not crm_list_product == True:
                     ProductCRM.objects.filter(article=article).update(**args)
 
