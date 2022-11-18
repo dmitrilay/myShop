@@ -121,8 +121,9 @@ class ProductImage(models.Model):
         return _path
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Продукт")
-    image = models.ImageField(upload_to=name_file, verbose_name="Изображение", null=True)
-    imageOLD = models.ImageField(upload_to=name_file, verbose_name='Изображение jpg', blank=True, null=True)
+    image = models.ImageField(upload_to=name_file, verbose_name="Изображение", null=True, max_length=250)
+    imageOLD = models.ImageField(upload_to=name_file, verbose_name='Изображение jpg',
+                                 blank=True, null=True, max_length=250)
     is_main = models.BooleanField(default=False, verbose_name="Главное изображение")
     name = models.CharField(max_length=200, db_index=True, default=uuid.uuid4(), verbose_name="Имя")
     compression = models.BooleanField(default=False, verbose_name="Сжатие фотографии")
