@@ -35,7 +35,7 @@
                 {% for item in cart  %}
                 <div class="composition-order__order-item">
                     <div class="composition-order__order-image">
-                        {% picture_tag item.image.url item.imageOLD.url %}
+                        {% picture_tag item.image item.imageOLD %}
                     </div>
                     <div class="composition-order__order-content">
                         <div class="composition-order__order-name">{{item.product}}</div>

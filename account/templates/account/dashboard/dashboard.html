@@ -152,12 +152,12 @@
               {% for prw in item.productimage_set.all %}
               {% if prw.is_main %}
               <a href="{{ item.get_absolute_url }}">
-                {% picture_tag prw.image.url prw.imageOLD.url %}
+                {% picture_tag prw.image prw.imageOLD %}
               </a>
               {% endif %}
               {% empty %}
               <a href="{{ item.get_absolute_url }}">
-                {% picture_tag prw.image.url prw.imageOLD.url %}
+                {% picture_tag prw.image prw.imageOLD %}
               </a>
               {% endfor %}
             </div>

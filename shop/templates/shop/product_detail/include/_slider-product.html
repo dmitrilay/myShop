@@ -4,11 +4,11 @@
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item swiper-slide">
-                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+                {% picture_tag image_item.image image_item.imageOLD %}
             </div>
             {% empty %}
             <div class="slider-product__item swiper-slide">
-                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+                {% picture_tag image_item.image image_item.imageOLD %}
             </div>
             {% endfor %}
         </div>
@@ -17,11 +17,11 @@
         <div class="swiper-wrapper">
             {% for image_item in product.productimage_set.all %}
             <div class="slider-product__item-thumbs swiper-slide">
-                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+                {% picture_tag image_item.image image_item.imageOLD %}
             </div>
             {% empty %}
             <div class="slider-product__item-thumbs swiper-slide">
-                {% picture_tag image_item.image.url image_item.imageOLD.url %}
+                {% picture_tag image_item.image image_item.imageOLD %}
             </div>
             {% endfor %}
         </div>
