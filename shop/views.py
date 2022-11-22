@@ -183,7 +183,8 @@ class CategoryDetailView2(ListView):
             elif _sort == 'price_high':
                 _q = _q.order_by('-price')
             queryset = _q.select_related('category').prefetch_related('productimage_set')
-            queryset = sterilization_of_products(queryset)
+
+        queryset = sterilization_of_products(queryset)
 
         return queryset
 
