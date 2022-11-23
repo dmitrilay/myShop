@@ -17,6 +17,13 @@ class SpecificationsAdmin(admin.ModelAdmin):
     list_filter = ['category', 'participation_filtering']
     list_per_page = 30
 
+    raw_id_fields = ['subcategory', ]
+    list_select_related = ['category', "subcategory", ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(self)
+        return qs.prefetch_related('category', 'subcategory')
+
 
 @admin.register(SubcategoriesCharacteristics)
 class SubcategoriesCharacteristicsAdmin(admin.ModelAdmin):
