@@ -27,16 +27,15 @@ class RecordingUniqueValues():
         product_category = Category.objects.filter(products__name=self.product_name)
         product_category = product_category[0].name if product_category else 0
         spec_category, _ = CategoryProducts.objects.get_or_create(name_cat=product_category)
-        _sp = Specifications.objects.filter(name__in=self.spec_list).values_list('name', 'category__name_cat')
-        _sp = {x[0]: x[1] for x in _sp}
+
+        _params = {"name__in": self.spec_list, "category__name_cat": spec_category.name_cat}
+        _sp = Specifications.objects.filter(**_params).values_list('name', )
+        _sp = [x[0] for x in _sp]
 
         not_list_spec = []
 
         for item in self.spec_list:
-            if _sp.get(item):
-                if _sp[item] != product_category:
-                    not_list_spec.append(item)
-            else:
+            if not item in _sp:
                 not_list_spec.append(item)
 
         bulk_list = [Specifications(name=item, category=spec_category) for item in not_list_spec]
